@@ -1,9 +1,11 @@
-import Login from "./pages/login/Login";
+import ConfirmOtp from "./pages/user/ConfirmOtp";
 
 function App() {
   return (
     <div>
-      <Login/>
+      {/* <Login/> */}
+      {/* <SignUp/> */}
+      <ConfirmOtp />
     </div>
   )
 }

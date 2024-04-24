@@ -13,17 +13,17 @@ function Login() {
     <div
       className="p-4 min-h-screen flex flex-col items-center justify-center bg-cover bg-center font-poppins"
       style={{
-        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)),url('/public/bg.jpg')",
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)),url('/bg.jpg')",
       }}
     >
       <div className="w-full max-w-md p-6 rounded-lg bg-white bg-clip-padding flex flex-col items-center">
         <img className="rounded-md h-11 mt-4" src="logo.webp" alt="site logo" />
         <div className="mt-4 text-center">
-          <h3 className="font-semibold text-3xl">Log in</h3>
+          <h3 className="font-semibold text-3xl">Sign Up</h3>
           <p className="mt-2 text-sm">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <a href="/signup" className="text-blue-500 hover:underline">
-              Sign up
+              Log in
             </a>
           </p>
           <div className="mt-5 ">
@@ -34,7 +34,7 @@ function Login() {
                 loading="lazy"
                 alt="google logo"
               />
-              <span>Login with Google</span>
+              <span>Signup with Google</span>
             </button>
           </div>
 
@@ -46,6 +46,18 @@ function Login() {
         </div>
 
         <form className="w-full">
+          <div className="mt-5">
+            <label className="block mb-2 text-sm" htmlFor="your-email">
+              Your Username
+            </label>
+            <input
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+              type="text"
+              id="your-username"
+              placeholder="Enter your username"
+            />
+          </div>
+
           <div className="mt-5">
             <label className="block mb-2 text-sm" htmlFor="your-email">
               Your Email
@@ -79,14 +91,32 @@ function Login() {
               </button>
             </div>
           </div>
+
+          <div className="mt-4 relative">
+            <label className="block mb-2 text-sm" htmlFor="your-password">
+              Confirm Password
+            </label>
+            <div className="relative">
+              <input
+                className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                type={showPassword ? 'text' : 'password'} 
+                id="confirm-password"
+                placeholder="Enter your confirm password"
+                autoComplete="confirm-password" 
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 flex items-center px-3 focus:outline-none"
+                onClick={togglePasswordVisibility} 
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </button>
+            </div>
+          </div>
         </form>
 
-        <div className="mt-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer">
-          Forgot your password?
-        </div>
-
-        <button className="mt-6 px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-150">
-          Login
+        <button className="btn btn-wide mt-6 px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-150">
+          Signup
         </button>
       </div>
     </div>

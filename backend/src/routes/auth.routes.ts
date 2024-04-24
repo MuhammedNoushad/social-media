@@ -12,7 +12,7 @@ const authRoute = express.Router();
 
 // // Authentication routes
 authRoute.post("/signup", signup);
-authRoute.post("/verifyotp", verifyotp);
+authRoute.post("/verify-otp", verifyotp);
 authRoute.post("/login", login);
 authRoute.post("/logout", logout);
 

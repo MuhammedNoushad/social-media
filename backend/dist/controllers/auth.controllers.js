@@ -63,7 +63,9 @@ exports.signup = signup;
 // Verify the user entered OTP
 const verifyotp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, username, password, otp } = req.body;
+        console.log(req.body);
+        const { formData, otp } = req.body;
+        const { email, username, hashPassword } = formData;
         // Find OTP details by email
         const otpDetails = yield otpRepository.findOtpByEmail(email);
         if (!otpDetails) {
@@ -78,7 +80,7 @@ const verifyotp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const newUser = {
             email,
             username,
-            password,
+            password: hashPassword,
         };
         // Create a new user in the database
         const createdUser = yield userRepository.createNewUser(newUser);
@@ -120,6 +122,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 success: true,
                 username: userDetails.username,
                 email: userDetails.email,
+                id: userDetails._id,
             };
             return res.status(200).json(responseData);
         }

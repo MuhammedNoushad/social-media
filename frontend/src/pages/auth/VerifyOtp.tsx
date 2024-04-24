@@ -1,4 +1,19 @@
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import useVerifyOtp from "../../hooks/auth/useVerifyOtp";
+
 function ConfirmOtp() {
+  const location = useLocation();
+  const userData = location.state?.userData;
+
+  const verifyOtp = useVerifyOtp();
+
+  const [otp, setOtp] = useState<string>("");
+
+  const submitOtpHandler = () => {
+    verifyOtp(otp, userData);
+  };
+
   return (
     <div
       className="p-4 min-h-screen flex flex-col items-center justify-center bg-cover bg-center font-poppins"
@@ -21,8 +36,14 @@ function ConfirmOtp() {
               type="text"
               placeholder="otp"
               className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-gray-300 rounded-lg font-medium placeholder:font-normal"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setOtp(e.target.value);
+              }}
             />
-            <button className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-gray-600 text-white">
+            <button
+              className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium  bg-gray-600 text-white"
+              onClick={submitOtpHandler}
+            >
               Confirm
             </button>
           </div>

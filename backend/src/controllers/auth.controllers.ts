@@ -59,7 +59,9 @@ export const signup = async (req: Request, res: Response) => {
 // Verify the user entered OTP
 export const verifyotp = async (req: Request, res: Response) => {
   try {
-    const { email, username, password, otp } = req.body;
+    console.log(req.body);
+    const { formData, otp } = req.body;
+    const { email, username, hashPassword } = formData;
 
     // Find OTP details by email
     const otpDetails = await otpRepository.findOtpByEmail(email);
@@ -79,7 +81,7 @@ export const verifyotp = async (req: Request, res: Response) => {
     const newUser = {
       email,
       username,
-      password,
+      password: hashPassword,
     } as IUsers;
 
     // Create a new user in the database
@@ -102,7 +104,6 @@ export const verifyotp = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-
     // finding the user is existing or not
     const existingEmail = await userRepository.existingEmail(email);
 
@@ -132,6 +133,7 @@ export const login = async (req: Request, res: Response) => {
         success: true,
         username: userDetails.username,
         email: userDetails.email,
+        id: userDetails._id,
       };
       return res.status(200).json(responseData);
     } else {

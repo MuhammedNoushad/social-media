@@ -9,7 +9,7 @@ const auth_controllers_js_1 = require("../controllers/auth.controllers.js");
 const authRoute = express_1.default.Router();
 // // Authentication routes
 authRoute.post("/signup", auth_controllers_js_1.signup);
-authRoute.post("/verifyotp", auth_controllers_js_1.verifyotp);
+authRoute.post("/verify-otp", auth_controllers_js_1.verifyotp);
 authRoute.post("/login", auth_controllers_js_1.login);
 authRoute.post("/logout", auth_controllers_js_1.logout);
 exports.default = authRoute;

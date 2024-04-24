@@ -1,30 +1,53 @@
-import { useState } from 'react';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Import eye icons from react-icons/ai
+import { useState } from "react";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import eye icons from react-icons/ai
+import { Link } from "react-router-dom";
+import IFormInput from "../../types/IFormInputs";
+import useLogin from "../../hooks/auth/useLogin";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false); // State to track whether to show the password
+  const [formData, setFormData] = useState<IFormInput>({
+    email: "",
+    password: "",
+  });
+
+  const login = useLogin();
 
   // Function to toggle between showing and hiding the password
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  // Function to handle the inputs in the form
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormData({ ...formData, [name]: value });
+  };
+
+  // Function to handle form submition
+  const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    login(formData);
+  };
+
   return (
     <div
       className="p-4 min-h-screen flex flex-col items-center justify-center bg-cover bg-center font-poppins"
       style={{
-        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)),url('/bg.jpg')",
+        backgroundImage:
+          "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)),url('/bg.jpg')",
       }}
     >
       <div className="w-full max-w-md p-6 rounded-lg bg-white bg-clip-padding flex flex-col items-center">
         <img className="rounded-md h-11 mt-4" src="logo.webp" alt="site logo" />
         <div className="mt-4 text-center">
-          <h3 className="font-semibold text-3xl">Sign Up</h3>
+          <h3 className="font-semibold text-3xl">Log in</h3>
           <p className="mt-2 text-sm">
-            Already have an account?{" "}
-            <a href="/signup" className="text-blue-500 hover:underline">
-              Log in
-            </a>
+            Don't have an account?{" "}
+            <Link to="/signup">
+              <span className="text-blue-500 hover:underline">Sign up</span>{" "}
+            </Link>
           </p>
           <div className="mt-5 ">
             <button className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
@@ -34,7 +57,7 @@ function Login() {
                 loading="lazy"
                 alt="google logo"
               />
-              <span>Signup with Google</span>
+              <span>Login with Google</span>
             </button>
           </div>
 
@@ -45,19 +68,7 @@ function Login() {
           </div>
         </div>
 
-        <form className="w-full">
-          <div className="mt-5">
-            <label className="block mb-2 text-sm" htmlFor="your-email">
-              Your Username
-            </label>
-            <input
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
-              type="text"
-              id="your-username"
-              placeholder="Enter your username"
-            />
-          </div>
-
+        <form className="w-full" onSubmit={formSubmitHandler}>
           <div className="mt-5">
             <label className="block mb-2 text-sm" htmlFor="your-email">
               Your Email
@@ -66,7 +77,9 @@ function Login() {
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
               type="email"
               id="your-email"
+              name="email"
               placeholder="Enter your email"
+              onChange={handleInputChange}
             />
           </div>
 
@@ -77,47 +90,37 @@ function Login() {
             <div className="relative">
               <input
                 className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
-                type={showPassword ? 'text' : 'password'} 
+                type={showPassword ? "text" : "password"}
                 id="your-password"
+                name="password"
                 placeholder="Enter your password"
-                autoComplete="new-password" 
+                autoComplete="new-password"
+                onChange={handleInputChange}
               />
               <button
                 type="button"
                 className="absolute inset-y-0 right-0 flex items-center px-3 focus:outline-none"
-                onClick={togglePasswordVisibility} 
+                onClick={togglePasswordVisibility}
               >
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
               </button>
             </div>
           </div>
 
-          <div className="mt-4 relative">
-            <label className="block mb-2 text-sm" htmlFor="your-password">
-              Confirm Password
-            </label>
-            <div className="relative">
-              <input
-                className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
-                type={showPassword ? 'text' : 'password'} 
-                id="confirm-password"
-                placeholder="Enter your confirm password"
-                autoComplete="confirm-password" 
-              />
-              <button
-                type="button"
-                className="absolute inset-y-0 right-0 flex items-center px-3 focus:outline-none"
-                onClick={togglePasswordVisibility} 
-              >
-                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-              </button>
-            </div>
+          <div className="mt-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer">
+            Forgot your password?
+          </div>
+
+          <div className="flex justify-center">
+            {" "}
+            <button
+              type="submit"
+              className="btn btn-wide mt-6 px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-150"
+            >
+              Login
+            </button>
           </div>
         </form>
-
-        <button className="btn btn-wide mt-6 px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-150">
-          Signup
-        </button>
       </div>
     </div>
   );

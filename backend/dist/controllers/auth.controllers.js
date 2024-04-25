@@ -24,7 +24,7 @@ const otpRepository = new OtpRepository_1.default();
 // Signup controller
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { password, confirmPassword, email, username } = req.body;
+        const { password, confirmPassword, email, username, firstName, lastName } = req.body;
         // Checking if the password and confirmPassword match
         if (password !== confirmPassword) {
             return res.status(400).json({ error: "Password didn't match" });
@@ -44,6 +44,8 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         (0, sendMail_1.sendEmailWithVerification)(email);
         const responseData = {
             username,
+            firstName,
+            lastName,
             email,
             hashPassword,
         };
@@ -65,7 +67,7 @@ const verifyotp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(req.body);
         const { formData, otp } = req.body;
-        const { email, username, hashPassword } = formData;
+        const { email, firstName, lastName, username, hashPassword } = formData;
         // Find OTP details by email
         const otpDetails = yield otpRepository.findOtpByEmail(email);
         if (!otpDetails) {
@@ -80,6 +82,8 @@ const verifyotp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const newUser = {
             email,
             username,
+            firstName,
+            lastName,
             password: hashPassword,
         };
         // Create a new user in the database

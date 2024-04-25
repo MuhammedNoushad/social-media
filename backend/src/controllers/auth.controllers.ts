@@ -14,7 +14,8 @@ const otpRepository = new OtpRepository();
 // Signup controller
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { password, confirmPassword, email, username } = req.body;
+    const { password, confirmPassword, email, username, firstName, lastName } =
+      req.body;
 
     // Checking if the password and confirmPassword match
     if (password !== confirmPassword) {
@@ -41,6 +42,8 @@ export const signup = async (req: Request, res: Response) => {
 
     const responseData = {
       username,
+      firstName,
+      lastName,
       email,
       hashPassword,
     };
@@ -61,7 +64,7 @@ export const verifyotp = async (req: Request, res: Response) => {
   try {
     console.log(req.body);
     const { formData, otp } = req.body;
-    const { email, username, hashPassword } = formData;
+    const { email, firstName, lastName, username, hashPassword } = formData;
 
     // Find OTP details by email
     const otpDetails = await otpRepository.findOtpByEmail(email);
@@ -81,6 +84,8 @@ export const verifyotp = async (req: Request, res: Response) => {
     const newUser = {
       email,
       username,
+      firstName,
+      lastName,
       password: hashPassword,
     } as IUsers;
 

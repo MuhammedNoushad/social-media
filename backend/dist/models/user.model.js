@@ -15,10 +15,10 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    fname: {
+    firstName: {
         type: String,
     },
-    lname: {
+    lastName: {
         type: String,
     },
     bio: {

@@ -4,8 +4,8 @@ interface IUsers extends Document {
   username: string;
   email: string;
   password: string;
-  fname?: string;
-  lname?: string;
+  firstName: string;
+  lastName: string;
   bio?: string;
   dob?: string;
   profileimg?: string;

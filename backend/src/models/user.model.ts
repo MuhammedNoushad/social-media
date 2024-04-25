@@ -17,10 +17,10 @@ const userSchema = new Schema<IUsers>(
       type: String,
       required: true,
     },
-    fname: {
+    firstName: {
       type: String,
     },
-    lname: {
+    lastName: {
       type: String,
     },
     bio: {

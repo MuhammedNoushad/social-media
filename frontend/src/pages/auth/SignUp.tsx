@@ -8,6 +8,8 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<IFormInput>({
     username: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -79,6 +81,34 @@ function Login() {
               id="your-username"
               name="username"
               placeholder="Enter your username"
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="mt-5">
+            <label className="block mb-2 text-sm" htmlFor="your-firstname">
+              First Name
+            </label>
+            <input
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+              type="text"
+              id="your-firstname"
+              name="firstName"
+              placeholder="Enter your first name"
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="mt-5">
+            <label className="block mb-2 text-sm" htmlFor="your-lastname">
+              Last Name
+            </label>
+            <input
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+              type="text"
+              id="your-lastname"
+              name="lastName"
+              placeholder="Enter your last name"
               onChange={handleInputChange}
             />
           </div>

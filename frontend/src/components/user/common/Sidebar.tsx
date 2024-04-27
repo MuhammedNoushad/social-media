@@ -1,7 +1,11 @@
 import React from 'react';
 import { BiHome, BiSearch, BiCompass, BiChat, BiBell, BiAddToQueue, BiUser, BiLogOut } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar: React.FC = () => {
+
+  const navigate=useNavigate()
+
   return (
     <div className="min-h-screen flex flex-row bg-gray-100">
       <div className="fixed top-0 bottom-0 flex flex-col bg-white rounded-r-3xl overflow-hidden lg:w-56 w-16">
@@ -71,7 +75,9 @@ const Sidebar: React.FC = () => {
               </span>
             </a>
           </li>
-          <li>
+          <li onClick={()=>{
+            navigate('/profile')
+          }}>
             <a
               href="#"
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
@@ -82,7 +88,9 @@ const Sidebar: React.FC = () => {
               <span className="hidden lg:block text-sm font-medium">Create</span>
             </a>
           </li>
-          <li>
+          <li onClick={()=>{
+            navigate('/profile')
+          }}>
             <a
               href="#"
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"

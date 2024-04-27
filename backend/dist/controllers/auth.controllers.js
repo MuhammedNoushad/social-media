@@ -123,12 +123,13 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             // Generate jwt cookie
             (0, generateToken_1.default)(userDetails._id, res);
             const responseData = {
-                success: true,
-                username: userDetails.username,
-                email: userDetails.email,
                 id: userDetails._id,
+                username: userDetails.username,
+                firstName: userDetails.firstName,
+                lastName: userDetails.lastName,
+                email: userDetails.email,
             };
-            return res.status(200).json(responseData);
+            return res.status(200).json({ success: true, responseData });
         }
         else {
             // If password is wrong show incorrect password

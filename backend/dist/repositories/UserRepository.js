@@ -16,7 +16,7 @@ const user_model_1 = __importDefault(require("../models/user.model"));
 const mongoose_1 = require("mongoose");
 // Creating the UserRepository
 class UserRepository {
-    // Checking the user email is existing or not
+    // Checking if the user email exists
     existingEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -34,7 +34,7 @@ class UserRepository {
             }
         });
     }
-    // Checking the user name is existing or not
+    // Checking if the username exists
     existingUsername(username) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -71,10 +71,54 @@ class UserRepository {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const userData = yield user_model_1.default.findOne({ email });
-                return userData || null; // Return null if user is not found
+                return userData || null;
             }
             catch (error) {
                 console.error("Error from findUser in UserRepository", error);
+                throw error;
+            }
+        });
+    }
+    // Update user profile
+    updateProfile(userDetails, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log(userDetails);
+                // Find the user by userId
+                const user = yield user_model_1.default.findById(userId).select("-password");
+                // If user not found, return null
+                if (!user) {
+                    console.error("User not found");
+                    return null;
+                }
+                // Validate userDetails
+                if (!userDetails.username ||
+                    !userDetails.firstName ||
+                    !userDetails.lastName) {
+                    console.error("Incomplete user details provided");
+                    return null;
+                }
+                // Update user details
+                user.username = userDetails.username;
+                user.firstName = userDetails.firstName;
+                user.lastName = userDetails.lastName;
+                // Optional fields
+                if (userDetails.bio) {
+                    user.bio = userDetails.bio;
+                }
+                if (userDetails.dob) {
+                    user.dob = userDetails.dob;
+                }
+                if (userDetails.phone) {
+                    user.phone = userDetails.phone;
+                }
+                // Save the updated user
+                yield user.save();
+                // Return the updated user details
+                return user;
+            }
+            catch (error) {
+                console.error("Error from updateProfile in UserRepository", error);
                 throw error;
             }
         });

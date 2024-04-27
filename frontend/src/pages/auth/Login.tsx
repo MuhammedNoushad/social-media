@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import eye icons from react-icons/ai
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import IFormInput from "../../types/IFormInputs";
+
 import useLogin from "../../hooks/auth/useLogin";
+import IFormInput from "../../types/IFormInputs";
 
 function Login() {
-  const [showPassword, setShowPassword] = useState(false); // State to track whether to show the password
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<IFormInput>({
     email: "",
     password: "",

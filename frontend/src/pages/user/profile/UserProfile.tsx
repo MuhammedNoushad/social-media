@@ -7,7 +7,7 @@ function UserProfile() {
       <div>
         <Sidebar />
       </div>
-      <div className="flex-grow flex justify-center">
+      <div className="flex-grow flex  justify-center px-4 sm:px-0">
         <ProfileCard />
       </div>
     </div>

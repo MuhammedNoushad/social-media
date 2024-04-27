@@ -5,6 +5,7 @@ import { Server } from "http";
 
 import authRoute from './routes/auth.routes'
 import connectToMongoDB from "./db/connectToMongoDB";
+import userRoute from "./routes/user.routes";
 
 
 dotenv.config()
@@ -15,7 +16,10 @@ const port = process.env.PORT || 5000;
 app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
 app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute);
 
 // Connect to MongoDB and start the server
 connectToMongoDB()

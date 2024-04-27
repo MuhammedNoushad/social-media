@@ -135,12 +135,13 @@ export const login = async (req: Request, res: Response) => {
       generateTokenAndSetCookie(userDetails._id, res);
 
       const responseData = {
-        success: true,
-        username: userDetails.username,
-        email: userDetails.email,
         id: userDetails._id,
+        username: userDetails.username,
+        firstName: userDetails.firstName,
+        lastName: userDetails.lastName,
+        email: userDetails.email,
       };
-      return res.status(200).json(responseData);
+      return res.status(200).json({ success: true, responseData });
     } else {
       // If password is wrong show incorrect password
       return res.status(400).json({ error: "Incorrect password" });

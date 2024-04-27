@@ -1,10 +1,8 @@
-import { Document } from "mongoose";
-
-interface IUsers extends Document {
-  id:string;
+export default interface IUserDetails {
+  id: string;
   username: string;
   email: string;
-  password: string;
+  password?: string;
   firstName: string;
   lastName: string;
   bio?: string;
@@ -14,5 +12,3 @@ interface IUsers extends Document {
   isBlock?: boolean;
   isAdmin?: boolean;
 }
-
-export default IUsers;

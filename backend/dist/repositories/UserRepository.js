@@ -79,7 +79,7 @@ class UserRepository {
             }
         });
     }
-    // For update the profile of the user 
+    // For update the profile of the user
     updateProfile(userDetails, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -129,7 +129,7 @@ class UserRepository {
         });
     }
     // Function for block a specified user
-    blockUser(userId) {
+    toggleBlock(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = yield user_model_1.default.findById(userId);
@@ -137,7 +137,7 @@ class UserRepository {
                     console.error("User not found");
                     return null;
                 }
-                user.isBlock = true;
+                user.isBlock = !user.isBlock;
                 yield user.save();
                 return user.toObject();
             }

@@ -63,7 +63,7 @@ class UserRepository {
     }
   }
 
-  // For update the profile of the user 
+  // For update the profile of the user
   async updateProfile(
     userDetails: IUsers,
     userId: string
@@ -120,7 +120,7 @@ class UserRepository {
   }
 
   // Function for block a specified user
-  async blockUser(userId: string): Promise<IUsers | null> {
+  async toggleBlock(userId: string): Promise<IUsers | null> {
     try {
       const user = await User.findById(userId);
 
@@ -129,7 +129,7 @@ class UserRepository {
         return null;
       }
 
-      user.isBlock = true;
+      user.isBlock = !user.isBlock;
 
       await user.save();
 

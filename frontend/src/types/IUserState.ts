@@ -1,5 +1,5 @@
 export default interface IUserState {
-  id: string;
+  _id: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -9,4 +9,5 @@ export default interface IUserState {
   phone?:number;
   isBlock?:boolean,
   isAdmin?:boolean,
+  createdAt: string;
 }

@@ -25,7 +25,7 @@ export const blockUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 
-    const blockedUser = await userRepository.blockUser(userId);
+    const blockedUser = await userRepository.toggleBlock(userId);
 
     if (!blockedUser) {
       return res.status(404).json({ error: "User not found" });

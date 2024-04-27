@@ -6,6 +6,7 @@ import { Server } from "http";
 import authRoute from './routes/auth.routes'
 import connectToMongoDB from "./db/connectToMongoDB";
 import userRoute from "./routes/user.routes";
+import adminRoute from "./routes/admin.routes";
 
 
 dotenv.config()
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/admin", adminRoute);
 
 // Connect to MongoDB and start the server
 connectToMongoDB()

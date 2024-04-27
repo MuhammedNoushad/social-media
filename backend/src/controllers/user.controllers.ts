@@ -19,7 +19,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     }
   } catch (error) {
     // Handle errors
-    console.error("Error from updateProfile controller", error);
+    console.error("Error from updateProfile user controller", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

@@ -63,23 +63,19 @@ class UserRepository {
     }
   }
 
-  // Update user profile
+  // For update the profile of the user 
   async updateProfile(
     userDetails: IUsers,
     userId: string
   ): Promise<IUsers | null> {
     try {
-      console.log(userDetails);
-      // Find the user by userId
       const user = await User.findById(userId).select("-password");
 
-      // If user not found, return null
       if (!user) {
         console.error("User not found");
         return null;
       }
 
-      // Validate userDetails
       if (
         !userDetails.username ||
         !userDetails.firstName ||
@@ -89,12 +85,10 @@ class UserRepository {
         return null;
       }
 
-      // Update user details
       user.username = userDetails.username;
       user.firstName = userDetails.firstName;
       user.lastName = userDetails.lastName;
 
-      // Optional fields
       if (userDetails.bio) {
         user.bio = userDetails.bio;
       }
@@ -105,13 +99,44 @@ class UserRepository {
         user.phone = userDetails.phone;
       }
 
-      // Save the updated user
       await user.save();
 
-      // Return the updated user details
       return user;
     } catch (error) {
       console.error("Error from updateProfile in UserRepository", error);
+      throw error;
+    }
+  }
+
+  // Funcion to fetch all the users from the user collection
+  async getUsers(): Promise<IUsers[] | null> {
+    try {
+      const users = await User.find({ isAdmin: false }).select("-password");
+      return users;
+    } catch (error) {
+      console.error("Error from getUsers in UserRepository", error);
+      return null;
+    }
+  }
+
+  // Function for block a specified user
+  async blockUser(userId: string): Promise<IUsers | null> {
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        console.error("User not found");
+        return null;
+      }
+
+      user.isBlock = true;
+
+      await user.save();
+
+      return user.toObject();
+    } catch (error) {
+      // Handle error
+      console.error("Error from blockUser in UserRepository", error);
       throw error;
     }
   }

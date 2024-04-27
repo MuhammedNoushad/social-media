@@ -79,30 +79,24 @@ class UserRepository {
             }
         });
     }
-    // Update user profile
+    // For update the profile of the user 
     updateProfile(userDetails, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(userDetails);
-                // Find the user by userId
                 const user = yield user_model_1.default.findById(userId).select("-password");
-                // If user not found, return null
                 if (!user) {
                     console.error("User not found");
                     return null;
                 }
-                // Validate userDetails
                 if (!userDetails.username ||
                     !userDetails.firstName ||
                     !userDetails.lastName) {
                     console.error("Incomplete user details provided");
                     return null;
                 }
-                // Update user details
                 user.username = userDetails.username;
                 user.firstName = userDetails.firstName;
                 user.lastName = userDetails.lastName;
-                // Optional fields
                 if (userDetails.bio) {
                     user.bio = userDetails.bio;
                 }
@@ -112,13 +106,44 @@ class UserRepository {
                 if (userDetails.phone) {
                     user.phone = userDetails.phone;
                 }
-                // Save the updated user
                 yield user.save();
-                // Return the updated user details
                 return user;
             }
             catch (error) {
                 console.error("Error from updateProfile in UserRepository", error);
+                throw error;
+            }
+        });
+    }
+    // Funcion to fetch all the users from the user collection
+    getUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield user_model_1.default.find({ isAdmin: false }).select("-password");
+                return users;
+            }
+            catch (error) {
+                console.error("Error from getUsers in UserRepository", error);
+                return null;
+            }
+        });
+    }
+    // Function for block a specified user
+    blockUser(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield user_model_1.default.findById(userId);
+                if (!user) {
+                    console.error("User not found");
+                    return null;
+                }
+                user.isBlock = true;
+                yield user.save();
+                return user.toObject();
+            }
+            catch (error) {
+                // Handle error
+                console.error("Error from blockUser in UserRepository", error);
                 throw error;
             }
         });

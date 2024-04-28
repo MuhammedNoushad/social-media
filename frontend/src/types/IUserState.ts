@@ -3,11 +3,12 @@ export default interface IUserState {
   username: string;
   firstName: string;
   lastName: string;
+  profileimg?: string;
   email?: string;
-  dob?:string;
-  bio?:string;
-  phone?:number;
-  isBlock?:boolean,
-  isAdmin?:boolean,
-  createdAt: string;
+  dob?: string;
+  bio?: string;
+  phone?: number;
+  isBlock?: boolean;
+  isAdmin?: boolean;
+  createdAt?: string;
 }

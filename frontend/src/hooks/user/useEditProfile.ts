@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 type EditProfileFunction = (
-  userDetails: Omit<IUserState, "password" | "isBlock" | "isAdmin">,
+  userDetails: Omit<IUserState, "password">,
   id: string
 ) => Promise<void>;
 
@@ -21,13 +21,7 @@ const useEditProfile = () => {
       );
       const data = response.data;
 
-      const updatedProfileWithId = {
-        ...data.updatedProfile,
-        id: data.updatedProfile._id,
-      };
-      delete updatedProfileWithId._id;
-
-      dispatch(setUser(updatedProfileWithId));
+      dispatch(setUser(data.updatedProfile));
 
       toast.success("Profile has been updated successfully");
 

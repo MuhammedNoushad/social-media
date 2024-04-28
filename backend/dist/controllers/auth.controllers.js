@@ -123,11 +123,17 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             // Generate jwt cookie
             (0, generateToken_1.default)(userDetails._id, res);
             const responseData = {
-                id: userDetails._id,
-                username: userDetails.username,
-                firstName: userDetails.firstName,
-                lastName: userDetails.lastName,
-                email: userDetails.email,
+                _id: userDetails._id || "",
+                username: userDetails.username || "",
+                firstName: userDetails.firstName || "",
+                lastName: userDetails.lastName || "",
+                email: userDetails.email || "",
+                profileimg: userDetails.profileimg || "",
+                bio: userDetails.bio || "",
+                dob: userDetails.dob || "",
+                phone: userDetails.phone !== undefined ? userDetails.phone : undefined,
+                isBlock: userDetails.isBlock || false,
+                isAdmin: userDetails.isAdmin || false,
             };
             return res.status(200).json({ success: true, responseData });
         }

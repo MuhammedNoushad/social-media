@@ -106,6 +106,9 @@ class UserRepository {
                 if (userDetails.phone) {
                     user.phone = userDetails.phone;
                 }
+                if (userDetails.profileimg) {
+                    user.profileimg = userDetails.profileimg;
+                }
                 yield user.save();
                 return user;
             }

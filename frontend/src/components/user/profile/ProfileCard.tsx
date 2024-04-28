@@ -18,7 +18,7 @@ const ProfileCard: React.FC = () => {
             <div className="relative inline-block shrink-0 rounded-2xl">
               <img
                 className="inline-block shrink-0 rounded-full w-[50px] h-[50px] sm:w-[80px] sm:h-[80px] lg:w-[120px] lg:h-[120px]"
-                src="profilepic.jpg"
+                src={userDetails.profileimg || "avathar.jpeg"}
                 alt="image"
               />
             </div>

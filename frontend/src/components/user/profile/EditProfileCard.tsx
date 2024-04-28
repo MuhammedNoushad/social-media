@@ -1,24 +1,32 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { UploadButton } from "@bytescale/upload-widget-react";
+
+import { RootState } from "../../../store/store";
 import IUserDetails from "../../../types/IUserDetails";
 import useEditProfile from "../../../hooks/user/useEditProfile";
+import axios from "../../../axios/axios";
 
 function EditProfileCard() {
+  const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;
+  const cloudname: string = import.meta.env.VITE_REACT_APP_CLOUDNAME;
+
   const userDetails = useSelector((state: RootState) => state.user);
   const editProfile = useEditProfile();
 
+  const [profilePic, setProfilePic] = useState(userDetails.profileimg);
   const [formData, setFormData] = useState<Omit<IUserDetails, "password">>({
     username: userDetails.username,
     firstName: userDetails.firstName,
     lastName: userDetails.lastName,
+    profileimg: userDetails.profileimg || "",
     bio: userDetails.bio || "",
     dob: userDetails.dob
       ? new Date(userDetails.dob).toISOString().split("T")[0]
       : "",
     phone: userDetails.phone || undefined,
     email: userDetails.email || "",
-    id: userDetails.id,
+    _id: userDetails._id,
     isAdmin: userDetails.isAdmin,
     isBlock: userDetails.isBlock,
   });
@@ -35,8 +43,36 @@ function EditProfileCard() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle form submission here
-    editProfile(formData, userDetails.id);
-    console.log(formData);
+    editProfile(formData, userDetails._id);
+  };
+
+  // Function to handle profile pic upload
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handlePictureUpload = (files: any[]) => {
+    const file = files[0].originalFile.file;
+
+    const profileForm = new FormData();
+    profileForm.append("file", file);
+    profileForm.append("upload_preset", presetKey || "");
+
+    axios({
+      method: "post",
+      url: `https://api.cloudinary.com/v1_1/${cloudname}/image/upload`,
+      data: profileForm,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        console.log("--", res.data.secure_url);
+        const updatedFormData: Omit<IUserDetails, "password"> = {
+          ...formData,
+          profileimg: res.data.secure_url,
+        };
+        setProfilePic(res.data.secure_url);
+        setFormData(updatedFormData);
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -52,17 +88,25 @@ function EditProfileCard() {
                 <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
                   <img
                     className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500"
-                    src="profilepic.jpg"
+                    src={profilePic || "avathar.jpeg"}
                     alt="Bordered avatar"
                   />
 
                   <div className="flex flex-col space-y-5 sm:ml-8">
-                    <button
-                      type="button"
-                      className="py-3.5 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200 "
+                    <UploadButton
+                      options={{ apiKey: "free", maxFileCount: 1 }}
+                      onComplete={handlePictureUpload}
                     >
-                      Change picture
-                    </button>
+                      {({ onClick }) => (
+                        <button
+                          onClick={onClick}
+                          type="button" // Ensure it doesn't submit the form
+                          className="py-3.5 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200"
+                        >
+                          Change picture
+                        </button>
+                      )}
+                    </UploadButton>
                     <button
                       type="button"
                       className="py-3.5 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200 "

@@ -98,6 +98,9 @@ class UserRepository {
       if (userDetails.phone) {
         user.phone = userDetails.phone;
       }
+      if (userDetails.profileimg) {
+        user.profileimg = userDetails.profileimg;
+      }
 
       await user.save();
 

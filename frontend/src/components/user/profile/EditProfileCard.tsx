@@ -6,6 +6,7 @@ import { RootState } from "../../../store/store";
 import IUserDetails from "../../../types/IUserDetails";
 import useEditProfile from "../../../hooks/user/useEditProfile";
 import axios from "../../../axios/axios";
+import useDeleteProfilePic from "../../../hooks/user/useDeleteProfilePic";
 
 function EditProfileCard() {
   const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;
@@ -13,7 +14,9 @@ function EditProfileCard() {
 
   const userDetails = useSelector((state: RootState) => state.user);
   const editProfile = useEditProfile();
+  const { deleteProfilePic, loading } = useDeleteProfilePic();
 
+  const [changePicLoading, setchangePicLoading] = useState<boolean>(false);
   const [profilePic, setProfilePic] = useState(userDetails.profileimg);
   const [formData, setFormData] = useState<Omit<IUserDetails, "password">>({
     username: userDetails.username,
@@ -49,6 +52,8 @@ function EditProfileCard() {
   // Function to handle profile pic upload
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePictureUpload = (files: any[]) => {
+    setchangePicLoading(true);
+
     const file = files[0].originalFile.file;
 
     const profileForm = new FormData();
@@ -64,7 +69,6 @@ function EditProfileCard() {
       },
     })
       .then((res) => {
-        console.log("--", res.data.secure_url);
         const updatedFormData: Omit<IUserDetails, "password"> = {
           ...formData,
           profileimg: res.data.secure_url,
@@ -72,7 +76,19 @@ function EditProfileCard() {
         setProfilePic(res.data.secure_url);
         setFormData(updatedFormData);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setchangePicLoading(false);
+      });
+  };
+
+  const handleDeleteProfilePic = async () => {
+    try {
+      await deleteProfilePic(userDetails._id);
+      setProfilePic("");
+    } catch (error) {
+      console.log("error from handleDeleteProfilePic EditProfileCard", error);
+    }
   };
 
   return (
@@ -103,15 +119,24 @@ function EditProfileCard() {
                           type="button" // Ensure it doesn't submit the form
                           className="py-3.5 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200"
                         >
-                          Change picture
+                          {changePicLoading ? (
+                            <span className="loading loading-spinner"></span>
+                          ) : (
+                            "Change Picture"
+                          )}
                         </button>
                       )}
                     </UploadButton>
                     <button
                       type="button"
+                      onClick={handleDeleteProfilePic}
                       className="py-3.5 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200 "
                     >
-                      Delete picture
+                      {loading ? (
+                        <span className="loading loading-spinner"></span>
+                      ) : (
+                        "Delete Picture"
+                      )}
                     </button>
                   </div>
                 </div>

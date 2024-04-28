@@ -151,5 +151,25 @@ class UserRepository {
             }
         });
     }
+    // Function for deleting the user profile data
+    removeProfileImage(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield user_model_1.default.findById(userId);
+                if (!user) {
+                    console.error("User not found");
+                    return null;
+                }
+                user.profileimg = "";
+                yield user.save();
+                return user.toObject();
+            }
+            catch (error) {
+                // Handle error
+                console.error("Error from deleteUser in UserRepository", error);
+                throw error;
+            }
+        });
+    }
 }
 exports.default = UserRepository;

@@ -143,6 +143,28 @@ class UserRepository {
       throw error;
     }
   }
+
+  // Function for deleting the user profile data
+  async removeProfileImage(userId: string): Promise<IUsers | null> {
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        console.error("User not found");
+        return null;
+      }
+
+      user.profileimg = "";
+
+      await user.save();
+
+      return user.toObject();
+    } catch (error) {
+      // Handle error
+      console.error("Error from deleteUser in UserRepository", error);
+      throw error;
+    }
+  }
 }
 
 export default UserRepository;

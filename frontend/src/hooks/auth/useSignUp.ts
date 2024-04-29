@@ -15,7 +15,6 @@ const useSignUp = (): SignUpFunction => {
       });
       const data = response.data;
 
-      console.log(data.userData);
       if (data.success) {
         toast.success("Otp send successfully");
         // If data has a success field set to true, navigate to the "/confirm-otp" route
@@ -23,8 +22,13 @@ const useSignUp = (): SignUpFunction => {
       } else {
         // Handle other cases where success is not true
       }
-    } catch (error) {
-      console.log("error from useSignUp hook", error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("An error occurred during login.");
+      }
     }
   };
 

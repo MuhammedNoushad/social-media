@@ -1,8 +1,9 @@
 import { useDispatch } from "react-redux";
 import axios from "../../axios/axios";
 import IFormInput from "../../types/IFormInputs";
-import { setUser } from "../../store/feactures/userDetailsSlice"; 
+import { setUser } from "../../store/feactures/userDetailsSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const useLogin = () => {
   const dispatch = useDispatch();
@@ -16,11 +17,16 @@ const useLogin = () => {
       const data = response.data;
 
       if (data.success) {
-        dispatch(setUser(data.responseData)); 
+        dispatch(setUser(data.responseData));
         navigate("/home");
       }
-    } catch (error) {
-      console.log("error from useLogin hook", error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("An error occurred during login.");
+      }
     }
   };
 

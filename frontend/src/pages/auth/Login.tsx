@@ -4,13 +4,15 @@ import { Link } from "react-router-dom";
 
 import useLogin from "../../hooks/auth/useLogin";
 import IFormInput from "../../types/IFormInputs";
+import validateForm from "../../utils/fromValidation";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState<IFormInput>({
+  const [formData, setFormData] = useState<Partial<IFormInput>>({
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState<Partial<IFormInput>>({});
 
   const login = useLogin();
 
@@ -24,12 +26,20 @@ function Login() {
     const { name, value } = e.target;
 
     setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: "" }); 
   };
 
   // Function to handle form submition
   const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login(formData);
+    const validationErrors = validateForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      if (formData.email && formData.password) {
+        login(formData as IFormInput);
+      }
+    }
   };
 
   return (
@@ -75,13 +85,20 @@ function Login() {
               Your Email
             </label>
             <input
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 ${
+                errors.email
+                  ? "border-red-500"
+                  : "border-gray-300 dark:border-gray-700"
+              }`}
               type="email"
               id="your-email"
               name="email"
               placeholder="Enter your email"
               onChange={handleInputChange}
             />
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+            )}
           </div>
 
           <div className="mt-4 relative">
@@ -90,7 +107,11 @@ function Login() {
             </label>
             <div className="relative">
               <input
-                className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                className={`w-full px-4 py-2 pr-10 border rounded-lg focus:outline-none focus:border-blue-500 ${
+                  errors.password
+                    ? "border-red-500"
+                    : "border-gray-300 dark:border-gray-700"
+                }`}
                 type={showPassword ? "text" : "password"}
                 id="your-password"
                 name="password"
@@ -106,6 +127,9 @@ function Login() {
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
               </button>
             </div>
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+            )}
           </div>
 
           <div className="mt-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer">

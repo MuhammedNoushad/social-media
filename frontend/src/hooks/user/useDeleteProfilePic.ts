@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "../../axios/axios";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../store/feactures/userDetailsSlice";
+import { setUser } from "../../store/features/userDetailsSlice";
 
 const useDeleteProfilePic = () => {
   const dispatch = useDispatch();

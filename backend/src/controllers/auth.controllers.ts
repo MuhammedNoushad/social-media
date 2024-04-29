@@ -49,7 +49,7 @@ export const signup = async (req: Request, res: Response) => {
     };
     res.status(200).json({
       success: true,
-      message: "otp sended successfully",
+      message: "OTP sent successfully",
       userData: responseData,
     });
   } catch (error: any) {
@@ -132,7 +132,7 @@ export const login = async (req: Request, res: Response) => {
     // If password correct create new User account
     if (isPasswordCorrect) {
       // Generate jwt cookie
-      generateTokenAndSetCookie(userDetails._id, res);
+      const accessToken = generateTokenAndSetCookie(userDetails._id, res);
 
       const responseData = {
         _id: userDetails._id || "",
@@ -146,6 +146,7 @@ export const login = async (req: Request, res: Response) => {
         phone: userDetails.phone !== undefined ? userDetails.phone : undefined,
         isBlock: userDetails.isBlock || false,
         isAdmin: userDetails.isAdmin || false,
+        accessToken,
       };
       return res.status(200).json({ success: true, responseData });
     } else {

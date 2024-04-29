@@ -51,7 +51,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         };
         res.status(200).json({
             success: true,
-            message: "otp sended successfully",
+            message: "OTP sent successfully",
             userData: responseData,
         });
     }
@@ -121,7 +121,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         // If password correct create new User account
         if (isPasswordCorrect) {
             // Generate jwt cookie
-            (0, generateToken_1.default)(userDetails._id, res);
+            const accessToken = (0, generateToken_1.default)(userDetails._id, res);
             const responseData = {
                 _id: userDetails._id || "",
                 username: userDetails.username || "",
@@ -134,6 +134,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 phone: userDetails.phone !== undefined ? userDetails.phone : undefined,
                 isBlock: userDetails.isBlock || false,
                 isAdmin: userDetails.isAdmin || false,
+                accessToken,
             };
             return res.status(200).json({ success: true, responseData });
         }

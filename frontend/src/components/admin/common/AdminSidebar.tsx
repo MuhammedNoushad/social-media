@@ -6,10 +6,18 @@ import {
   BiMessageSquare,
   BiLogOut,
 } from "react-icons/bi";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { clearToken } from "../../../store/features/tokenSlice";
 
 const AdminSidebar: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(clearToken());
+    navigate("/" , { replace: true });
+  };
 
   return (
     <div className="min-h-screen flex flex-row bg-gray-100">
@@ -43,9 +51,7 @@ const AdminSidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiUser />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
-                Users
-              </span>
+              <span className="hidden lg:block text-sm font-medium">Users</span>
             </a>
           </li>
           <li>
@@ -72,7 +78,7 @@ const AdminSidebar: React.FC = () => {
               <span className="hidden lg:block text-sm font-medium">Ads</span>
             </a>
           </li>
-          <li>
+          <li onClick={handleLogout}>
             <a
               href="#"
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"

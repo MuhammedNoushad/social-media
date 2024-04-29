@@ -14,5 +14,6 @@ const generateTokenAndSetCookes = (userId, res) => {
         sameSite: "strict",
         secure: process.env.NODE_ENV !== "develepment",
     });
+    return token;
 };
 exports.default = generateTokenAndSetCookes;

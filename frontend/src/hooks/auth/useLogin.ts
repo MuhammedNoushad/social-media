@@ -1,9 +1,10 @@
 import { useDispatch } from "react-redux";
 import axios from "../../axios/axios";
 import IFormInput from "../../types/IFormInputs";
-import { setUser } from "../../store/feactures/userDetailsSlice";
+import { setUser } from "../../store/features/userDetailsSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { addToken } from "../../store/features/tokenSlice";
 
 const useLogin = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,12 @@ const useLogin = () => {
 
       if (data.success) {
         dispatch(setUser(data.responseData));
-        navigate("/home");
+        dispatch(addToken(data.responseData.accessToken));
+        if (data.responseData.isAdmin) {
+          navigate("/admin", { replace: true });
+        } else {
+          navigate("/home", { replace: true });
+        }
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

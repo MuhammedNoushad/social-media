@@ -1,10 +1,27 @@
-import React from 'react';
-import { BiHome, BiSearch, BiCompass, BiChat, BiBell, BiAddToQueue, BiUser, BiLogOut } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import {
+  BiHome,
+  BiSearch,
+  BiCompass,
+  BiChat,
+  BiBell,
+  BiAddToQueue,
+  BiUser,
+  BiLogOut,
+} from "react-icons/bi";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearToken } from "../../../store/features/tokenSlice";
 
 const Sidebar: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const navigate=useNavigate()
+  // Function to handle logout
+  const handleLogout = () => {
+    dispatch(clearToken());
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen flex flex-row bg-gray-100">
@@ -36,7 +53,9 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiSearch />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Search</span>
+              <span className="hidden lg:block text-sm font-medium">
+                Search
+              </span>
             </a>
           </li>
           <li>
@@ -47,7 +66,9 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiCompass />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Explore</span>
+              <span className="hidden lg:block text-sm font-medium">
+                Explore
+              </span>
             </a>
           </li>
           <li>
@@ -58,7 +79,9 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiChat />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Message</span>
+              <span className="hidden lg:block text-sm font-medium">
+                Message
+              </span>
             </a>
           </li>
           <li>
@@ -69,15 +92,19 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiBell />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Notifications</span>
+              <span className="hidden lg:block text-sm font-medium">
+                Notifications
+              </span>
               <span className="hidden lg:block ml-auto mr-6 text-sm bg-red-100 rounded-full px-3 py-px text-red-500">
                 5
               </span>
             </a>
           </li>
-          <li onClick={()=>{
-            navigate('/profile')
-          }}>
+          <li
+            onClick={() => {
+              navigate("/profile");
+            }}
+          >
             <a
               href="#"
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
@@ -85,12 +112,16 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiAddToQueue />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Create</span>
+              <span className="hidden lg:block text-sm font-medium">
+                Create
+              </span>
             </a>
           </li>
-          <li onClick={()=>{
-            navigate('/profile')
-          }}>
+          <li
+            onClick={() => {
+              navigate("/profile");
+            }}
+          >
             <a
               href="#"
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
@@ -98,10 +129,12 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiUser />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Profile</span>
+              <span className="hidden lg:block text-sm font-medium">
+                Profile
+              </span>
             </a>
           </li>
-          <li>
+          <li onClick={handleLogout}>
             <a
               href="#"
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
@@ -109,13 +142,15 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiLogOut />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Logout</span>
+              <span className="hidden lg:block text-sm font-medium">
+                Logout
+              </span>
             </a>
           </li>
         </ul>
       </div>
     </div>
   );
-}
+};
 
 export default Sidebar;

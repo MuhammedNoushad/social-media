@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import axios from "../../axios/axios";
 import IUserState from "../../types/IUserState";
-import { setUser } from "../../store/feactures/userDetailsSlice";
+import { setUser } from "../../store/features/userDetailsSlice";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 

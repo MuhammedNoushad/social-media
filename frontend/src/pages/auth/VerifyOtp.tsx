@@ -5,13 +5,25 @@ import useVerifyOtp from "../../hooks/auth/useVerifyOtp";
 function ConfirmOtp() {
   const location = useLocation();
   const userData = location.state?.userData;
-
   const verifyOtp = useVerifyOtp();
-
   const [otp, setOtp] = useState<string>("");
+  const [otpError, setOtpError] = useState<string>("");
 
   const submitOtpHandler = () => {
-    verifyOtp(otp, userData);
+    setOtpError("");
+    const trimmedOtp = otp.trim();
+
+    if (trimmedOtp.length === 0) {
+      setOtpError("OTP cannot be empty");
+      return;
+    }
+
+    if (trimmedOtp.includes(" ")) {
+      setOtpError("OTP cannot contain spaces");
+      return;
+    }
+
+    verifyOtp(trimmedOtp, userData);
   };
 
   return (
@@ -34,14 +46,21 @@ function ConfirmOtp() {
           <div className="flex flex-col max-w-md space-y-5">
             <input
               type="text"
-              placeholder="otp"
-              className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-gray-300 rounded-lg font-medium placeholder:font-normal"
+              placeholder="OTP"
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 ${
+                otpError
+                  ? "border-red-500"
+                  : "border-gray-300 dark:border-gray-700"
+              }`}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setOtp(e.target.value);
               }}
             />
+            {otpError && (
+              <p className="mt-1 text-sm text-red-500">{otpError}</p>
+            )}
             <button
-              className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium  bg-gray-600 text-white"
+              className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium bg-gray-600 text-white"
               onClick={submitOtpHandler}
             >
               Confirm

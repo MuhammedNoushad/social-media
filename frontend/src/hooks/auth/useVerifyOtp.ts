@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import axios from "../../axios/axios";
 import IFormInput from "../../types/IFormInputs";
 
@@ -16,7 +17,7 @@ const useVerifyOtp = (): VerifyOtpFunction => {
       }
     } catch (error) {
       console.log("error from useConfirmOtp", error);
-      throw error; // Optionally rethrow the error for the caller to handle
+      toast.error("Invalid OTP");
     }
   };
 

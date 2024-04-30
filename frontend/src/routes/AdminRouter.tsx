@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import UserManagement from "../pages/admin/profile/UserManagement";
 import NotFoundPage from "../pages/common/NotFoundPage";
-import PrivateRoute from "./privateRoute";
+import PrivateRoute from "./ProtectedRoute";
 import AdminHome from "../pages/admin/home/AdminHome";
 
 function AdminRouter() {
@@ -11,7 +11,7 @@ function AdminRouter() {
       <Route
         path="/"
         element={
-          <PrivateRoute>
+          <PrivateRoute role="admin">
             <AdminHome />
           </PrivateRoute>
         }
@@ -19,7 +19,7 @@ function AdminRouter() {
       <Route
         path="/user-management"
         element={
-          <PrivateRoute>
+          <PrivateRoute role="admin">
             <UserManagement />
           </PrivateRoute>
         }

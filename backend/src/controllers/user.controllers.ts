@@ -3,7 +3,7 @@ import UserRepository from "../repositories/UserRepository";
 
 const userRepository = new UserRepository();
 
-// Function for updating user profile 
+// Function for updating user profile
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const userDetails = req.body;
@@ -25,17 +25,16 @@ export const updateProfile = async (req: Request, res: Response) => {
   }
 };
 
-// Function for deleting the profile picture of user 
+// Function for deleting the profile picture of user
 export const deleteProfilePic = async (req: Request, res: Response) => {
   try {
-    const {userId} = req.params;
+    const { userId } = req.params;
 
-    const updatedProfile=await userRepository.removeProfileImage(userId)
+    const updatedProfile = await userRepository.removeProfileImage(userId);
 
-    if(updatedProfile){
-      res.status(200).json({success:true,updatedProfile})
+    if (updatedProfile) {
+      res.status(200).json({ success: true, updatedProfile });
     }
-
   } catch (error) {
     // Handle errors
     console.error("Error from delteProfilePic user controller", error);

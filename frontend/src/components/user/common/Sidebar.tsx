@@ -29,7 +29,7 @@ const Sidebar: React.FC = () => {
         <div className="flex items-center justify-center h-20 shadow-md">
           <img
             className="rounded-md h-11 mt-4"
-            src="logo.webp"
+            src="/public/logo.webp"
             alt="site logo"
           />
         </div>

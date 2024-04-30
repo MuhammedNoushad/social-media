@@ -16,7 +16,7 @@ const AdminSidebar: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(clearToken());
-    navigate("/" , { replace: true });
+    navigate("/");
   };
 
   return (

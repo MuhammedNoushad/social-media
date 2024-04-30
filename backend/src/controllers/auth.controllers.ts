@@ -138,6 +138,7 @@ export const login = async (req: Request, res: Response) => {
           userDetails._id ? userDetails._id : "",
           res
         );
+        const role = userDetails.isAdmin ? "admin" : "user";
 
         const responseData = {
           _id: userDetails._id || "",
@@ -153,6 +154,7 @@ export const login = async (req: Request, res: Response) => {
           isBlock: userDetails.isBlock || false,
           isAdmin: userDetails.isAdmin || false,
           accessToken,
+          role,
         };
         return res.status(200).json({ success: true, responseData });
       } else {
@@ -194,6 +196,9 @@ export const googleLogin = async (req: Request, res: Response) => {
         user._id ? user._id : "",
         res
       );
+
+      const role = user.isAdmin ? "admin" : "user";
+
       const responseData = {
         _id: user._id || "",
         username: user.username || "",
@@ -207,6 +212,7 @@ export const googleLogin = async (req: Request, res: Response) => {
         isBlock: user.isBlock || false,
         isAdmin: user.isAdmin || false,
         accessToken,
+        role,
       };
       return res.status(200).json({ success: true, responseData });
     } else {

@@ -6,17 +6,60 @@ import UserProfile from "../pages/user/profile/UserProfile";
 import UserHome from "../pages/user/home/UserHome";
 import UserEditProfile from "../pages/user/profile/UserEditProfile";
 import NotFoundPage from "../pages/common/NotFoundPage";
-import PrivateRoute from "./privateRoute";
+import PrivateRoute from "./ProtectedRoute";
+import ProtectedAuthRoute from "./ProtectedAuthRoute";
 
 function UserRouter() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/verify-otp" element={<ConfirmOtp />} />
-      <Route path="/home" element={<PrivateRoute><UserHome /></PrivateRoute>} />
-      <Route path="/profile" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
-      <Route path="/edit-profile" element={<PrivateRoute><UserEditProfile /></PrivateRoute>} />
+      <Route
+        path="/"
+        element={
+          <ProtectedAuthRoute>
+            <Login />
+          </ProtectedAuthRoute>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <ProtectedAuthRoute>
+            <SignUp />
+          </ProtectedAuthRoute>
+        }
+      />
+      <Route
+        path="/verify-otp"
+        element={
+          <ProtectedAuthRoute>
+            <ConfirmOtp />
+          </ProtectedAuthRoute>
+        }
+      />
+      <Route
+        path="/home"
+        element={
+          <PrivateRoute role="user">
+            <UserHome />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute role="user">
+            <UserProfile />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/edit-profile"
+        element={
+          <PrivateRoute role="user">
+            <UserEditProfile />
+          </PrivateRoute>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

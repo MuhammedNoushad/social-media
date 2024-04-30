@@ -30,11 +30,16 @@ const useGoogleLogin = () => {
 
       if (data) {
         dispatch(setUser(data.responseData));
-        dispatch(addToken(data.responseData.accessToken));
+        dispatch(
+          addToken({
+            token: data.responseData.accessToken,
+            role: data.responseData.role,
+          })
+        );
         if (data.responseData.isAdmin) {
-          navigate("/admin", { replace: true });
+          navigate("/admin");
         } else {
-          navigate("/home", { replace: true });
+          navigate("/home");
         }
       }
 

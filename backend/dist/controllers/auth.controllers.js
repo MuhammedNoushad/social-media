@@ -124,6 +124,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             if (isPasswordCorrect) {
                 // Generate jwt cookie
                 const accessToken = (0, generateToken_1.default)(userDetails._id ? userDetails._id : "", res);
+                const role = userDetails.isAdmin ? "admin" : "user";
                 const responseData = {
                     _id: userDetails._id || "",
                     username: userDetails.username || "",
@@ -137,6 +138,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     isBlock: userDetails.isBlock || false,
                     isAdmin: userDetails.isAdmin || false,
                     accessToken,
+                    role,
                 };
                 return res.status(200).json({ success: true, responseData });
             }
@@ -175,6 +177,7 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const user = yield userRepository.findUser(email);
         if (user) {
             const accessToken = (0, generateToken_1.default)(user._id ? user._id : "", res);
+            const role = user.isAdmin ? "admin" : "user";
             const responseData = {
                 _id: user._id || "",
                 username: user.username || "",
@@ -188,6 +191,7 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 isBlock: user.isBlock || false,
                 isAdmin: user.isAdmin || false,
                 accessToken,
+                role,
             };
             return res.status(200).json({ success: true, responseData });
         }

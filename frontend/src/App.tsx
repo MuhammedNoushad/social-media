@@ -6,10 +6,11 @@ import AdminRouter from "./routes/AdminRouter";
 function App() {
   return (
     <Router>
-        <Routes>
-          <Route path="/*" element={<UserRouter />} />
-          <Route path="/admin/*" element={<AdminRouter />} />
-        </Routes>
+      <Routes>
+        <Route path="/*" element={<UserRouter />} />
+        <Route path="/admin/*" element={<AdminRouter />} />
+        <Route path="/forbidden" element={<div>Forbidden</div>} />
+      </Routes>
     </Router>
   );
 }

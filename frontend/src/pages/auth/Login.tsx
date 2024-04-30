@@ -50,7 +50,6 @@ function Login() {
   const handleGoogleSignIn = (credentialResponse: { credential?: string }) => {
     if (credentialResponse?.credential) {
       const decoded = jwtDecode(credentialResponse.credential);
-      console.log(decoded);
       const { email, given_name, name } = decoded as {
         email: string;
         given_name: string;

@@ -10,7 +10,7 @@ const ProfileCard: React.FC = () => {
   const userDetails = useSelector((state: RootState) => state.user);
 
   return (
-    <div className="relative w-auto min-w-0 mb-6 break-words border border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30 draggable max-h-[33vh] ">
+    <div className="relative mt-6 w-auto min-w-0 mb-6 break-words border border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30 draggable max-h-[33vh] ">
       {/* card body */}
       <div className="px-9 py-9 flex flex-col items-center justify-center h-full">
         <div className="flex flex-wrap mb-6 xl:flex-nowrap">

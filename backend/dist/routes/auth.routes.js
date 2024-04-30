@@ -12,4 +12,5 @@ authRoute.post("/signup", auth_controllers_js_1.signup);
 authRoute.post("/verify-otp", auth_controllers_js_1.verifyotp);
 authRoute.post("/login", auth_controllers_js_1.login);
 authRoute.post("/logout", auth_controllers_js_1.logout);
+authRoute.post('/google-login', auth_controllers_js_1.googleLogin);
 exports.default = authRoute;

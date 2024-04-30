@@ -12,7 +12,6 @@ const tokenSlice = createSlice({
   reducers: {
     addToken: (state: TokenState, action: PayloadAction<string>) => {
       if (action.payload) {
-        console.log(action.payload, "action.payload");
         return { ...state, token: action.payload };
       }
     },

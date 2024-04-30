@@ -1,12 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
+import useGoogleLogin from "../../hooks/auth/useGoogleLogin";
 import useLogin from "../../hooks/auth/useLogin";
 import IFormInput from "../../types/IFormInputs";
 import validateForm from "../../utils/fromValidation";
 
 function Login() {
+  const googleLogin = useGoogleLogin();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<Partial<IFormInput>>({
     email: "",
@@ -26,10 +30,10 @@ function Login() {
     const { name, value } = e.target;
 
     setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: "" }); 
+    setErrors({ ...errors, [name]: "" });
   };
 
-  // Function to handle form submition
+  // Function to handle form submission
   const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validationErrors = validateForm(formData);
@@ -39,6 +43,25 @@ function Login() {
       if (formData.email && formData.password) {
         login(formData as IFormInput);
       }
+    }
+  };
+
+  // Function to handle google signin
+  const handleGoogleSignIn = (credentialResponse: { credential?: string }) => {
+    if (credentialResponse?.credential) {
+      const decoded = jwtDecode(credentialResponse.credential);
+      console.log(decoded);
+      const { email, given_name, name } = decoded as {
+        email: string;
+        given_name: string;
+        name: string;
+      };
+      googleLogin({
+        email,
+        firstName: name?.split(" ")[0],
+        lastName: name?.split(" ")[1],
+        given_name,
+      });
     }
   };
 
@@ -60,25 +83,13 @@ function Login() {
               <span className="text-blue-500 hover:underline">Sign up</span>{" "}
             </Link>
           </p>
-          <div className="mt-5 ">
-            <button className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
-              <img
-                className="w-6 h-6"
-                src="google logo.svg"
-                loading="lazy"
-                alt="google logo"
-              />
-              <span>Login with Google</span>
-            </button>
-          </div>
-
+          <GoogleLogin onSuccess={handleGoogleSignIn} />
           <div className="relative flex py-5 items-center">
             <div className="flex-grow border-t-2 border-gray-400"></div>
             <span className="flex-shrink mx-4 text-gray-400">OR</span>
             <div className="flex-grow border-t-2 border-gray-400"></div>
           </div>
         </div>
-
         <form className="w-full" onSubmit={formSubmitHandler}>
           <div className="mt-5">
             <label className="block mb-2 text-sm" htmlFor="your-email">
@@ -100,7 +111,6 @@ function Login() {
               <p className="mt-1 text-sm text-red-500">{errors.email}</p>
             )}
           </div>
-
           <div className="mt-4 relative">
             <label className="block mb-2 text-sm" htmlFor="your-password">
               Your Password
@@ -131,11 +141,9 @@ function Login() {
               <p className="mt-1 text-sm text-red-500">{errors.password}</p>
             )}
           </div>
-
           <div className="mt-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer">
             Forgot your password?
           </div>
-
           <div className="flex justify-center">
             {" "}
             <button

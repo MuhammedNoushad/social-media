@@ -12,12 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.login = exports.verifyotp = exports.signup = void 0;
+exports.googleLogin = exports.logout = exports.login = exports.verifyotp = exports.signup = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const UserRepository_1 = __importDefault(require("../repositories/UserRepository"));
 const sendMail_1 = require("../utils/sendMail");
 const OtpRepository_1 = __importDefault(require("../repositories/OtpRepository"));
 const generateToken_1 = __importDefault(require("../utils/generateToken"));
+const generatePassword_1 = __importDefault(require("../utils/generatePassword"));
 // Creating instance of Repositories
 const userRepository = new UserRepository_1.default();
 const otpRepository = new OtpRepository_1.default();
@@ -117,30 +118,32 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(404).json({ error: "User not found" });
         }
         // Comparing the password that entered and the hashed password from the database
-        const isPasswordCorrect = yield bcrypt_1.default.compare(password, userDetails === null || userDetails === void 0 ? void 0 : userDetails.password);
-        // If password correct create new User account
-        if (isPasswordCorrect) {
-            // Generate jwt cookie
-            const accessToken = (0, generateToken_1.default)(userDetails._id, res);
-            const responseData = {
-                _id: userDetails._id || "",
-                username: userDetails.username || "",
-                firstName: userDetails.firstName || "",
-                lastName: userDetails.lastName || "",
-                email: userDetails.email || "",
-                profileimg: userDetails.profileimg || "",
-                bio: userDetails.bio || "",
-                dob: userDetails.dob || "",
-                phone: userDetails.phone !== undefined ? userDetails.phone : undefined,
-                isBlock: userDetails.isBlock || false,
-                isAdmin: userDetails.isAdmin || false,
-                accessToken,
-            };
-            return res.status(200).json({ success: true, responseData });
-        }
-        else {
-            // If password is wrong show incorrect password
-            return res.status(400).json({ error: "Incorrect password" });
+        if (userDetails && userDetails.password) {
+            const isPasswordCorrect = yield bcrypt_1.default.compare(password, userDetails.password);
+            // If password correct create new User account
+            if (isPasswordCorrect) {
+                // Generate jwt cookie
+                const accessToken = (0, generateToken_1.default)(userDetails._id ? userDetails._id : "", res);
+                const responseData = {
+                    _id: userDetails._id || "",
+                    username: userDetails.username || "",
+                    firstName: userDetails.firstName || "",
+                    lastName: userDetails.lastName || "",
+                    email: userDetails.email || "",
+                    profileimg: userDetails.profileimg || "",
+                    bio: userDetails.bio || "",
+                    dob: userDetails.dob || "",
+                    phone: userDetails.phone !== undefined ? userDetails.phone : undefined,
+                    isBlock: userDetails.isBlock || false,
+                    isAdmin: userDetails.isAdmin || false,
+                    accessToken,
+                };
+                return res.status(200).json({ success: true, responseData });
+            }
+            else {
+                // If password is wrong show incorrect password
+                return res.status(400).json({ error: "Incorrect password" });
+            }
         }
     }
     catch (error) {
@@ -165,3 +168,49 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.logout = logout;
+// Controller for google login
+const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, firstName, lastName, username } = req.body;
+        const user = yield userRepository.findUser(email);
+        if (user) {
+            const accessToken = (0, generateToken_1.default)(user._id ? user._id : "", res);
+            const responseData = {
+                _id: user._id || "",
+                username: user.username || "",
+                firstName: user.firstName || "",
+                lastName: user.lastName || "",
+                email: user.email || "",
+                profileimg: user.profileimg || "",
+                bio: user.bio || "",
+                dob: user.dob || "",
+                phone: user.phone !== undefined ? user.phone : undefined,
+                isBlock: user.isBlock || false,
+                isAdmin: user.isAdmin || false,
+                accessToken,
+            };
+            return res.status(200).json({ success: true, responseData });
+        }
+        else {
+            const password = (0, generatePassword_1.default)();
+            const hashsedPassword = yield bcrypt_1.default.hash(password, 10);
+            const newUser = {
+                email,
+                username,
+                firstName,
+                lastName,
+                password: hashsedPassword,
+            };
+            const createdUser = yield userRepository.createNewUser(newUser);
+            createdUser &&
+                res
+                    .status(200)
+                    .json({ success: true, message: "User created successfully" });
+        }
+    }
+    catch (error) {
+        console.error("Error from google login controller", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.googleLogin = googleLogin;

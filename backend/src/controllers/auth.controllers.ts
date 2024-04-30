@@ -6,6 +6,7 @@ import { sendEmailWithVerification } from "../utils/sendMail";
 import OtpRepository from "../repositories/OtpRepository";
 import IUsers from "../interfaces/IUsers";
 import generateTokenAndSetCookie from "../utils/generateToken";
+import generatePassword from "../utils/generatePassword";
 
 // Creating instance of Repositories
 const userRepository = new UserRepository();
@@ -124,34 +125,40 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // Comparing the password that entered and the hashed password from the database
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      userDetails?.password
-    );
+    if (userDetails && userDetails.password) {
+      const isPasswordCorrect = await bcrypt.compare(
+        password,
+        userDetails.password
+      );
 
-    // If password correct create new User account
-    if (isPasswordCorrect) {
-      // Generate jwt cookie
-      const accessToken = generateTokenAndSetCookie(userDetails._id, res);
+      // If password correct create new User account
+      if (isPasswordCorrect) {
+        // Generate jwt cookie
+        const accessToken = generateTokenAndSetCookie(
+          userDetails._id ? userDetails._id : "",
+          res
+        );
 
-      const responseData = {
-        _id: userDetails._id || "",
-        username: userDetails.username || "",
-        firstName: userDetails.firstName || "",
-        lastName: userDetails.lastName || "",
-        email: userDetails.email || "",
-        profileimg: userDetails.profileimg || "",
-        bio: userDetails.bio || "",
-        dob: userDetails.dob || "",
-        phone: userDetails.phone !== undefined ? userDetails.phone : undefined,
-        isBlock: userDetails.isBlock || false,
-        isAdmin: userDetails.isAdmin || false,
-        accessToken,
-      };
-      return res.status(200).json({ success: true, responseData });
-    } else {
-      // If password is wrong show incorrect password
-      return res.status(400).json({ error: "Incorrect password" });
+        const responseData = {
+          _id: userDetails._id || "",
+          username: userDetails.username || "",
+          firstName: userDetails.firstName || "",
+          lastName: userDetails.lastName || "",
+          email: userDetails.email || "",
+          profileimg: userDetails.profileimg || "",
+          bio: userDetails.bio || "",
+          dob: userDetails.dob || "",
+          phone:
+            userDetails.phone !== undefined ? userDetails.phone : undefined,
+          isBlock: userDetails.isBlock || false,
+          isAdmin: userDetails.isAdmin || false,
+          accessToken,
+        };
+        return res.status(200).json({ success: true, responseData });
+      } else {
+        // If password is wrong show incorrect password
+        return res.status(400).json({ error: "Incorrect password" });
+      }
     }
   } catch (error) {
     // Handle errors
@@ -171,6 +178,57 @@ export const logout = async (req: Request, res: Response) => {
   } catch (error) {
     // Handle errors
     console.error("Error from logout controller", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Controller for google login
+export const googleLogin = async (req: Request, res: Response) => {
+  try {
+    const { email, firstName, lastName, username } = req.body;
+
+    const user = await userRepository.findUser(email);
+
+    if (user) {
+      const accessToken = generateTokenAndSetCookie(
+        user._id ? user._id : "",
+        res
+      );
+      const responseData = {
+        _id: user._id || "",
+        username: user.username || "",
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        profileimg: user.profileimg || "",
+        bio: user.bio || "",
+        dob: user.dob || "",
+        phone: user.phone !== undefined ? user.phone : undefined,
+        isBlock: user.isBlock || false,
+        isAdmin: user.isAdmin || false,
+        accessToken,
+      };
+      return res.status(200).json({ success: true, responseData });
+    } else {
+      const password = generatePassword();
+      const hashsedPassword = await bcrypt.hash(password, 10);
+
+      const newUser = {
+        email,
+        username,
+        firstName,
+        lastName,
+        password: hashsedPassword,
+      } as IUsers;
+
+      const createdUser = await userRepository.createNewUser(newUser);
+      createdUser &&
+        res
+          .status(200)
+          .json({ success: true, message: "User created successfully" });
+    }
+  } catch (error) {
+    console.error("Error from google login controller", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

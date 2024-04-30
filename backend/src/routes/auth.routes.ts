@@ -1,6 +1,7 @@
 import express from "express";
 
 import {
+  googleLogin,
   login,
   logout,
   signup,
@@ -15,5 +16,6 @@ authRoute.post("/signup", signup);
 authRoute.post("/verify-otp", verifyotp);
 authRoute.post("/login", login);
 authRoute.post("/logout", logout);
+authRoute.post('/google-login', googleLogin)
 
 export default authRoute;

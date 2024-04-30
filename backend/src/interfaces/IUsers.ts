@@ -1,12 +1,12 @@
 import { Document } from "mongoose";
 
 interface IUsers extends Document {
-  id:string;
+  _id?: string;
   username: string;
   email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
   bio?: string;
   dob?: string;
   profileimg?: string;

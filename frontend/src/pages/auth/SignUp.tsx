@@ -1,11 +1,16 @@
 import React, { FormEvent, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+
+import useGoogleLogin from "../../hooks/auth/useGoogleLogin";
 import IFormInput from "../../types/IFormInputs";
 import useSignUp from "../../hooks/auth/useSignUp";
 import validateForm from "../../utils/fromValidation";
 
 function Login() {
+  const googleLogin = useGoogleLogin();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<IFormInput>({
     username: "",
@@ -38,6 +43,25 @@ function Login() {
     }
   };
 
+  // Function to handle google signin
+  const handleGoogleSignIn = (credentialResponse: { credential?: string }) => {
+    if (credentialResponse?.credential) {
+      const decoded = jwtDecode(credentialResponse.credential);
+      console.log(decoded);
+      const { email, given_name, name } = decoded as {
+        email: string;
+        given_name: string;
+        name: string;
+      };
+      googleLogin({
+        email,
+        firstName: name?.split(" ")[0],
+        lastName: name?.split(" ")[1],
+        given_name,
+      });
+    }
+  };
+
   return (
     <div
       className="p-4 min-h-screen flex flex-col items-center justify-center bg-cover bg-center font-poppins"
@@ -56,17 +80,7 @@ function Login() {
               <span className="text-blue-500 hover:underline">Login</span>{" "}
             </Link>
           </p>
-          <div className="mt-5 ">
-            <button className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
-              <img
-                className="w-6 h-6"
-                src="google logo.svg"
-                loading="lazy"
-                alt="google logo"
-              />
-              <span>Signup with Google</span>
-            </button>
-          </div>
+          <GoogleLogin onSuccess={handleGoogleSignIn} />
 
           <div className="relative flex py-5 items-center">
             <div className="flex-grow border-t-2 border-gray-400"></div>

@@ -34,8 +34,8 @@ function AuthModel({
     if (page === "signup") {
       return (
         <>
-          Create an account{" "}
-          <Link to="/" className="text-blue-500 hover:underline">
+          Already have an account?{" "}
+          <Link to="/" className="ml-2 text-blue-500 hover:underline">
             Log in
           </Link>
         </>
@@ -43,8 +43,8 @@ function AuthModel({
     } else if (page === "login") {
       return (
         <>
-          Welcome back!{" "}
-          <Link to="/signup" className="text-blue-500 hover:underline">
+          Create an account!{" "}
+          <Link to="/signup" className="ml-2 text-blue-500 hover:underline">
             Sign up
           </Link>
         </>

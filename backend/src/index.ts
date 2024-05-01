@@ -8,6 +8,7 @@ import authRoute from './routes/auth.routes'
 import connectToMongoDB from "./db/connectToMongoDB";
 import userRoute from "./routes/user.routes";
 import adminRoute from "./routes/admin.routes";
+import postRoute from "./routes/post.routes";
 
 
 dotenv.config()
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/admin", adminRoute);
+app.use('/api/posts',postRoute)
 
 // Connect to MongoDB and start the server
 connectToMongoDB()

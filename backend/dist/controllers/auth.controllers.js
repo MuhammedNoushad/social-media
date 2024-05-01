@@ -225,7 +225,7 @@ const sendOtpForResetPassword = (req, res) => __awaiter(void 0, void 0, void 0, 
         if (!isUserExist) {
             return res
                 .status(400)
-                .json({ success: false, message: "User not found" });
+                .json({ error: "User not found" });
         }
         (0, sendMail_1.sendEmailForForgotPassword)(email);
         return res
@@ -244,7 +244,7 @@ const verifyotpForgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, 
         const { email, otp } = req.body;
         const otpDetails = yield otpRepository.findOtpByEmail(email);
         if (!otpDetails) {
-            return res.status(400).json({ success: false, message: "Otp not found" });
+            return res.status(400).json({ error: "Otp not found" });
         }
         const isValidOtp = yield bcrypt_1.default.compare(otp, otpDetails.otp);
         if (isValidOtp) {
@@ -253,7 +253,7 @@ const verifyotpForgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, 
                 .json({ success: true, message: "Otp verified successfully", email });
         }
         else {
-            return res.status(400).json({ success: false, message: "Invalid Otp" });
+            return res.status(400).json({ error: "Invalid Otp" });
         }
     }
     catch (error) {
@@ -269,7 +269,7 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (password !== confirmPassword) {
             return res
                 .status(400)
-                .json({ success: false, message: "Password not matched" });
+                .json({ error: "Password not matched" });
         }
         const hashPassword = yield bcrypt_1.default.hash(password, 10);
         const updtedUser = yield userRepository.updatePassword(email, hashPassword);

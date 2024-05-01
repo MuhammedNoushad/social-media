@@ -1,12 +1,16 @@
 import { useState } from "react";
 // import { useLocation } from "react-router-dom";
 import AuthModel from "../../components/common/AuthModel"; // Import AuthModel component
+import { useLocation } from "react-router-dom";
+import useVerifyResetPasswordOtp from "../../hooks/auth/useVerifyResetPasswordOtp";
 
 function ConfirmOtpForgotPassword() {
-  //   const location = useLocation();
-  //   const userData = location.state?.userData;
+  const { verifyResetPasswordOtp } = useVerifyResetPasswordOtp();
   const [otp, setOtp] = useState<string>("");
   const [otpError, setOtpError] = useState<string>("");
+  const location = useLocation();
+
+  const email = location.state?.email;
 
   const submitOtpHandler = () => {
     setOtpError("");
@@ -21,6 +25,9 @@ function ConfirmOtpForgotPassword() {
       setOtpError("OTP cannot contain spaces");
       return;
     }
+
+    // Assuming otp is valid, proceed to next step
+    verifyResetPasswordOtp(trimmedOtp, email);
   };
 
   return (

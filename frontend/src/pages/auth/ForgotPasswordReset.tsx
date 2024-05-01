@@ -1,8 +1,13 @@
 // ForgotPasswordResetPage.jsx
 import { useState } from "react";
 import AuthModel from "../../components/common/AuthModel";
+import useResetPassword from "../../hooks/auth/useResetPassword";
+import { useLocation } from "react-router-dom";
 
 function ForgotPasswordResetPage() {
+  const location = useLocation();
+  const email = location.state?.email;
+  const { resetPassword } = useResetPassword();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -14,9 +19,18 @@ function ForgotPasswordResetPage() {
 
     // Validate password and confirm password here
     // Ensure password meets requirements (e.g., length, complexity)
-    // Ensure password and confirm password match
+    if (password.trim().length === 0) {
+      setPasswordError("Password is required");
+      return;
+      // Ensure password and confirm password match
+    } else if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match");
+    }
 
     // If validation passes, proceed with password reset
+    else {
+      resetPassword(email, password, confirmPassword);
+    }
   };
 
   return (

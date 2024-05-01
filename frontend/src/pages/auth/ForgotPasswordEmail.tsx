@@ -1,17 +1,28 @@
 // ForgotPasswordEmailPage.jsx
 import { useState } from "react";
 import AuthModel from "../../components/common/AuthModel";
+import useSendMailForgotPassword from "../../hooks/auth/useSendMailForgotPassword";
 
 function ForgotPasswordEmailPage() {
+  const { sendMailForgotPassword } = useSendMailForgotPassword();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
   const submitEmailHandler = () => {
     setEmailError("");
     // Validate email format here if needed
+    const emailRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    if (email.trim().length === 0) {
+      setEmailError("Please enter your email address");
+      return;
+    } else if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
 
     // Assuming email is valid, proceed to next step
-    // Redirect to ForgotPasswordResetPage with email in location state
+    sendMailForgotPassword(email);
   };
 
   return (

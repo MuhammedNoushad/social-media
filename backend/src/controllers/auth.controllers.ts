@@ -252,7 +252,7 @@ export const sendOtpForResetPassword = async (req: Request, res: Response) => {
     if (!isUserExist) {
       return res
         .status(400)
-        .json({ success: false, message: "User not found" });
+        .json({ error: "User not found" });
     }
 
     sendEmailForForgotPassword(email);
@@ -273,7 +273,7 @@ export const verifyotpForgotPassword = async (req: Request, res: Response) => {
     const otpDetails = await otpRepository.findOtpByEmail(email);
 
     if (!otpDetails) {
-      return res.status(400).json({ success: false, message: "Otp not found" });
+      return res.status(400).json({ error: "Otp not found" });
     }
 
     const isValidOtp = await bcrypt.compare(otp, otpDetails.otp);
@@ -283,7 +283,7 @@ export const verifyotpForgotPassword = async (req: Request, res: Response) => {
         .status(200)
         .json({ success: true, message: "Otp verified successfully", email });
     } else {
-      return res.status(400).json({ success: false, message: "Invalid Otp" });
+      return res.status(400).json({  error: "Invalid Otp" });
     }
   } catch (error) {
     console.error("Error from verifyotpForgotPassword controller", error);
@@ -299,7 +299,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     if (password !== confirmPassword) {
       return res
         .status(400)
-        .json({ success: false, message: "Password not matched" });
+        .json({  error: "Password not matched" });
     }
 
     const hashPassword = await bcrypt.hash(password, 10);

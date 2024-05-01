@@ -2,11 +2,15 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 import UserRepository from "../repositories/UserRepository";
-import { sendEmailWithVerification } from "../utils/sendMail";
+import {
+  sendEmailForForgotPassword,
+  sendEmailWithVerification,
+} from "../utils/sendMail";
 import OtpRepository from "../repositories/OtpRepository";
 import IUsers from "../interfaces/IUsers";
 import generateTokenAndSetCookie from "../utils/generateToken";
 import generatePassword from "../utils/generatePassword";
+import { hasJSDocParameterTags } from "typescript";
 
 // Creating instance of Repositories
 const userRepository = new UserRepository();
@@ -63,7 +67,6 @@ export const signup = async (req: Request, res: Response) => {
 // Verify the user entered OTP
 export const verifyotp = async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
     const { formData, otp } = req.body;
     const { email, firstName, lastName, username, hashPassword } = formData;
 
@@ -235,6 +238,81 @@ export const googleLogin = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.error("Error from google login controller", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for sending the otp for reset password
+export const sendOtpForResetPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    const isUserExist = await userRepository.existingEmail(email);
+
+    if (!isUserExist) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+
+    sendEmailForForgotPassword(email);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Otp sent successfully", email });
+  } catch (error) {
+    console.error("Error from sendOtpForResetPassword controller", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for verify otp for reset password
+export const verifyotpForgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { email, otp } = req.body;
+    const otpDetails = await otpRepository.findOtpByEmail(email);
+
+    if (!otpDetails) {
+      return res.status(400).json({ success: false, message: "Otp not found" });
+    }
+
+    const isValidOtp = await bcrypt.compare(otp, otpDetails.otp);
+
+    if (isValidOtp) {
+      return res
+        .status(200)
+        .json({ success: true, message: "Otp verified successfully", email });
+    } else {
+      return res.status(400).json({ success: false, message: "Invalid Otp" });
+    }
+  } catch (error) {
+    console.error("Error from verifyotpForgotPassword controller", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for reset password
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { email, password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Password not matched" });
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const updtedUser = await userRepository.updatePassword(email, hashPassword);
+
+    if (updtedUser) {
+      return res
+        .status(200)
+        .json({ success: true, message: "Password reset successfully" });
+    }
+  } catch (error) {
+    console.error("Error from resetPassword controller", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

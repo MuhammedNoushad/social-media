@@ -161,7 +161,28 @@ class UserRepository {
       return user.toObject();
     } catch (error) {
       // Handle error
-      console.error("Error from deleteUser in UserRepository", error);
+      console.error("Error from removeProfileImage in UserRepository", error);
+      throw error;
+    }
+  }
+
+  // Function for update password
+  async updatePassword(
+    email: string,
+    password: string
+  ): Promise<IUsers | null> {
+    try {
+      const userData = await User.findOne({ email });
+
+      if (userData) {
+        userData.password = password;
+        await userData.save();
+        return userData.toObject();
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error from updatePassword in UserRepository", error);
       throw error;
     }
   }

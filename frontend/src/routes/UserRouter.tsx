@@ -8,6 +8,9 @@ import UserEditProfile from "../pages/user/profile/UserEditProfile";
 import NotFoundPage from "../pages/common/NotFoundPage";
 import PrivateRoute from "./ProtectedRoute";
 import ProtectedAuthRoute from "./ProtectedAuthRoute";
+import ForgotPasswordEmailPage from "../pages/auth/ForgotPasswordEmail";
+import ForgotPasswordResetPage from "../pages/auth/ForgotPasswordReset";
+import ConfirmOtpForgotPassword from "../pages/auth/VerifyOtpForgotPassword";
 
 function UserRouter() {
   return (
@@ -33,6 +36,30 @@ function UserRouter() {
         element={
           <ProtectedAuthRoute>
             <ConfirmOtp />
+          </ProtectedAuthRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <ProtectedAuthRoute>
+            <ForgotPasswordEmailPage />
+          </ProtectedAuthRoute>
+        }
+      />
+      <Route
+        path="/forgot-password/otp"
+        element={
+          <ProtectedAuthRoute>
+            <ConfirmOtpForgotPassword />
+          </ProtectedAuthRoute>
+        }
+      />
+      <Route
+        path="/forgot-password/reset"
+        element={
+          <ProtectedAuthRoute>
+            <ForgotPasswordResetPage />
           </ProtectedAuthRoute>
         }
       />

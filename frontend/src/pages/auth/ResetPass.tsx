@@ -1,7 +1,7 @@
 
 function ResetPass() {
   return (
-    <div>ResetPass</div>
+    <div></div>
   )
 }
 

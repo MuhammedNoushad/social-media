@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.googleLogin = exports.logout = exports.login = exports.verifyotp = exports.signup = void 0;
+exports.resetPassword = exports.verifyotpForgotPassword = exports.sendOtpForResetPassword = exports.googleLogin = exports.logout = exports.login = exports.verifyotp = exports.signup = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const UserRepository_1 = __importDefault(require("../repositories/UserRepository"));
 const sendMail_1 = require("../utils/sendMail");
@@ -66,7 +66,6 @@ exports.signup = signup;
 // Verify the user entered OTP
 const verifyotp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
         const { formData, otp } = req.body;
         const { email, firstName, lastName, username, hashPassword } = formData;
         // Find OTP details by email
@@ -218,3 +217,71 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.googleLogin = googleLogin;
+// Function for sending the otp for reset password
+const sendOtpForResetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email } = req.body;
+        const isUserExist = yield userRepository.existingEmail(email);
+        if (!isUserExist) {
+            return res
+                .status(400)
+                .json({ success: false, message: "User not found" });
+        }
+        (0, sendMail_1.sendEmailForForgotPassword)(email);
+        return res
+            .status(200)
+            .json({ success: true, message: "Otp sent successfully", email });
+    }
+    catch (error) {
+        console.error("Error from sendOtpForResetPassword controller", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.sendOtpForResetPassword = sendOtpForResetPassword;
+// Function for verify otp for reset password
+const verifyotpForgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, otp } = req.body;
+        const otpDetails = yield otpRepository.findOtpByEmail(email);
+        if (!otpDetails) {
+            return res.status(400).json({ success: false, message: "Otp not found" });
+        }
+        const isValidOtp = yield bcrypt_1.default.compare(otp, otpDetails.otp);
+        if (isValidOtp) {
+            return res
+                .status(200)
+                .json({ success: true, message: "Otp verified successfully", email });
+        }
+        else {
+            return res.status(400).json({ success: false, message: "Invalid Otp" });
+        }
+    }
+    catch (error) {
+        console.error("Error from verifyotpForgotPassword controller", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.verifyotpForgotPassword = verifyotpForgotPassword;
+// Function for reset password
+const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password, confirmPassword } = req.body;
+        if (password !== confirmPassword) {
+            return res
+                .status(400)
+                .json({ success: false, message: "Password not matched" });
+        }
+        const hashPassword = yield bcrypt_1.default.hash(password, 10);
+        const updtedUser = yield userRepository.updatePassword(email, hashPassword);
+        if (updtedUser) {
+            return res
+                .status(200)
+                .json({ success: true, message: "Password reset successfully" });
+        }
+    }
+    catch (error) {
+        console.error("Error from resetPassword controller", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.resetPassword = resetPassword;

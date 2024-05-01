@@ -166,7 +166,25 @@ class UserRepository {
             }
             catch (error) {
                 // Handle error
-                console.error("Error from deleteUser in UserRepository", error);
+                console.error("Error from removeProfileImage in UserRepository", error);
+                throw error;
+            }
+        });
+    }
+    // Function for update password
+    updatePassword(email, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userData = yield user_model_1.default.findOne({ email });
+                if (userData) {
+                    userData.password = password;
+                    yield userData.save();
+                    return userData.toObject();
+                }
+                return null;
+            }
+            catch (error) {
+                console.error("Error from updatePassword in UserRepository", error);
                 throw error;
             }
         });

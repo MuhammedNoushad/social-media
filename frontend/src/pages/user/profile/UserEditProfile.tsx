@@ -8,7 +8,7 @@ const UserEditProfile: React.FC = () => {
       <div>
         <Sidebar />
       </div>
-      <div className="flex-grow flex justify-center">
+      <div className="flex-grow flex lg:pl-60  justify-center">
         <EditProfileCard />
       </div>
     </div>

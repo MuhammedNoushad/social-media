@@ -8,11 +8,11 @@ function UserProfile() {
       <div className="w-64 ">
         <Sidebar />
       </div>
-      <div className="flex-grow flex flex-col">
-        <div className="flex-grow p-4">
+      <div className="flex-grow flex flex-col gap:6 lg:gap-12">
+        <div className="flex-grow lg:p-4 lg:max-h-[26vh]">
           <ProfileCard />
         </div>
-        <div className="p-4 m-auto">
+        <div className="p-4 mx-auto mb-auto">
           <DefaultGallery />
         </div>
       </div>

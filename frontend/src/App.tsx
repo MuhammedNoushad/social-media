@@ -9,7 +9,6 @@ function App() {
       <Routes>
         <Route path="/*" element={<UserRouter />} />
         <Route path="/admin/*" element={<AdminRouter />} />
-        <Route path="/forbidden" element={<div>Forbidden</div>} />
       </Routes>
     </Router>
   );

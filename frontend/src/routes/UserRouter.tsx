@@ -11,6 +11,7 @@ import ProtectedAuthRoute from "./ProtectedAuthRoute";
 import ForgotPasswordEmailPage from "../pages/auth/ForgotPasswordEmail";
 import ForgotPasswordResetPage from "../pages/auth/ForgotPasswordReset";
 import ConfirmOtpForgotPassword from "../pages/auth/VerifyOtpForgotPassword";
+import UserCreatePost from "../pages/user/home/UserCreatePost";
 
 function UserRouter() {
   return (
@@ -84,6 +85,14 @@ function UserRouter() {
         element={
           <PrivateRoute role="user">
             <UserEditProfile />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/post"
+        element={
+          <PrivateRoute role="user">
+            <UserCreatePost />
           </PrivateRoute>
         }
       />

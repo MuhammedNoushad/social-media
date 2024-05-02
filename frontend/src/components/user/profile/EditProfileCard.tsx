@@ -116,8 +116,13 @@ function EditProfileCard() {
                       {({ onClick }) => (
                         <button
                           onClick={onClick}
-                          type="button" // Ensure it doesn't submit the form
-                          className="py-3.5 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200"
+                          type="button"
+                          disabled={changePicLoading || loading}
+                          className={`py-3.5 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200 ${
+                            changePicLoading || loading
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
                         >
                           {changePicLoading ? (
                             <span className="loading loading-spinner"></span>
@@ -129,8 +134,13 @@ function EditProfileCard() {
                     </UploadButton>
                     <button
                       type="button"
+                      disabled={changePicLoading || loading}
                       onClick={handleDeleteProfilePic}
-                      className="py-3.5 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200 "
+                      className={`py-3.5 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200 ${
+                        changePicLoading || loading
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
                     >
                       {loading ? (
                         <span className="loading loading-spinner"></span>

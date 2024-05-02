@@ -8,7 +8,8 @@ const postRepository = new PostRepository();
 export const createNewPost = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const { imageUrl, description } = req.body;
+    const { imageUrl, desc: description } = req.body;
+    console.log(userId, imageUrl, description);
 
     // Create new post
     const newPOst = {
@@ -20,7 +21,13 @@ export const createNewPost = async (req: Request, res: Response) => {
     const postData = await postRepository.createNewpost(newPOst);
 
     if (postData) {
-      return res.status(200).json({ success: true, postData });
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "Post created successfully",
+          postData,
+        });
     } else {
       return res.status(400).json({ error: "Something went wrong" });
     }
@@ -47,14 +54,14 @@ export const fetchAllPosts = async (req: Request, res: Response) => {
 
 // Function for fetching post of user
 export const getPostOfUser = async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.params;
-        const posts = await postRepository.getPostOfUser(userId);
-        if(!posts){
-            return res.status(400).json({ error: "Failed to fetch posts" });
-        }
-        return res.status(200).json({ success: true, posts });
-    } catch (error) {
-        return res.status(500).json({ error: "Internal server error" });
+  try {
+    const { userId } = req.params;
+    const posts = await postRepository.getPostOfUser(userId);
+    if (!posts) {
+      return res.status(400).json({ error: "Failed to fetch posts" });
     }
-}
+    return res.status(200).json({ success: true, posts });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

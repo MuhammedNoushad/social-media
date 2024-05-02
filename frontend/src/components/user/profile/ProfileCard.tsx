@@ -10,14 +10,14 @@ const ProfileCard: React.FC = () => {
   const userDetails = useSelector((state: RootState) => state.user);
 
   return (
-    <div className="relative mt-6 w-auto min-w-0 mb-6 break-words border border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30 draggable max-h-[33vh] ">
+    <div className="relative mt-6 w-auto min-w-0 mb-2 break-words bg-light/30 draggable max-h-max ">
       {/* card body */}
       <div className="px-9 py-9 flex flex-col items-center justify-center h-full">
         <div className="flex flex-wrap mb-6 xl:flex-nowrap">
           <div className="mb-5 mr-5">
             <div className="relative inline-block shrink-0 rounded-2xl">
               <img
-                className="inline-block shrink-0 rounded-full w-[50px] h-[50px] sm:w-[80px] sm:h-[80px] lg:w-[120px] lg:h-[120px]"
+                className="object-cover  inline-block  shrink-0 rounded-full w-[50px] h-[50px] sm:w-[80px] sm:h-[80px] lg:w-[120px] lg:h-[120px]"
                 src={userDetails.profileimg || "avathar.jpeg"}
                 alt="image"
               />

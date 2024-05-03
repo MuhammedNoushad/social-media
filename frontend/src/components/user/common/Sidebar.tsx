@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BiHome,
   BiSearch,
@@ -11,18 +11,35 @@ import {
 } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearToken } from "../../../store/features/tokenSlice";
 
+import { clearToken } from "../../../store/features/tokenSlice";
+import Dialog from "../../common/Dialog";
+
+// Component for the sidebar
 const Sidebar: React.FC = () => {
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Function to handle logout
-  const handleLogout = () => {
-    dispatch(clearToken());
-    navigate("/");
+  const handleLogout = (e: React.MouseEvent<HTMLLIElement>) => {
+    e.preventDefault();
+    setShowLogoutDialog(true);
   };
 
+  // Function to confirm logout
+  const confirmLogout = () => {
+    dispatch(clearToken());
+    navigate("/");
+    setShowLogoutDialog(false);
+  };
+
+  // Function to cancel logout
+  const cancelLogout = () => {
+    setShowLogoutDialog(false);
+  };
+
+  // Render the sidebar
   return (
     <div className="min-h-screen flex flex-row">
       <div className="fixed top-0 bottom-0 flex flex-col bg-white rounded-r-3xl overflow-hidden lg:w-56 w-16">
@@ -36,7 +53,7 @@ const Sidebar: React.FC = () => {
         <ul className="flex flex-col py-4">
           <li>
             <a
-              href=''
+              href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
             >
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
@@ -47,7 +64,7 @@ const Sidebar: React.FC = () => {
           </li>
           <li>
             <a
-              href=''
+              href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
             >
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
@@ -60,7 +77,7 @@ const Sidebar: React.FC = () => {
           </li>
           <li>
             <a
-              href=''
+              href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
             >
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
@@ -73,7 +90,7 @@ const Sidebar: React.FC = () => {
           </li>
           <li>
             <a
-              href=''
+              href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
             >
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
@@ -86,7 +103,7 @@ const Sidebar: React.FC = () => {
           </li>
           <li>
             <a
-              href=''
+              href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
             >
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
@@ -106,7 +123,7 @@ const Sidebar: React.FC = () => {
             }}
           >
             <a
-              href=''
+              href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
             >
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
@@ -123,7 +140,7 @@ const Sidebar: React.FC = () => {
             }}
           >
             <a
-              href=''
+              href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
             >
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
@@ -136,7 +153,7 @@ const Sidebar: React.FC = () => {
           </li>
           <li onClick={handleLogout}>
             <a
-              href=''
+              href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
             >
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
@@ -149,6 +166,13 @@ const Sidebar: React.FC = () => {
           </li>
         </ul>
       </div>
+      <Dialog
+        title="Logout"
+        message="Are you sure you want to logout?"
+        isOpen={showLogoutDialog}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
     </div>
   );
 };

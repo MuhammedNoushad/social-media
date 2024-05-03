@@ -3,8 +3,10 @@ import { FaTelegramPlane, FaImages, FaTimes } from "react-icons/fa";
 import useFetchUserPosts from "../../../hooks/user/useFetchUserPosts";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
+import SkeletonLoader from "../../common/SkeletonLoader";
 
 export function DefaultGallery() {
+  const [loading, setLoading] = useState(true);
   const { fetchUserPosts } = useFetchUserPosts();
   const user = useSelector((state: RootState) => state.user);
   const [posts, setPosts] = useState<
@@ -28,6 +30,7 @@ export function DefaultGallery() {
           })
         );
         setPosts(updatedPosts);
+        setLoading(false);
       } catch (error) {
         console.log("Error fetching posts:", error);
       }
@@ -59,15 +62,19 @@ export function DefaultGallery() {
         <div className="w-full h-px bg-gray-300"></div>
       </div>
       <div className="p-0 mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {posts.map((post) => (
-          <div key={post._id} onClick={() => handleImageClick(post)}>
-            <img
-              className="h-40 w-full max-w-full rounded-lg object-cover object-center cursor-pointer"
-              src={post.imageUrl}
-              alt={`gallery-photo-${post._id}`}
-            />
-          </div>
-        ))}
+        {loading
+          ? Array.from({ length: 9 }, (_, index) => (
+              <SkeletonLoader key={index} />
+            ))
+          : posts.map((post) => (
+              <div key={post._id} onClick={() => handleImageClick(post)}>
+                <img
+                  className="h-40 w-full max-w-full rounded-lg object-cover object-center cursor-pointer"
+                  src={post.imageUrl}
+                  alt={`gallery-photo-${post._id}`}
+                />
+              </div>
+            ))}
       </div>
 
       {showModal && selectedPost && (

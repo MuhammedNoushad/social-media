@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BiHome,
   BiUser,
@@ -9,14 +9,26 @@ import {
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../../store/features/tokenSlice";
+import Dialog from "../../common/Dialog";
 
 const AdminSidebar: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = (e: React.MouseEvent<HTMLLIElement>) => {
+    e.preventDefault();
+    setShowLogoutDialog(true);
+  };
+
+  const confirmLogout = () => {
     dispatch(clearToken());
     navigate("/");
+    setShowLogoutDialog(false);
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutDialog(false);
   };
 
   return (
@@ -93,6 +105,13 @@ const AdminSidebar: React.FC = () => {
           </li>
         </ul>
       </div>
+      <Dialog
+        title="Logout"
+        message="Are you sure you want to logout?"
+        isOpen={showLogoutDialog}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
     </div>
   );
 };

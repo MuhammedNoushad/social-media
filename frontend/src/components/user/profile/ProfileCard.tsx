@@ -29,8 +29,9 @@ const ProfileCard: React.FC = () => {
                 <div className="flex items-center mb-2">
                   <p className="text-secondary-inverse hover:text-red-600 transition-colors duration-200 ease-in-out font-semibold text-[1.2rem] mr-1">
                     {" "}
-                    {userDetails.firstName}
-                    {userDetails.lastName}{" "}
+                    {userDetails.firstName} 
+                    {" "}
+                    {userDetails.lastName}
                   </p>
                   <a
                     onClick={() => {

@@ -36,7 +36,9 @@ class PostRepository {
   // Function for fetching post of user
   async getPostOfUser(userId: string): Promise<IPosts[] | null> {
     try {
-      const posts = await Post.find({ userId }).populate('userId');
+      const posts = await Post.find({ userId })
+        .populate("userId")
+        .sort({ createdAt: -1 });
       if (!posts) return null;
       return posts.map((post) => post.toObject());
     } catch (error) {

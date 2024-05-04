@@ -29,9 +29,7 @@ const ProfileCard: React.FC = () => {
                 <div className="flex items-center mb-2">
                   <p className="text-secondary-inverse hover:text-red-600 transition-colors duration-200 ease-in-out font-semibold text-[1.2rem] mr-1">
                     {" "}
-                    {userDetails.firstName} 
-                    {" "}
-                    {userDetails.lastName}
+                    {userDetails.firstName} {userDetails.lastName}
                   </p>
                   <a
                     onClick={() => {
@@ -49,7 +47,10 @@ const ProfileCard: React.FC = () => {
                     </span>{" "}
                     {userDetails.username}{" "}
                   </a>
-                  <a className="flex items-center mr-5 text-secondary-dark hover:text-red-600">
+                  <a
+                    href={`mailto:${userDetails.email}`}
+                    className="flex items-center mr-5 text-secondary-dark hover:text-red-600"
+                  >
                     <span className="mr-1">
                       <BiMailSend />
                     </span>{" "}

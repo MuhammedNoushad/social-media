@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { UploadButton } from "@bytescale/upload-widget-react";
+import { v4 as uuidv4 } from "uuid";
 
 import IFileUpload from "../../../types/IFileUpload";
 import Image from "../../../types/IFileImage";
@@ -20,20 +21,26 @@ const PostCreate: React.FC = () => {
   const handlePictureUpload = (files: IFileUpload[] | any) => {
     if (files.length > 0) {
       setChangePicLoading(true);
-      const newImages = files.map((file: IFileUpload) => ({
-        url: file.fileUrl,
-        name: file.originalFile.originalFileName,
-        preview: ["jpg", "jpeg", "png", "gif"].includes(
-          file.originalFile.originalFileName.split(".").pop()?.toLowerCase() ||
-            ""
-        ),
-        size:
-          file.originalFile.size > 1024
-            ? file.originalFile.size > 1048576
-              ? `${Math.round(file.originalFile.size / 1048576)} MB`
-              : `${Math.round(file.originalFile.size / 1024)} KB`
-            : `${file.originalFile.size} B`,
-      }));
+      const newImages = files.map((file: IFileUpload) => {
+        const uniqueId = uuidv4(); // Generate unique identifier
+        const imageUrlWithUniqueId = `${file.fileUrl}?uuid=${uniqueId}`; // Append unique identifier to the existing URL
+        return {
+          url: imageUrlWithUniqueId,
+          name: file.originalFile.originalFileName,
+          preview: ["jpg", "jpeg", "png", "gif"].includes(
+            file.originalFile.originalFileName
+              .split(".")
+              .pop()
+              ?.toLowerCase() || ""
+          ),
+          size:
+            file.originalFile.size > 1024
+              ? file.originalFile.size > 1048576
+                ? `${Math.round(file.originalFile.size / 1048576)} MB`
+                : `${Math.round(file.originalFile.size / 1024)} KB`
+              : `${file.originalFile.size} B`,
+        };
+      });
       setImages((prevImages) => [...prevImages, ...newImages]);
       setChangePicLoading(false);
     }
@@ -46,20 +53,17 @@ const PostCreate: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setChangePicLoading(true);
     e.preventDefault();
-  
-    console.log("desc:", desc);
-    console.log("Images:", images);
-  
+
     const file = images[0];
-  
+
     try {
       const blobPromise = fetch(file.url).then((res) => res.blob());
       const blob = await blobPromise;
-  
+
       const profileForm = new FormData();
       profileForm.append("file", blob, file.name);
       profileForm.append("upload_preset", presetKey || "");
-  
+
       const res = await axios({
         method: "post",
         url: `https://api.cloudinary.com/v1_1/${cloudname}/image/upload`,
@@ -68,12 +72,11 @@ const PostCreate: React.FC = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-  
+
       const url = res.data.secure_url;
       setPostUrl(url);
-  
-      const postData = await createPost({ desc, imageUrl: url });
-      console.log(postData);
+
+      await createPost({ desc, imageUrl: url });
     } catch (error) {
       console.error(error);
     } finally {

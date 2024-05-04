@@ -12,7 +12,7 @@ const useSendMailForgotPassword = () => {
 
       if (data.success) {
         toast.success(data.message);
-        navigate("/forgot-password/otp", { state: { email: email } });
+        navigate("/forgot-password/otp", { state: { email: email , verified : true } });
       }
       console.log(data)
 

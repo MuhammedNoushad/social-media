@@ -16,7 +16,7 @@ function EditProfileCard() {
   const editProfile = useEditProfile();
   const { deleteProfilePic, loading } = useDeleteProfilePic();
 
-  const [changePicLoading, setchangePicLoading] = useState<boolean>(false);
+  const [changePicLoading, setChangePicLoading] = useState<boolean>(false);
   const [profilePic, setProfilePic] = useState(userDetails.profileimg);
   const [formData, setFormData] = useState<Omit<IUserDetails, "password">>({
     username: userDetails.username,
@@ -34,17 +34,36 @@ function EditProfileCard() {
     isBlock: userDetails.isBlock,
   });
 
+  const [bioValidation, setBioValidation] = useState<boolean>(true);
+  const maxBioLength = 100; // Maximum character limit for bio
+
   // Function to handle the inputs in the form
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    if (name === "bio") {
+      if (value.length <= maxBioLength) {
+        setFormData({ ...formData, [name]: value });
+        setBioValidation(true);
+      } else {
+        const truncatedValue = value.slice(0, maxBioLength);
+        setFormData({ ...formData, [name]: truncatedValue });
+        setBioValidation(false);
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   // Function to handle form submission
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!bioValidation) {
+      return;
+    }
     // Handle form submission here
     editProfile(formData, userDetails._id);
   };
@@ -52,7 +71,7 @@ function EditProfileCard() {
   // Function to handle profile pic upload
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePictureUpload = (files: any[]) => {
-    setchangePicLoading(true);
+    setChangePicLoading(true);
 
     const file = files[0].originalFile.file;
 
@@ -78,7 +97,7 @@ function EditProfileCard() {
       })
       .catch((err) => console.error(err))
       .finally(() => {
-        setchangePicLoading(false);
+        setChangePicLoading(false);
       });
   };
 
@@ -255,11 +274,18 @@ function EditProfileCard() {
                       id="message"
                       rows={4}
                       name="bio"
-                      className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500 "
+                      className={`block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border ${
+                        !bioValidation ? "border-red-500" : ""
+                      } border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500`}
                       placeholder="Write your bio here..."
                       value={formData.bio}
                       onChange={handleInputChange}
                     ></textarea>
+                    {!bioValidation && (
+                      <p className="text-red-500 text-sm mt-1">
+                        Bio must contain at most {maxBioLength} characters.
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex justify-end">

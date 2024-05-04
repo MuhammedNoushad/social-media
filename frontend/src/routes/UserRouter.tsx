@@ -12,6 +12,7 @@ import ForgotPasswordEmailPage from "../pages/auth/ForgotPasswordEmail";
 import ForgotPasswordResetPage from "../pages/auth/ForgotPasswordReset";
 import ConfirmOtpForgotPassword from "../pages/auth/VerifyOtpForgotPassword";
 import UserCreatePost from "../pages/user/home/UserCreatePost";
+import RestrictedAuthRoute from "./RestrictedAuthRoute";
 
 function UserRouter() {
   return (
@@ -52,7 +53,9 @@ function UserRouter() {
         path="/forgot-password/otp"
         element={
           <ProtectedAuthRoute>
-            <ConfirmOtpForgotPassword />
+            <RestrictedAuthRoute>
+              <ConfirmOtpForgotPassword />
+            </RestrictedAuthRoute>
           </ProtectedAuthRoute>
         }
       />
@@ -60,7 +63,9 @@ function UserRouter() {
         path="/forgot-password/reset"
         element={
           <ProtectedAuthRoute>
-            <ForgotPasswordResetPage />
+            <RestrictedAuthRoute>
+              <ForgotPasswordResetPage />
+            </RestrictedAuthRoute>
           </ProtectedAuthRoute>
         }
       />

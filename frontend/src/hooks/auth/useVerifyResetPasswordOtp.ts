@@ -15,7 +15,7 @@ const useVerifyResetPasswordOtp = () => {
 
       if (data.success) {
         toast.success(data.message);
-        navigate("/forgot-password/reset", { state: { email: email } });
+        navigate("/forgot-password/reset", { state: { email: email , verified : true } });
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

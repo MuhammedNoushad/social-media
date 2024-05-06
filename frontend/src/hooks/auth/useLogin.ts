@@ -18,6 +18,7 @@ const useLogin = () => {
       const data = response.data;
 
       if (data.success) {
+        localStorage.setItem("token", data.responseData.accessToken);
         dispatch(setUser(data.responseData));
         dispatch(
           addToken({

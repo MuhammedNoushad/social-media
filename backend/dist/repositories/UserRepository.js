@@ -171,6 +171,21 @@ class UserRepository {
             }
         });
     }
+    findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userData = yield user_model_1.default.findById(id).select("-password");
+                if (!userData) {
+                    return null;
+                }
+                return userData;
+            }
+            catch (error) {
+                console.error("Error from updatePassword in UserRepository", error);
+                throw error;
+            }
+        });
+    }
     // Function for update password
     updatePassword(email, password) {
         return __awaiter(this, void 0, void 0, function* () {

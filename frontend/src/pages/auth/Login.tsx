@@ -44,8 +44,8 @@ function Login() {
   };
 
   return (
-    <AuthModel page="login">
-      <form className="w-full" onSubmit={formSubmitHandler}>
+    <AuthModel page="Login">
+      <form noValidate className="w-full" onSubmit={formSubmitHandler}>
         <div className="mt-5">
           <label className="block mb-2 text-sm" htmlFor="your-email">
             Your Email

@@ -40,8 +40,8 @@ function Login() {
   };
 
   return (
-    <AuthModel page="signup">
-      <form className="w-full" onSubmit={formSubmitHandler}>
+    <AuthModel page="Sign Up">
+      <form noValidate className="w-full" onSubmit={formSubmitHandler}>
         <div className="mt-5">
           <label className="block mb-2 text-sm" htmlFor="your-username">
             Your Username

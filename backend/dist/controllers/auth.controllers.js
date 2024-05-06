@@ -116,6 +116,9 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!userDetails) {
             return res.status(404).json({ error: "User not found" });
         }
+        if (userDetails.isBlock) {
+            return res.status(404).json({ error: "User is blocked" });
+        }
         // Comparing the password that entered and the hashed password from the database
         if (userDetails && userDetails.password) {
             const isPasswordCorrect = yield bcrypt_1.default.compare(password, userDetails.password);
@@ -157,8 +160,6 @@ exports.login = login;
 // User logout controller
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Clear the JWT cookie
-        res.cookie("jwt", "", { maxAge: 0 });
         // Send success response
         res.status(200).json({ message: "Logout successful" });
     }
@@ -174,6 +175,12 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const { email, firstName, lastName, username } = req.body;
         const user = yield userRepository.findUser(email);
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+        if (user.isBlock) {
+            return res.status(400).json({ error: "User is blocked" });
+        }
         if (user) {
             const accessToken = (0, generateToken_1.default)(user._id ? user._id : "", res);
             const role = user.isAdmin ? "admin" : "user";
@@ -223,9 +230,7 @@ const sendOtpForResetPassword = (req, res) => __awaiter(void 0, void 0, void 0, 
         const { email } = req.body;
         const isUserExist = yield userRepository.existingEmail(email);
         if (!isUserExist) {
-            return res
-                .status(400)
-                .json({ error: "User not found" });
+            return res.status(400).json({ error: "User not found" });
         }
         (0, sendMail_1.sendEmailForForgotPassword)(email);
         return res
@@ -267,9 +272,7 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { email, password, confirmPassword } = req.body;
         if (password !== confirmPassword) {
-            return res
-                .status(400)
-                .json({ error: "Password not matched" });
+            return res.status(400).json({ error: "Password not matched" });
         }
         const hashPassword = yield bcrypt_1.default.hash(password, 10);
         const updtedUser = yield userRepository.updatePassword(email, hashPassword);

@@ -127,6 +127,10 @@ export const login = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    if (userDetails.isBlock) {
+      return res.status(404).json({ error: "User is blocked" });
+    }
+
     // Comparing the password that entered and the hashed password from the database
     if (userDetails && userDetails.password) {
       const isPasswordCorrect = await bcrypt.compare(
@@ -175,9 +179,6 @@ export const login = async (req: Request, res: Response) => {
 // User logout controller
 export const logout = async (req: Request, res: Response) => {
   try {
-    // Clear the JWT cookie
-    res.cookie("jwt", "", { maxAge: 0 });
-
     // Send success response
     res.status(200).json({ message: "Logout successful" });
   } catch (error) {
@@ -193,6 +194,14 @@ export const googleLogin = async (req: Request, res: Response) => {
     const { email, firstName, lastName, username } = req.body;
 
     const user = await userRepository.findUser(email);
+
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    if (user.isBlock) {
+      return res.status(400).json({ error: "User is blocked" });
+    }
 
     if (user) {
       const accessToken = generateTokenAndSetCookie(
@@ -250,9 +259,7 @@ export const sendOtpForResetPassword = async (req: Request, res: Response) => {
     const isUserExist = await userRepository.existingEmail(email);
 
     if (!isUserExist) {
-      return res
-        .status(400)
-        .json({ error: "User not found" });
+      return res.status(400).json({ error: "User not found" });
     }
 
     sendEmailForForgotPassword(email);
@@ -283,7 +290,7 @@ export const verifyotpForgotPassword = async (req: Request, res: Response) => {
         .status(200)
         .json({ success: true, message: "Otp verified successfully", email });
     } else {
-      return res.status(400).json({  error: "Invalid Otp" });
+      return res.status(400).json({ error: "Invalid Otp" });
     }
   } catch (error) {
     console.error("Error from verifyotpForgotPassword controller", error);
@@ -297,9 +304,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     const { email, password, confirmPassword } = req.body;
 
     if (password !== confirmPassword) {
-      return res
-        .status(400)
-        .json({  error: "Password not matched" });
+      return res.status(400).json({ error: "Password not matched" });
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -316,3 +321,5 @@ export const resetPassword = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+

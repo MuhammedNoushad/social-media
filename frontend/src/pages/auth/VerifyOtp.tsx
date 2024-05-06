@@ -28,7 +28,7 @@ function ConfirmOtp() {
   };
 
   return (
-    <AuthModel page="confirmotp">
+    <AuthModel page="Confirm otp">
       <div className="flex flex-1 flex-col justify-center space-y-5 max-w-md mx-auto mt-6">
         <div className="flex flex-col space-y-2 text-center">
           <h2 className="text-3xl md:text-4xl font-bold">Confirm OTP</h2>

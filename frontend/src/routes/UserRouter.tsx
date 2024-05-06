@@ -13,6 +13,7 @@ import ForgotPasswordResetPage from "../pages/auth/ForgotPasswordReset";
 import ConfirmOtpForgotPassword from "../pages/auth/VerifyOtpForgotPassword";
 import UserCreatePost from "../pages/user/home/UserCreatePost";
 import RestrictedAuthRoute from "./RestrictedAuthRoute";
+import NotFoundRoute from "./NotFoundRoute";
 
 function UserRouter() {
   return (
@@ -101,7 +102,14 @@ function UserRouter() {
           </PrivateRoute>
         }
       />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route
+        path="*"
+        element={
+          <NotFoundRoute>
+            <NotFoundPage />
+          </NotFoundRoute>
+        }
+      />
     </Routes>
   );
 }

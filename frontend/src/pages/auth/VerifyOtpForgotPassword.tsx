@@ -31,7 +31,7 @@ function ConfirmOtpForgotPassword() {
   };
 
   return (
-    <AuthModel page="ConfirmOtpForgotPassword">
+    <AuthModel page="Reset Password">
       <div className="flex flex-1 flex-col justify-center space-y-5 max-w-md mx-auto mt-6">
         <div className="flex flex-col space-y-2 text-center">
           <p className="text-md md:text-xl">Enter the OTP we just sent you.</p>

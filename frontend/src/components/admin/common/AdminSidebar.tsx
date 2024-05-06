@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../../store/features/tokenSlice";
 import Dialog from "../../common/Dialog";
+import { clearState } from "../../../store/features/userDetailsSlice";
 
 const AdminSidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ const AdminSidebar: React.FC = () => {
   };
 
   const confirmLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(clearState())
     dispatch(clearToken());
     navigate("/");
     setShowLogoutDialog(false);

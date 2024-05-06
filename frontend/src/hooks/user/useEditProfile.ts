@@ -1,9 +1,10 @@
 import { useDispatch } from "react-redux";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+
 import axios from "../../axios/axios";
 import IUserState from "../../types/IUserState";
 import { setUser } from "../../store/features/userDetailsSlice";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 
 type EditProfileFunction = (
   userDetails: Omit<IUserState, "password">,

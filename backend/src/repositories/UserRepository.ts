@@ -166,6 +166,19 @@ class UserRepository {
     }
   }
 
+  async findById(id: string): Promise<IUsers | null> {
+    try {
+      const userData = await User.findById(id).select("-password");
+      if (!userData) {
+        return null;
+      }
+      return userData;
+    } catch (error) {
+      console.error("Error from updatePassword in UserRepository", error);
+      throw error;
+    }
+  }
+
   // Function for update password
   async updatePassword(
     email: string,

@@ -22,8 +22,8 @@ authRoute.post("/logout", logout);
 authRoute.post("/google-login", googleLogin);
 
 //  Route for forgotpassword and resetpassword
-authRoute.post('/forgot-password',sendOtpForResetPassword)
-authRoute.post('/forgot-password/otp',verifyotpForgotPassword)
-authRoute.put('/forgot-password/reset',resetPassword)
+authRoute.post("/forgot-password", sendOtpForResetPassword);
+authRoute.post("/forgot-password/otp", verifyotpForgotPassword);
+authRoute.put("/forgot-password/reset", resetPassword);
 
 export default authRoute;

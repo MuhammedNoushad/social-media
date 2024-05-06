@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 import { clearToken } from "../../../store/features/tokenSlice";
 import Dialog from "../../common/Dialog";
+import { clearState } from "../../../store/features/userDetailsSlice";
 
 // Component for the sidebar
 const Sidebar: React.FC = () => {
@@ -29,6 +30,8 @@ const Sidebar: React.FC = () => {
 
   // Function to confirm logout
   const confirmLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(clearState());
     dispatch(clearToken());
     navigate("/");
     setShowLogoutDialog(false);

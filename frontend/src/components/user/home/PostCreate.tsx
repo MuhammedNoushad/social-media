@@ -62,7 +62,9 @@ const PostCreate: React.FC = () => {
 
       const profileForm = new FormData();
       profileForm.append("file", blob, file.name);
-      profileForm.append("upload_preset", presetKey || "");
+      profileForm.append("upload_preset", presetKey);
+
+      console.log(profileForm);
 
       const res = await axios({
         method: "post",

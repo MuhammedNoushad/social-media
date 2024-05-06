@@ -31,7 +31,7 @@ function AuthModel({
   };
 
   const renderAuthLink = () => {
-    if (page === "signup") {
+    if (page === "Sign Up") {
       return (
         <>
           Already have an account?{" "}
@@ -40,7 +40,7 @@ function AuthModel({
           </Link>
         </>
       );
-    } else if (page === "login") {
+    } else if (page === "Login") {
       return (
         <>
           Create an account!{" "}
@@ -69,14 +69,14 @@ function AuthModel({
           alt="site logo"
         />
         <div className="mt-4 text-center">
-          <h3 className="font-semibold text-3xl">Reset Password</h3>
+          <h3 className="font-semibold text-3xl">{page}</h3>
           <p className="mt-2 text-sm">{renderAuthLink()}</p>
-          {(page === "signup" || page === "login") && (
+          {(page === "sign up" || page === "Login") && (
             <GoogleLogin onSuccess={handleGoogleSignIn} />
           )}
           <div className="relative flex py-5 items-center">
             <div className="flex-grow border-t-2 border-gray-400"></div>
-            {(page === "signup" || page === "login") && (
+            {(page === "Sign Up" || page === "Login") && (
               <span className="flex-shrink mx-4 text-gray-400">OR</span>
             )}
             <div className="flex-grow border-t-2 border-gray-400"></div>

@@ -41,3 +41,6 @@ export const deleteProfilePic = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for fetching user profile
+

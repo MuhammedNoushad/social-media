@@ -3,12 +3,16 @@ import {
   deleteProfilePic,
   updateProfile,
 } from "../controllers/user.controllers";
-import isBlock from "../middleware/isBlock";
+import verifyToken from "../middleware/verifyToken";
 
 const userRoute = express.Router();
 
 // Route for updating user profile
-userRoute.put("/profile/:userId", isBlock, updateProfile);
-userRoute.delete("/profile/:userId/delete-profile-picture", deleteProfilePic);
+userRoute.put("/profile/:userId", verifyToken, updateProfile);
+userRoute.delete(
+  "/profile/:userId/delete-profile-picture",
+  verifyToken,
+  deleteProfilePic
+);
 
 export default userRoute;

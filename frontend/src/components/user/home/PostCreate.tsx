@@ -4,8 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import IFileUpload from "../../../types/IFileUpload";
 import Image from "../../../types/IFileImage";
-import axios from "../../../axios/axios";
 import useCreatePost from "../../../hooks/user/useCreatePost";
+import axios from "axios";
 
 const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;
 const cloudname: string = import.meta.env.VITE_REACT_APP_CLOUDNAME;

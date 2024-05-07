@@ -6,7 +6,7 @@ const useFetchUserPosts = () => {
       const response = await axios.get(`/api/posts/${userId}`);
 
       const data = response.data;
-
+      console.log(data.posts);
       if (data.success) {
         return data.posts;
       } else {

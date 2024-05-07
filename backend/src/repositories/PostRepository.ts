@@ -39,6 +39,7 @@ class PostRepository {
       const posts = await Post.find({ userId })
         .populate("userId")
         .sort({ createdAt: -1 });
+        
       if (!posts) return null;
       return posts.map((post) => post.toObject());
     } catch (error) {

@@ -58,3 +58,22 @@ export const fetchAllUsers = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for fetch single user
+export const fetchSigleUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const userData = await userRepository.findById(userId);
+
+    if (!userData) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({ success: true, userData });
+  } catch (error) {
+    // Handle errors
+    console.error("Error from fetchSigleUser user controller", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaTelegramPlane, FaImages, FaTimes } from "react-icons/fa";
 import useFetchUserPosts from "../../../hooks/user/useFetchUserPosts";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
 import SkeletonLoader from "../../common/SkeletonLoader";
 
-export function DefaultGallery() {
+export function DefaultGallery({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true);
   const { fetchUserPosts } = useFetchUserPosts();
-  const user = useSelector((state: RootState) => state.user);
   const [posts, setPosts] = useState<
     { imageUrl: string; _id: string; description: string }[]
   >([]);
@@ -22,13 +19,14 @@ export function DefaultGallery() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const postsData = await fetchUserPosts(user._id);
+        const postsData = await fetchUserPosts(userId);
         const updatedPosts = postsData.map(
           (post: { imageUrl: string; _id: string; description: string }) => ({
             ...post,
             imageUrl: post.imageUrl,
           })
         );
+        console.log(updatedPosts);
         setPosts(updatedPosts);
         setLoading(false);
       } catch (error) {
@@ -36,7 +34,8 @@ export function DefaultGallery() {
       }
     };
     fetchData();
-  }, [fetchUserPosts, user._id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   const handleImageClick = (post: {
     imageUrl: string;
@@ -100,9 +99,7 @@ export function DefaultGallery() {
                   {/* Image description */}
                   <div className="bg-gray-100 p-2 rounded-md mb-2">
                     <p className="text-sm text-gray-600">
-                      <span className="font-semibold mr-2">
-                        {user.username}:
-                      </span>
+                      <span className="font-semibold mr-2">Aslah</span>
                       {selectedPost.description}
                     </p>
                   </div>

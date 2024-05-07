@@ -1,22 +1,25 @@
 import React from "react";
 import IUserState from "../../../types/IUserState";
+import { useNavigate } from "react-router-dom";
 
 interface IUserCardListProps {
   users: IUserState[];
 }
 
 const UserCardList: React.FC<IUserCardListProps> = ({ users }) => {
+  const navigate = useNavigate();
   return (
     <div className="max-w-sm mx-auto mt-auto">
       {users.map((user: IUserState) => (
         <div
+          onClick={() => navigate(`/profile/${user._id}`)}
           key={user._id}
           className="p-3 flex items-center justify-between border-t cursor-pointer hover:bg-gray-200"
         >
           <div className="flex items-center">
             <img
               className="rounded-full h-10 w-10"
-              src={user.profileimg || "avathar.jpeg"}
+              src={user.profileimg || "/public/avathar.jpeg"}
               alt={user.username}
             />
             <div className="ml-2 flex flex-col">

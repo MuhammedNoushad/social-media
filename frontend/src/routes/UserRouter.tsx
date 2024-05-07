@@ -14,6 +14,7 @@ import ConfirmOtpForgotPassword from "../pages/auth/VerifyOtpForgotPassword";
 import UserCreatePost from "../pages/user/home/UserCreatePost";
 import RestrictedAuthRoute from "./RestrictedAuthRoute";
 import NotFoundRoute from "./NotFoundRoute";
+import OthersProfile from "../pages/user/profile/OthersProfile";
 
 function UserRouter() {
   return (
@@ -83,6 +84,14 @@ function UserRouter() {
         element={
           <PrivateRoute role="user">
             <UserProfile />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/profile/:userId"
+        element={
+          <PrivateRoute role="user">
+            <OthersProfile />
           </PrivateRoute>
         }
       />

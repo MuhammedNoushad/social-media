@@ -21,13 +21,11 @@ export const createNewPost = async (req: Request, res: Response) => {
     const postData = await postRepository.createNewpost(newPOst);
 
     if (postData) {
-      return res
-        .status(200)
-        .json({
-          success: true,
-          message: "Post created successfully",
-          postData,
-        });
+      return res.status(200).json({
+        success: true,
+        message: "Post created successfully",
+        postData,
+      });
     } else {
       return res.status(400).json({ error: "Something went wrong" });
     }

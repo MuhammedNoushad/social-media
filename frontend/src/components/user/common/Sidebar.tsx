@@ -78,7 +78,7 @@ const Sidebar: React.FC = () => {
               <span
                 className={`hidden ${
                   !isSearchOpen && "lg:block"
-                } text-sm font-medium`}
+                } text-sm font-medium font-roboto-condensed`}
               >
                 Home
               </span>
@@ -95,7 +95,7 @@ const Sidebar: React.FC = () => {
               <span
                 className={`hidden ${
                   !isSearchOpen && "lg:block"
-                } text-sm font-medium`}
+                } text-sm font-medium font-roboto-condensed`}
               >
                 Search
               </span>
@@ -112,7 +112,7 @@ const Sidebar: React.FC = () => {
               <span
                 className={`hidden ${
                   !isSearchOpen && "lg:block"
-                } text-sm font-medium`}
+                } text-sm font-medium font-roboto-condensed`}
               >
                 Explore
               </span>
@@ -129,7 +129,7 @@ const Sidebar: React.FC = () => {
               <span
                 className={`hidden ${
                   !isSearchOpen && "lg:block"
-                } text-sm font-medium`}
+                } text-sm font-medium font-roboto-condensed`}
               >
                 Message
               </span>
@@ -146,7 +146,7 @@ const Sidebar: React.FC = () => {
               <span
                 className={`hidden ${
                   !isSearchOpen && "lg:block"
-                } text-sm font-medium`}
+                } text-sm font-medium font-roboto-condensed`}
               >
                 Notifications
               </span>
@@ -172,7 +172,7 @@ const Sidebar: React.FC = () => {
               <span
                 className={`hidden ${
                   !isSearchOpen && "lg:block"
-                } text-sm font-medium`}
+                } text-sm font-medium font-roboto-condensed`}
               >
                 Create
               </span>
@@ -193,7 +193,7 @@ const Sidebar: React.FC = () => {
               <span
                 className={`hidden ${
                   !isSearchOpen && "lg:block"
-                } text-sm font-medium`}
+                } text-sm font-medium font-roboto-condensed`}
               >
                 Profile
               </span>
@@ -210,7 +210,7 @@ const Sidebar: React.FC = () => {
               <span
                 className={`hidden ${
                   !isSearchOpen && "lg:block"
-                } text-sm font-medium`}
+                } text-sm font-medium font-roboto-condensed`}
               >
                 Logout
               </span>

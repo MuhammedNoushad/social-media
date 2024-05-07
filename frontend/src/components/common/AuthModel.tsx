@@ -71,7 +71,7 @@ function AuthModel({
         <div className="mt-4 text-center">
           <h3 className="font-semibold text-3xl">{page}</h3>
           <p className="mt-2 text-sm">{renderAuthLink()}</p>
-          {(page === "sign up" || page === "Login") && (
+          {(page === "Sign Up" || page === "Login") && (
             <GoogleLogin onSuccess={handleGoogleSignIn} />
           )}
           <div className="relative flex py-5 items-center">

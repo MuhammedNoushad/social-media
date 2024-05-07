@@ -192,25 +192,17 @@ export const logout = async (req: Request, res: Response) => {
 export const googleLogin = async (req: Request, res: Response) => {
   try {
     const { email, firstName, lastName, username } = req.body;
-
     const user = await userRepository.findUser(email);
 
-    if (!user) {
-      return res.status(400).json({ error: "User not found" });
-    }
-
-    if (user.isBlock) {
-      return res.status(400).json({ error: "User is blocked" });
-    }
-
     if (user) {
+      if (user.isBlock) {
+        return res.status(404).json({ error: "User is blocked" });
+      }
       const accessToken = generateTokenAndSetCookie(
         user._id ? user._id : "",
         res
       );
-
       const role = user.isAdmin ? "admin" : "user";
-
       const responseData = {
         _id: user._id || "",
         username: user.username || "",
@@ -229,21 +221,40 @@ export const googleLogin = async (req: Request, res: Response) => {
       return res.status(200).json({ success: true, responseData });
     } else {
       const password = generatePassword();
-      const hashsedPassword = await bcrypt.hash(password, 10);
-
+      const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = {
         email,
         username,
         firstName,
         lastName,
-        password: hashsedPassword,
+        password: hashedPassword,
       } as IUsers;
-
       const createdUser = await userRepository.createNewUser(newUser);
-      createdUser &&
-        res
-          .status(200)
-          .json({ success: true, message: "User created successfully" });
+
+      if (createdUser) {
+        const accessToken = generateTokenAndSetCookie(
+          createdUser._id ?? "default_id",
+          res
+        );
+        const role = createdUser.isAdmin ? "admin" : "user";
+        const responseData = {
+          _id: createdUser._id,
+          username: createdUser.username,
+          firstName: createdUser.firstName,
+          lastName: createdUser.lastName,
+          email: createdUser.email,
+          profileimg: createdUser.profileimg || "",
+          bio: createdUser.bio || "",
+          dob: createdUser.dob || "",
+          phone:
+            createdUser.phone !== undefined ? createdUser.phone : undefined,
+          isBlock: createdUser.isBlock || false,
+          isAdmin: createdUser.isAdmin || false,
+          accessToken,
+          role,
+        };
+        return res.status(200).json({ success: true, responseData });
+      }
     }
   } catch (error) {
     console.error("Error from google login controller", error);
@@ -321,5 +332,3 @@ export const resetPassword = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
-

@@ -15,10 +15,13 @@ import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../../store/features/tokenSlice";
 import Dialog from "../../common/Dialog";
 import { clearState } from "../../../store/features/userDetailsSlice";
+import SearchModal from "./SerachModal";
 
 // Component for the sidebar
 const Sidebar: React.FC = () => {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState("w-auto");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -42,10 +45,20 @@ const Sidebar: React.FC = () => {
     setShowLogoutDialog(false);
   };
 
+  // Function for toggle search
+  const toggleSearch = (e: React.MouseEvent<HTMLLIElement>) => {
+    e.preventDefault();
+
+    setIsSearchOpen(!isSearchOpen);
+    setSidebarWidth(isSearchOpen ? "w-auto" : "w-14");
+  };
+
   // Render the sidebar
   return (
     <div className="min-h-screen flex flex-row">
-      <div className="fixed top-0 bottom-0 flex flex-col bg-white rounded-r-3xl overflow-hidden lg:w-56 w-16">
+      <div
+        className={`fixed top-0 bottom-0 flex flex-col bg-white rounded-r-3xl overflow-hidden ${sidebarWidth}`}
+      >
         <div className="flex items-center justify-center h-20 shadow-md">
           <img
             className="rounded-md h-11 mt-4"
@@ -62,10 +75,16 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiHome />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Home</span>
+              <span
+                className={`hidden ${
+                  !isSearchOpen && "lg:block"
+                } text-sm font-medium`}
+              >
+                Home
+              </span>
             </a>
           </li>
-          <li>
+          <li onClick={toggleSearch}>
             <a
               href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
@@ -73,7 +92,11 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiSearch />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span
+                className={`hidden ${
+                  !isSearchOpen && "lg:block"
+                } text-sm font-medium`}
+              >
                 Search
               </span>
             </a>
@@ -86,7 +109,11 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiCompass />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span
+                className={`hidden ${
+                  !isSearchOpen && "lg:block"
+                } text-sm font-medium`}
+              >
                 Explore
               </span>
             </a>
@@ -99,7 +126,11 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiChat />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span
+                className={`hidden ${
+                  !isSearchOpen && "lg:block"
+                } text-sm font-medium`}
+              >
                 Message
               </span>
             </a>
@@ -112,12 +143,18 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiBell />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span
+                className={`hidden ${
+                  !isSearchOpen && "lg:block"
+                } text-sm font-medium`}
+              >
                 Notifications
               </span>
-              <span className="hidden lg:block ml-auto mr-6 text-sm bg-red-100 rounded-full px-3 py-px text-red-500">
-                5
-              </span>
+              {!isSearchOpen && (
+                <span className="hidden lg:block ml-auto mr-6 text-sm bg-red-100 rounded-full px-3 py-px text-red-500">
+                  5
+                </span>
+              )}
             </a>
           </li>
           <li
@@ -132,7 +169,11 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiAddToQueue />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span
+                className={`hidden ${
+                  !isSearchOpen && "lg:block"
+                } text-sm font-medium`}
+              >
                 Create
               </span>
             </a>
@@ -149,7 +190,11 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiUser />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span
+                className={`hidden ${
+                  !isSearchOpen && "lg:block"
+                } text-sm font-medium`}
+              >
                 Profile
               </span>
             </a>
@@ -162,13 +207,21 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiLogOut />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span
+                className={`hidden ${
+                  !isSearchOpen && "lg:block"
+                } text-sm font-medium`}
+              >
                 Logout
               </span>
             </a>
           </li>
         </ul>
       </div>
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
       <Dialog
         title="Logout"
         message="Are you sure you want to logout?"

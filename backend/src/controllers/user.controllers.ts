@@ -42,5 +42,19 @@ export const deleteProfilePic = async (req: Request, res: Response) => {
   }
 };
 
-// Function for fetching user profile
+// Function for fetch all users
+export const fetchAllUsers = async (req: Request, res: Response) => {
+  try {
+    const usersData = await userRepository.getUsers();
 
+    if (!usersData) {
+      return res.status(400).json({ error: "Something went wrong" });
+    }
+
+    return res.status(200).json({ success: true, usersData });
+  } catch (error) {
+    // Handle errors
+    console.error("Error from fetchAllUsers user controller", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

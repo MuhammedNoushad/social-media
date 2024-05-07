@@ -172,16 +172,14 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.logout = logout;
 // Controller for google login
 const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const { email, firstName, lastName, username } = req.body;
         const user = yield userRepository.findUser(email);
-        if (!user) {
-            return res.status(400).json({ error: "User not found" });
-        }
-        if (user.isBlock) {
-            return res.status(400).json({ error: "User is blocked" });
-        }
         if (user) {
+            if (user.isBlock) {
+                return res.status(404).json({ error: "User is blocked" });
+            }
             const accessToken = (0, generateToken_1.default)(user._id ? user._id : "", res);
             const role = user.isAdmin ? "admin" : "user";
             const responseData = {
@@ -203,19 +201,35 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
         else {
             const password = (0, generatePassword_1.default)();
-            const hashsedPassword = yield bcrypt_1.default.hash(password, 10);
+            const hashedPassword = yield bcrypt_1.default.hash(password, 10);
             const newUser = {
                 email,
                 username,
                 firstName,
                 lastName,
-                password: hashsedPassword,
+                password: hashedPassword,
             };
             const createdUser = yield userRepository.createNewUser(newUser);
-            createdUser &&
-                res
-                    .status(200)
-                    .json({ success: true, message: "User created successfully" });
+            if (createdUser) {
+                const accessToken = (0, generateToken_1.default)((_a = createdUser._id) !== null && _a !== void 0 ? _a : "default_id", res);
+                const role = createdUser.isAdmin ? "admin" : "user";
+                const responseData = {
+                    _id: createdUser._id,
+                    username: createdUser.username,
+                    firstName: createdUser.firstName,
+                    lastName: createdUser.lastName,
+                    email: createdUser.email,
+                    profileimg: createdUser.profileimg || "",
+                    bio: createdUser.bio || "",
+                    dob: createdUser.dob || "",
+                    phone: createdUser.phone !== undefined ? createdUser.phone : undefined,
+                    isBlock: createdUser.isBlock || false,
+                    isAdmin: createdUser.isAdmin || false,
+                    accessToken,
+                    role,
+                };
+                return res.status(200).json({ success: true, responseData });
+            }
         }
     }
     catch (error) {

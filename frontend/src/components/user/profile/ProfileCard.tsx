@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const ProfileCard: React.FC = () => {
   const navigate = useNavigate();
   const userDetails = useSelector((state: RootState) => state.user);
+  console.log(userDetails)
 
   return (
     <div className="relative  w-auto min-w-0 break-words bg-light/30 draggable max-h-max ">

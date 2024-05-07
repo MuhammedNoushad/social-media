@@ -1,12 +1,12 @@
+import axios from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { UploadButton } from "@bytescale/upload-widget-react";
 
-import { RootState } from "../../../store/store";
 import IUserDetails from "../../../types/IUserDetails";
 import useEditProfile from "../../../hooks/user/useEditProfile";
-import axios from "../../../axios/axios";
 import useDeleteProfilePic from "../../../hooks/user/useDeleteProfilePic";
+import { RootState } from "../../../store/store";
 
 function EditProfileCard() {
   const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;

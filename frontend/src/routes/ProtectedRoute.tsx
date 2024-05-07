@@ -8,23 +8,19 @@ interface PrivateRouteProps {
   role: string;
 }
 
-function PrivateRoute({ children ,role }: PrivateRouteProps) {
-  const isAuthenticated = !!useSelector(
-    (state: RootState) => state.token.token
-  );
+function PrivateRoute({ children, role }: PrivateRouteProps) {
+  const isAuthenticated = !!localStorage.getItem("token");
   const userRole = useSelector((state: RootState) => state.token.role);
-
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   } else {
     if (userRole === "admin" && role !== "admin") {
       return <Navigate to="/admin" />;
-    } else if(userRole === "user" && role !== "user") {
+    } else if (userRole === "user" && role !== "user") {
       return <Navigate to="/home" />;
-    }
-    else{
-      return children
+    } else {
+      return children;
     }
   }
 }

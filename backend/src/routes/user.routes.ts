@@ -1,6 +1,7 @@
 import express from "express";
 import {
   deleteProfilePic,
+  fetchAllUsers,
   updateProfile,
 } from "../controllers/user.controllers";
 import verifyToken from "../middleware/verifyToken";
@@ -14,5 +15,6 @@ userRoute.delete(
   verifyToken,
   deleteProfilePic
 );
+userRoute.get('/users',fetchAllUsers)
 
 export default userRoute;

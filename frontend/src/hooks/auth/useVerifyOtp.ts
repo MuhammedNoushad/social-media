@@ -1,10 +1,12 @@
 import { toast } from "sonner";
 import axios from "../../axios/axios";
 import IFormInput from "../../types/IFormInputs";
+import { useNavigate } from "react-router-dom";
 
 type VerifyOtpFunction = (otp: string, formData: IFormInput) => Promise<void>;
 
 const useVerifyOtp = (): VerifyOtpFunction => {
+  const navigate = useNavigate();
   const confirmOtp: VerifyOtpFunction = async (otp, formData) => {
     try {
       // Send OTP and form data to the server
@@ -13,7 +15,7 @@ const useVerifyOtp = (): VerifyOtpFunction => {
         formData,
       });
       if (response.data.success) {
-        console.log("Successfully verified");
+        navigate("/", { replace: true });
       }
     } catch (error) {
       console.log("error from useConfirmOtp", error);

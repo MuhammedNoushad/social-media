@@ -27,6 +27,7 @@ const useGoogleLogin = () => {
       );
 
       const data = response.data;
+      console.log(data)
 
       if (data) {
         dispatch(setUser(data.responseData));

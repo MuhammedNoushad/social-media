@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BiMailSend,
   BiUser,
@@ -7,12 +7,70 @@ import {
 } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import IUserState from "../../../types/IUserState";
+import axios from "../../../axios/axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import useFollow from "../../../hooks/user/useFollow";
 
 const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
   userDetails,
   profile,
 }) => {
   const navigate = useNavigate();
+  const [following, setFollowing] = useState(false);
+  const [followedByUser, setFollowedByUser] = useState(false);
+  const user = useSelector((state: RootState) => state.user);
+  const { follow, unfollow } = useFollow();
+
+  // Function for fetch Connection
+  const fetchConnection = async () => {
+    try {
+      const response = await axios.get(`/api/connection/${user._id}`);
+      const data = response.data;
+      if (data.success) {
+        const isFollowing = data.connections.following.some(
+          (followingUser: { _id: string }) =>
+            followingUser._id === userDetails._id
+        );
+        setFollowing(isFollowing);
+        const isFollowedByUser = data.connections.followers.some(
+          (follower: { _id: string }) => follower._id === userDetails._id
+        );
+        setFollowedByUser(isFollowedByUser);
+      }
+    } catch (error) {
+      console.log(error, "error from fetchConnection");
+    }
+  };
+
+  useEffect(() => {
+    fetchConnection();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user._id, userDetails._id]);
+
+  // Function for handle follow User
+  const handleFollow = async () => {
+    try {
+      const response = await follow(user._id, userDetails._id);
+      if (response) {
+        setFollowing(true);
+      }
+    } catch (error) {
+      console.log(error, "error from handleFollow");
+    }
+  };
+
+  // Function for handle unfollow User
+  const handleUnfollow = async () => {
+    try {
+      const response = await unfollow(user._id, userDetails._id);
+      if (response) {
+        setFollowing(false);
+      }
+    } catch (error) {
+      console.log(error, "error from handleUnfollow");
+    }
+  };
 
   return (
     <div className="relative w-auto min-w-0 break-words bg-light/30 draggable max-h-max font-roboto-condensed">
@@ -51,7 +109,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
                     <span className="mr-1">
                       <BiUser />
                     </span>{" "}
-                    {userDetails.username}{" "}
+                    @{userDetails.username}{" "}
                   </a>
                   <a
                     href={`mailto:${userDetails.email}`}
@@ -88,10 +146,30 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
             {/* follow and message button here */}
             {profile === "others" && (
               <div className="flex justify-center my-4">
-                <button className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-md mr-2">
-                  <BiUserPlus className="mr-2" /> Follow
-                </button>
-                <button className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-md">
+                {following ? (
+                  <button
+                    onClick={handleUnfollow}
+                    className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-lg mr-2"
+                  >
+                    <BiUserPlus className="mr-2" /> Unfollow
+                  </button>
+                ) : followedByUser ? (
+                  <button
+                    onClick={handleFollow}
+                    className="flex items-center justify-center  bg-blue-500 hover:bg-blue-600 text-white font-roboto-condensed font-medium px-4 py-2 rounded-lg mr-2"
+                  >
+                    <BiUserPlus className="mr-2" /> Follow Back
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleFollow}
+                    className="flex items-center justify-center  bg-blue-500 hover:bg-blue-600 text-white font-roboto-condensed font-medium px-4 py-2 rounded-lg mr-2"
+                  >
+                    <BiUserPlus className="mr-2" /> Follow
+                  </button>
+                )}
+
+                <button className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-lg">
                   <BiMessageSquareAdd className="mr-2" /> Message
                 </button>
               </div>

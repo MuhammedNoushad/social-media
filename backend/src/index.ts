@@ -9,6 +9,7 @@ import connectToMongoDB from "./db/connectToMongoDB";
 import userRoute from "./routes/user.routes";
 import adminRoute from "./routes/admin.routes";
 import postRoute from "./routes/post.routes";
+import connectionRoute from "./routes/connection.routes";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/connection", connectionRoute);
 
 // Connect to MongoDB and start the server
 connectToMongoDB()

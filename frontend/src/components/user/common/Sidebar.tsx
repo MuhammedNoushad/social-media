@@ -67,7 +67,11 @@ const Sidebar: React.FC = () => {
           />
         </div>
         <ul className="flex flex-col py-4">
-          <li>
+          <li
+            onClick={() => {
+              navigate("/home");
+            }}
+          >
             <a
               href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"

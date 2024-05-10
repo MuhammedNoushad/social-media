@@ -13,10 +13,10 @@ function UserProfile() {
         <Sidebar />
       </div>
       <div className="flex-grow flex flex-col w-10/12 gap:6 lg:gap-12">
-        <div className="flex-grow lg:p-4 lg:max-h-[26vh]">
+        <div className="flex-grow lg:p-4 lg:mr-44 lg:max-h-[26vh]">
           <ProfileCard userDetails={userDetails} profile="own" />
         </div>
-        <div className="p-4 lg:ml-24 mr-auto mb-auto">
+        <div className="p-4 lg:ml-24 lg:mr-60 mb-auto lg:mt-8">
           <DefaultGallery userId={userDetails._id} />
         </div>
       </div>

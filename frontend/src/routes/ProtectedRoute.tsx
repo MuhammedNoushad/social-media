@@ -12,6 +12,8 @@ function PrivateRoute({ children, role }: PrivateRouteProps) {
   const isAuthenticated = !!localStorage.getItem("token");
   const userRole = useSelector((state: RootState) => state.token.role);
 
+  console.log(userRole,role)
+
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   } else {
@@ -23,6 +25,7 @@ function PrivateRoute({ children, role }: PrivateRouteProps) {
       return children;
     }
   }
+  
 }
 
 export default PrivateRoute;

@@ -1,13 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "@reduxjs/toolkit";
-import userDetailsReducer from "./features/userDetailsSlice";
-import tokenReducer from "./features/tokenSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+import tokenReducer from "./features/tokenSlice";
+import userDetailsReducer from "./features/userDetailsSlice";
+import postReducer from "./features/postsSlice";
+import connectionReducer from "./features/connectionSlice";
+
 const rootReducer = combineReducers({
   user: userDetailsReducer,
-  token: tokenReducer
+  token: tokenReducer,
+  posts: postReducer,
+  connection: connectionReducer,
 });
 
 const persistConfig = {
@@ -18,7 +23,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer
+  reducer: persistedReducer,
 });
 
 export const persistor = persistStore(store);

@@ -45,7 +45,7 @@ function OthersProfile() {
         <div className="flex-grow lg:mb-4 lg:mr-44 lg:py-4 lg:max-h-[26vh]">
           <ProfileCard userDetails={userData} profile="others" />
         </div>
-        <div className="p-4 lg:ml-24 mr-auto mb-auto">
+        <div className="p-4 lg:ml-24 lg:mr-60 mb-auto lg:mt-8">
           <DefaultGallery userId={userId as string} />
         </div>
       </div>

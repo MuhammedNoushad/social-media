@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 import IPosts from "../interfaces/IPosts";
 import Post from "../models/post.model";
 
@@ -24,6 +26,7 @@ class PostRepository {
   async getAllPosts(): Promise<IPosts[] | null> {
     try {
       const posts = await Post.find({})
+        .sort({ createdAt: -1 })
         .populate("userId", "username _id profileimg")
         .populate("comments.userId", "username _id profileimg");
       if (posts) {
@@ -72,6 +75,30 @@ class PostRepository {
       return null;
     }
   }
-}
 
+  // Function for toggle like
+  async toggleLike(postId: string, userId: string): Promise<IPosts | null> {
+    try {
+      const postData = await Post.findById(postId);
+      if (!postData) return null;
+
+      const isLiked = postData.likes.includes(new ObjectId(userId));
+
+      if (isLiked) {
+        postData.likes = postData.likes.filter(
+          (id) => !id.equals(new ObjectId(userId))
+        );
+      } else {
+        postData.likes.push(new ObjectId(userId));
+      }
+
+      // Save the updated postData
+      const updatedPost = await postData.save();
+      return updatedPost ? updatedPost.toObject() : null;
+    } catch (error) {
+      console.error("Error from toggleLike in PostRepository", error);
+      return null;
+    }
+  }
+}
 export default PostRepository;

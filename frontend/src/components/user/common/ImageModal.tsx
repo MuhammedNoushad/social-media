@@ -22,14 +22,15 @@ const ImageModal: React.FC<ImageModalProps> = ({
   selectedPost,
   onClose,
 }) => {
-  const [comments, setComments] = useState<IComment[]>(selectedPost?.comments || []);
+  const [comments, setComments] = useState<IComment[]>(
+    selectedPost?.comments || []
+  );
   const [commentInput, setCommentInput] = useState<string>("");
   const { postComment } = usePostComment();
 
   if (!showModal || !selectedPost) {
     return null;
   }
-
 
   // Function for adding a new comment
   const handlePostComment = async () => {
@@ -38,12 +39,11 @@ const ImageModal: React.FC<ImageModalProps> = ({
       if (newComment) {
         setComments([...comments, newComment]);
       }
-      setCommentInput(""); 
+      setCommentInput("");
     } catch (error) {
       console.error("Error posting comment:", error);
     }
   };
-
 
   return (
     <div className="fixed z-50 inset-0 flex items-center justify-center">
@@ -83,7 +83,10 @@ const ImageModal: React.FC<ImageModalProps> = ({
               </div>
               {/* Comments section */}
               {comments?.map((comment: IComment) => (
-                <div className="bg-gray-100 p-2 rounded-md mb-2 flex items-start">
+                <div
+                  key={comment._id}
+                  className="bg-gray-100 p-2 rounded-md mb-2 flex items-start"
+                >
                   <img
                     src={comment.userId.profileimg}
                     alt={comment.userId.username}
@@ -104,6 +107,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
               <div className="relative w-full min-w-[200px] h-10">
                 <div className="absolute grid w-5 h-5 place-items-center text-blue-gray-500 top-2/4 right-3 -translate-y-2/4">
                   <FaTelegramPlane
+                    className="cursor-pointer"
                     aria-hidden="true"
                     onClick={handlePostComment}
                   />

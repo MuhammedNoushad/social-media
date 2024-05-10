@@ -27,3 +27,23 @@ export const addComment = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for toggle like
+
+export const toggleLike = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req.body;
+
+    const updatedPostData = await postRepository.toggleLike(postId, userId);
+
+    if (!updatedPostData)
+      return res.status(400).json({ error: "Something went wrong" });
+
+    const postData = await postRepository.getAllPosts();
+
+    return res.status(200).json({ success: true, postData });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

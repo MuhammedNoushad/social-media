@@ -5,7 +5,7 @@ import {
   getPostOfUser,
 } from "../controllers/post.controllers";
 import verifyToken from "../middleware/verifyToken";
-import { addComment } from "../controllers/comment.controllers";
+import { addComment, toggleLike } from "../controllers/comment.controllers";
 
 const postRoute = express.Router();
 
@@ -15,5 +15,7 @@ postRoute.get("/:userId", verifyToken, getPostOfUser);
 
 
 postRoute.post('/add-comment/:postId',addComment);
+
+postRoute.post('/toggle-like/:postId',toggleLike)
 
 export default postRoute;

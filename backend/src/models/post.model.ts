@@ -17,6 +17,14 @@ const commentSchema = new Schema(
   }
 );
 
+const reportSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    content: { type: String, required: true },
+  },
+  { timestamps: true }
+);
+
 const postSchema = new Schema(
   {
     userId: {
@@ -32,12 +40,7 @@ const postSchema = new Schema(
       type: String,
     },
     comments: [commentSchema],
-    reports: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    reports: [reportSchema],
     likes: {
       type: [
         {

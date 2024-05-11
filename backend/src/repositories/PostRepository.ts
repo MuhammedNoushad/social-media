@@ -100,5 +100,35 @@ class PostRepository {
       return null;
     }
   }
+
+  // Function for report
+  async reportPost(
+    postId: string,
+    userId: string,
+    content: string
+  ): Promise<IPosts | null> {
+    try {
+      const postData = await Post.findById(postId);
+
+      if (!postData) return null;
+
+      const isReported = postData.reports.some(
+        (report) => report.userId.toString() === userId
+      );
+      if (isReported) {
+        return null;
+      }
+
+      postData.reports.push({ userId: new ObjectId(userId), content });
+
+      // Save the updated postData
+      const updatedPost = await postData.save();
+
+      return updatedPost ? updatedPost.toObject() : null;
+    } catch (error) {
+      console.error("Error from reportPost in PostRepository", error);
+      return null;
+    }
+  }
 }
 export default PostRepository;

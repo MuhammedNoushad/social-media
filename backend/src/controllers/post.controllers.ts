@@ -63,3 +63,22 @@ export const getPostOfUser = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for report post
+export const report = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+    const { userId, content } = req.body;
+
+    const reportData = await postRepository.reportPost(postId, userId, content);
+
+    if (!reportData)
+      return res.status(400).json({ error: "Failed to report post" });
+
+    const postData = await postRepository.getAllPosts();
+
+    return res.status(200).json({ success: true, postData });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

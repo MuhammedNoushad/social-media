@@ -1,23 +1,23 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
+import { FaEdit, FaRegFlag, FaTrash, FaUserMinus } from "react-icons/fa";
 
 import { RootState } from "../../../store/store";
 import IPosts from "../../../types/IPosts";
 import IConnection from "../../../types/IConnection";
-import { useState } from "react";
 import ImageModal from "../common/ImageModal";
 import IComment from "../../../types/IComment";
 import IUserDetails from "../../../types/IUserDetails";
 import useLikePost from "../../../hooks/user/useLikePost";
+import Dialog from "../../common/Dialog";
+import useReportPost from "../../../hooks/user/useReportPost";
 
 function Post() {
-  const { likePost } = useLikePost();
-  const posts = useSelector((state: RootState) => state.posts.posts);
-  const currentUser = useSelector((state: RootState) => state.user);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const connections: any = useSelector(
-    (state: RootState) => state.connection.connection
-  );
+  const [reason, setReason] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showReportDialog, setShowReportDialog] = useState(false);
+  const [postReported, setPostReported] = useState("");
   const [selectedPost, setSelectedPost] = useState<{
     userId: IUserDetails;
     imageUrl: string;
@@ -26,6 +26,18 @@ function Post() {
     comments?: IComment[];
     likes?: string[];
   } | null>(null);
+
+  const { likePost } = useLikePost();
+  const { reportPost } = useReportPost();
+
+  const posts = useSelector((state: RootState) => state.posts.posts);
+  const currentUser = useSelector((state: RootState) => state.user);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const connections: any = useSelector(
+    (state: RootState) => state.connection.connection
+  );
+
+  const detailsElement = document.querySelector("details");
 
   const filteredPosts = posts.filter((post: IPosts) => {
     return (
@@ -60,6 +72,42 @@ function Post() {
     }
   };
 
+  // Function for Show report modal
+  const handleReport = (reason: string) => {
+    setReason(reason);
+
+    const modal = document.getElementById("my_modal_1");
+    if (modal && modal instanceof HTMLDialogElement) {
+      modal.close();
+    }
+    setShowReportDialog(true);
+  };
+
+  // Function for confirm report
+  const confirmReport = async () => {
+    setShowReportDialog(false);
+
+    const reported = await reportPost(postReported, currentUser._id, reason);
+
+    if (reported) {
+      setSelectedPost(null);
+      setPostReported("");
+      setReason("");
+      toast.success("Post reported successfully");
+      if (detailsElement) {
+        detailsElement.open = false;
+      }
+    }
+  };
+
+  // Function for cancel report
+  const cancelReport = () => {
+    if (detailsElement) {
+      detailsElement.open = false;
+    }
+    setShowReportDialog(false);
+  };
+
   return (
     <>
       <div className="max-w-3xl mx-auto">
@@ -80,17 +128,57 @@ function Post() {
                     <span className="text-gray-500 text-2xl">&middot;</span>
                     <span className="text-gray-500 text-xs">3 m</span>
                   </div>
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="25"
-                      height="25"
-                      viewBox="0 0 256 256"
-                      className="text-gray-200 fill-current cursor-pointer hover:text-black"
-                    >
-                      <path d="M112 60a16 16 0 1 1 16 16a16 16 0 0 1-16-16Zm16 52a16 16 0 1 0 16 16a16 16 0 0 0-16-16Zm0 68a16 16 0 1 0 16 16a16 16 0 0 0-16-16Z" />
-                    </svg>
-                  </div>
+
+                  <details className="dropdown">
+                    <summary className="m-1 btn btn-ghost text-white hover:text-white hover:bg-transparent">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="25"
+                        height="25"
+                        viewBox="0 0 256 256"
+                        className="text-black fill-current cursor-pointer hover:text-black"
+                      >
+                        <path d="M112 60a16 16 0 1 1 16 16a16 16 0 0 1-16-16Zm16 52a16 16 0 1 0 16 16a16 16 0 0 0-16-16Zm0 68a16 16 0 1 0 16 16a16 16 0 0 0-16-16Z" />
+                      </svg>
+                    </summary>
+                    {image.userId._id === currentUser._id ? (
+                      <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                        <li>
+                          <a>
+                            <FaEdit className="mr-2" /> Edit
+                          </a>
+                        </li>
+                        <li>
+                          <a>
+                            <FaTrash className="mr-2" /> Delete
+                          </a>
+                        </li>
+                      </ul>
+                    ) : (
+                      <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                        <li>
+                          <a
+                            onClick={() => {
+                              setPostReported(image._id);
+                              const modal = document.getElementById(
+                                "my_modal_1"
+                              ) as HTMLDialogElement;
+                              if (modal) {
+                                modal.showModal();
+                              }
+                            }}
+                          >
+                            <FaRegFlag className="mr-2" /> Report
+                          </a>
+                        </li>
+                        <li>
+                          <a>
+                            <FaUserMinus className="mr-2" /> Unfollow
+                          </a>
+                        </li>
+                      </ul>
+                    )}
+                  </details>
                 </div>
                 <div className="py-3 h-96">
                   <img
@@ -219,6 +307,58 @@ function Post() {
           onClose={handleCloseModal}
         />
       )}
+
+      <dialog id="my_modal_1" className="modal">
+        <ul className="modal-box w-80 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <h3 className="font-bold text-lg">
+            Why are you reporting this post?
+          </h3>
+          <form method="dialog">
+            <button
+              onClick={() => handleReport("It's spam")}
+              className="cursor-pointer w-full mt-4 px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600"
+            >
+              It's spam
+            </button>
+            <button
+              onClick={() => handleReport("Nudity or sexual activity")}
+              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600"
+            >
+              Nudity or sexual activity
+            </button>
+            <button
+              onClick={() => handleReport("Scam or fraud")}
+              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600"
+            >
+              Scam or fraud
+            </button>
+            <button
+              onClick={() => handleReport("False information")}
+              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600"
+            >
+              False information
+            </button>
+            <button
+              onClick={() => handleReport("I just don't like it")}
+              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600"
+            >
+              I just don't like it
+            </button>
+            <div className="modal-action">
+              <button>Close</button>
+            </div>
+          </form>
+        </ul>
+      </dialog>
+
+      {/* Confirmation Modal for report */}
+      <Dialog
+        title="Report Post"
+        message="Are you sure you want to report this post?"
+        isOpen={showReportDialog}
+        onConfirm={confirmReport}
+        onCancel={cancelReport}
+      />
     </>
   );
 }

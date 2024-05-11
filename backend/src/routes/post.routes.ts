@@ -3,6 +3,7 @@ import {
   createNewPost,
   fetchAllPosts,
   getPostOfUser,
+  report,
 } from "../controllers/post.controllers";
 import verifyToken from "../middleware/verifyToken";
 import { addComment, toggleLike } from "../controllers/comment.controllers";
@@ -17,5 +18,7 @@ postRoute.get("/:userId", verifyToken, getPostOfUser);
 postRoute.post('/add-comment/:postId',addComment);
 
 postRoute.post('/toggle-like/:postId',toggleLike)
+
+postRoute.post('/report/:postId',report)
 
 export default postRoute;

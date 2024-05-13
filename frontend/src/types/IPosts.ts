@@ -2,7 +2,7 @@ import IComment from "./IComment";
 import IUserDetails from "./IUserDetails";
 
 interface IReport {
-  userId: string;
+  userId: IUserDetails;
   content: string;
 }
 

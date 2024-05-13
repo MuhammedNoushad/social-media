@@ -40,11 +40,18 @@ function Post() {
   const detailsElement = document.querySelector("details");
 
   const filteredPosts = posts.filter((post: IPosts) => {
-    return (
+    const isFollowingOrOwnPost =
       connections?.following?.some(
         (user: IConnection) => user._id === post.userId?._id
-      ) || post.userId?._id === currentUser._id
-    );
+      ) || post.userId?._id === currentUser._id;
+
+    const hasReportedPost = post.reports?.some((report) => {
+      return report.userId._id === currentUser._id;
+    });
+
+    const isNotReportedByCurrentUser = !hasReportedPost;
+
+    return isFollowingOrOwnPost && isNotReportedByCurrentUser;
   });
 
   const handleImageClick = (post: {
@@ -64,6 +71,7 @@ function Post() {
     setSelectedPost(null);
   };
 
+  // Function for liking post
   const handleLike = async (postId: string) => {
     try {
       await likePost(postId);

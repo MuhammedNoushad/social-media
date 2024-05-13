@@ -27,6 +27,7 @@ class PostRepository {
     try {
       const posts = await Post.find({})
         .sort({ createdAt: -1 })
+        .populate("reports.userId", "username _id profileimg")
         .populate("userId", "username _id profileimg")
         .populate("comments.userId", "username _id profileimg");
       if (posts) {

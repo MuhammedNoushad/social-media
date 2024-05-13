@@ -291,8 +291,12 @@ function Post() {
                   <a className="font-medium">{image.userId.username}</a>
                   <p>{image.description}</p>
                 </div>
-                <div className="text-sm text-gray-400 py-2 cursor-pointer">
-                  View all 13 comments
+                <div
+                  onClick={() => handleImageClick(image)}
+                  className="text-sm text-gray-400 py-2 cursor-pointer"
+                >
+                  {image.comments?.length !== 0 &&
+                    `View all ${image.comments?.length} comments`}
                 </div>
               </section>
               <hr className="border-gray-700" />

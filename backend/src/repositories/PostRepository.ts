@@ -130,5 +130,22 @@ class PostRepository {
       return null;
     }
   }
+
+  // Function for fetching block posts
+  async toggleBlock(postId: string): Promise<IPosts | null> {
+    try {
+      const post = await Post.findById(postId);
+      if (!post) return null;
+
+      post.isBlocked = !post.isBlocked;
+
+      // Save the updated postData
+      const updatedPost = await post.save();
+      return updatedPost ? updatedPost.toObject() : null;
+    } catch (error) {
+      console.log("Error from blockPost in PostRepository", error);
+      return null;
+    }
+  }
 }
 export default PostRepository;

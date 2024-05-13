@@ -38,11 +38,15 @@ export const createNewPost = async (req: Request, res: Response) => {
 // Function for fetching all posts
 export const fetchAllPosts = async (req: Request, res: Response) => {
   try {
-    const posts = await postRepository.getAllPosts();
+    const postData = await postRepository.getAllPosts();
 
-    if (!posts) {
+    if (!postData) {
       return res.status(400).json({ error: "Failed to fetch posts" });
     }
+
+    const posts = postData.filter(
+      (post) => post.isBlocked === false && post.isDeleted === false
+    );
 
     return res.status(200).json({ success: true, posts });
   } catch (error) {
@@ -75,10 +79,53 @@ export const report = async (req: Request, res: Response) => {
     if (!reportData)
       return res.status(400).json({ error: "Failed to report post" });
 
-    const postData = await postRepository.getAllPosts();
+    const posts = await postRepository.getAllPosts();
+
+    const postData = posts?.filter(
+      (post) => post.isBlocked === false && post.isDeleted === false
+    );
 
     return res.status(200).json({ success: true, postData });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for fetch reported posts
+export const reportedPosts = async (req: Request, res: Response) => {
+  try {
+    const postData = await postRepository.getAllPosts();
+    if (!postData) {
+      return res.status(400).json({ error: "Failed to fetch posts" });
+    }
+
+    const reportedPosts = postData.filter(
+      (post) => post.reports && post.reports.length > 0
+    );
+
+    return res.status(200).json({ success: true, reportedPosts });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for block post
+export const togglePostBlock = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+
+    const blockedPost = await postRepository.toggleBlock(postId);
+
+    if (!blockedPost) {
+      res.status(400).json({ error: "Failed to block post" });
+    }
+
+    const message = blockedPost?.isBlocked
+      ? "Post blocked successfully"
+      : "Post unblocked successfully";
+
+    res.status(200).json({ success: true, message });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
   }
 };

@@ -6,6 +6,9 @@ interface IPosts extends Document {
   description: string;
   likes?: string[];
   comments?: string[];
+  reports?: { userId: string; content: string }[];
+  isBlocked?: boolean;
+  isDeleted?: boolean;
 }
 
 export default IPosts;

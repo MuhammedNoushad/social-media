@@ -129,3 +129,22 @@ export const togglePostBlock = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for delete post
+export const deletePost = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+
+    const deletedPost = await postRepository.deletePost(postId);
+
+    if (!deletedPost) {
+      res.status(400).json({ error: "Failed to delete post" });
+    }
+
+    const postData = await postRepository.getAllPosts();
+
+    return res.status(200).json({ success: true, postData });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

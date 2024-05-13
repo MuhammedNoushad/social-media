@@ -12,11 +12,13 @@ import IUserDetails from "../../../types/IUserDetails";
 import useLikePost from "../../../hooks/user/useLikePost";
 import Dialog from "../../common/Dialog";
 import useReportPost from "../../../hooks/user/useReportPost";
+import useDeletePost from "../../../hooks/user/useDeletePost";
 
 function Post() {
   const [reason, setReason] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showReportDialog, setShowReportDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [postReported, setPostReported] = useState("");
   const [selectedPost, setSelectedPost] = useState<{
     userId: IUserDetails;
@@ -27,6 +29,7 @@ function Post() {
     likes?: string[];
   } | null>(null);
 
+  const { deletePost } = useDeletePost();
   const { likePost } = useLikePost();
   const { reportPost } = useReportPost();
 
@@ -116,6 +119,36 @@ function Post() {
     setShowReportDialog(false);
   };
 
+  // Function to open the delete modal
+  const openDeleteModal = (postId: string) => {
+    setSelectedPost(posts.find((post) => post._id === postId) || null);
+    setShowDeleteDialog(true);
+  };
+
+  // Function to close the delete modal
+  const closeDeleteModal = () => {
+    setShowDeleteDialog(false);
+    setSelectedPost(null);
+  };
+
+  // Function to confirm delete
+  const confirmDelete = async () => {
+    if (selectedPost) {
+      try {
+        await deletePost(selectedPost._id);
+        toast.success("Post deleted successfully");
+      } catch (error) {
+        console.log("Error deleting post:", error);
+      }
+    }
+    closeDeleteModal();
+  };
+
+  // Function to cancel delete
+  const cancelDelete = () => {
+    closeDeleteModal();
+  };
+
   return (
     <>
       <div className="max-w-3xl mx-auto">
@@ -156,7 +189,7 @@ function Post() {
                             <FaEdit className="mr-2" /> Edit
                           </a>
                         </li>
-                        <li>
+                        <li onClick={() => openDeleteModal(image._id)}>
                           <a>
                             <FaTrash className="mr-2" /> Delete
                           </a>
@@ -370,6 +403,15 @@ function Post() {
         isOpen={showReportDialog}
         onConfirm={confirmReport}
         onCancel={cancelReport}
+      />
+
+      {/* Confirmation modal for delete post */}
+      <Dialog
+        title="Delete Post"
+        message="Are you sure you want to delete this post?"
+        isOpen={showDeleteDialog}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
       />
     </>
   );

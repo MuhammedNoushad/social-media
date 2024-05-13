@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createNewPost,
+  deletePost,
   fetchAllPosts,
   getPostOfUser,
   report,
@@ -10,9 +11,10 @@ import { addComment, toggleLike } from "../controllers/comment.controllers";
 
 const postRoute = express.Router();
 
-postRoute.post("/:userId", verifyToken, createNewPost);
 postRoute.get("/", verifyToken, fetchAllPosts);
+postRoute.post("/:userId", verifyToken, createNewPost);
 postRoute.get("/:userId", verifyToken, getPostOfUser);
+postRoute.delete('/:postId', deletePost)
 
 
 postRoute.post('/add-comment/:postId',addComment);

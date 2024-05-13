@@ -25,7 +25,7 @@ class PostRepository {
   // Function for fetching all posts
   async getAllPosts(): Promise<IPosts[] | null> {
     try {
-      const posts = await Post.find({})
+      const posts = await Post.find({ isDeleted: false })
         .sort({ createdAt: -1 })
         .populate("reports.userId", "username _id profileimg")
         .populate("userId", "username _id profileimg")
@@ -43,7 +43,7 @@ class PostRepository {
   // Function for fetching post of user
   async getPostOfUser(userId: string): Promise<IPosts[] | null> {
     try {
-      const posts = await Post.find({ userId })
+      const posts = await Post.find({ userId , isDeleted: false })
         .populate("userId", "username _id profileimg")
         .populate("comments.userId", "username _id profileimg")
         .sort({ createdAt: -1 });
@@ -145,6 +145,20 @@ class PostRepository {
       return updatedPost ? updatedPost.toObject() : null;
     } catch (error) {
       console.log("Error from blockPost in PostRepository", error);
+      return null;
+    }
+  }
+
+  // Function for delete post
+  async deletePost(postId: string) {
+    try {
+      const deletedPost = await Post.findByIdAndUpdate(postId, {
+        isDeleted: true,
+      });
+
+      return deletedPost;
+    } catch (error) {
+      console.log("Error from deletePost in PostRepository", error);
       return null;
     }
   }

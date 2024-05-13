@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPassword = exports.verifyotpForgotPassword = exports.sendOtpForResetPassword = exports.googleLogin = exports.logout = exports.login = exports.verifyotp = exports.signup = void 0;
+exports.resendOtp = exports.resendOtpForgotPassword = exports.resetPassword = exports.verifyotpForgotPassword = exports.sendOtpForResetPassword = exports.googleLogin = exports.logout = exports.login = exports.verifyotp = exports.signup = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const UserRepository_1 = __importDefault(require("../repositories/UserRepository"));
 const sendMail_1 = require("../utils/sendMail");
@@ -302,3 +302,35 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.resetPassword = resetPassword;
+// Function for resend otp
+const resendOtpForgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email } = req.body;
+        const isUserExist = yield userRepository.existingEmail(email);
+        if (!isUserExist) {
+            return res.status(400).json({ error: "User not found" });
+        }
+        (0, sendMail_1.sendEmailForForgotPassword)(email);
+        return res
+            .status(200)
+            .json({ success: true, message: "Otp sent successfully" });
+    }
+    catch (error) {
+        console.error("Error from resendOtp controller", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.resendOtpForgotPassword = resendOtpForgotPassword;
+// Function for resend otp for signup
+const resendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email } = req.body;
+        (0, sendMail_1.sendEmailWithVerification)(email);
+        res.status(200).json({ success: true, message: "Otp sent successfully" });
+    }
+    catch (error) {
+        console.error("Error from resendOtp controller", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.resendOtp = resendOtp;

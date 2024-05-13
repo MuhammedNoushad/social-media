@@ -1,13 +1,11 @@
 import { toast } from "sonner";
 import axios from "../../axios/axios";
-import IFormInput from "../../types/IFormInputs";
 import { useNavigate } from "react-router-dom";
 
-type VerifyOtpFunction = (otp: string, formData: IFormInput) => Promise<void>;
-
-const useVerifyOtp = (): VerifyOtpFunction => {
+const useVerifyOtp = () => {
   const navigate = useNavigate();
-  const confirmOtp: VerifyOtpFunction = async (otp, formData) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const confirmOtp = async (otp: string, formData: any) => {
     try {
       // Send OTP and form data to the server
       const response = await axios.post("/api/auth/verify-otp", {
@@ -23,7 +21,20 @@ const useVerifyOtp = (): VerifyOtpFunction => {
     }
   };
 
-  return confirmOtp;
+  const resendOtp = async (email: string) => {
+    try {
+      const response = await axios.post("/api/auth/resend-otp", {
+        email,
+      });
+      if (response.data.success) {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.log("error from resendOtp", error);
+    }
+  };
+
+  return { confirmOtp, resendOtp };
 };
 
 export default useVerifyOtp;

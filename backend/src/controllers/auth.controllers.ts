@@ -332,3 +332,38 @@ export const resetPassword = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for resend otp
+export const resendOtpForgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const isUserExist = await userRepository.existingEmail(email);
+
+    if (!isUserExist) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    sendEmailForForgotPassword(email);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Otp sent successfully" });
+  } catch (error) {
+    console.error("Error from resendOtp controller", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for resend otp for signup
+export const resendOtp = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    sendEmailWithVerification(email);
+
+    res.status(200).json({ success: true, message: "Otp sent successfully" });
+  } catch (error) {
+    console.error("Error from resendOtp controller", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

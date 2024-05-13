@@ -15,9 +15,12 @@ const useVerifyResetPasswordOtp = () => {
 
       if (data.success) {
         toast.success(data.message);
-        navigate("/forgot-password/reset", { state: { email: email , verified : true } });
+        localStorage.removeItem("otpTimerRemaining");
+        navigate("/forgot-password/reset", {
+          state: { email: email, verified: true },
+        });
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.data) {
         toast.error(error.response.data.error);
@@ -26,7 +29,26 @@ const useVerifyResetPasswordOtp = () => {
       }
     }
   };
-  return { verifyResetPasswordOtp };
+
+  const resendOtp = async (email: string) => {
+    try {
+      const response = await axios.post(
+        "/api/auth/forgot-password/resend-otp",
+        {
+          email,
+        }
+      );
+      const data = response.data;
+
+      if (data.success) {
+        toast.success(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return { verifyResetPasswordOtp, resendOtp };
 };
 
 export default useVerifyResetPasswordOtp;

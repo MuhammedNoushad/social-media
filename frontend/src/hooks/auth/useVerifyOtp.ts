@@ -1,6 +1,7 @@
 import { toast } from "sonner";
-import axios from "../../axios/axios";
 import { useNavigate } from "react-router-dom";
+
+import axios from "../../axios/axios";
 
 const useVerifyOtp = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const useVerifyOtp = () => {
         formData,
       });
       if (response.data.success) {
+        localStorage.removeItem("otp");
         navigate("/", { replace: true });
       }
     } catch (error) {
@@ -23,6 +25,7 @@ const useVerifyOtp = () => {
 
   const resendOtp = async (email: string) => {
     try {
+      console.log(email);
       const response = await axios.post("/api/auth/resend-otp", {
         email,
       });

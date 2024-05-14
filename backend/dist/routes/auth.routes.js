@@ -10,7 +10,7 @@ const authRoute = express_1.default.Router();
 // // Authentication routes
 authRoute.post("/signup", auth_controllers_js_1.signup);
 authRoute.post("/verify-otp", auth_controllers_js_1.verifyotp);
-authRoute.post('resend-otp', auth_controllers_js_1.resendOtp);
+authRoute.post('/resend-otp', auth_controllers_js_1.resendOtp);
 authRoute.post("/login", auth_controllers_js_1.login);
 authRoute.post("/logout", auth_controllers_js_1.logout);
 authRoute.post("/google-login", auth_controllers_js_1.googleLogin);

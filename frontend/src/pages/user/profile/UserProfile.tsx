@@ -17,7 +17,7 @@ function UserProfile() {
           <ProfileCard userDetails={userDetails} profile="own" />
         </div>
         <div className="p-4 lg:ml-24 lg:mr-60 mb-auto lg:mt-8">
-          <DefaultGallery userId={userDetails._id} />
+          <DefaultGallery userId={userDetails._id} profile="own" />
         </div>
       </div>
     </div>

@@ -22,6 +22,18 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
   const user = useSelector((state: RootState) => state.user);
   const { follow, unfollow } = useFollow();
 
+  const post = useSelector((state: RootState) => state.posts.posts);
+  const ownPosts = post.filter((post) => {
+    return post.userId?._id === userDetails._id;
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const connections: any = useSelector(
+    (state: RootState) => state.connection.connection
+  );
+  const numberOfFollowers = connections.followers.length;
+  const numberOfFollowing = connections.following.length;
+
   // Function for fetch Connection
   const fetchConnection = async () => {
     try {
@@ -133,13 +145,13 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
             <div className="flex flex-wrap justify-center">
               <div className="flex flex-wrap items-center">
                 <p className="mr-3 mb-2 inline-flex items-center justify-center text-secondary-inverse rounded-full bg-neutral-100 hover:bg-neutral-200 transition-all duration-200 ease-in-out px-2 py-1 text-xs font-roboto-condensed font-medium leading-normal">
-                  0 posts
+                  {ownPosts.length} posts
                 </p>
                 <p className="mr-3 mb-2 inline-flex items-center justify-center text-secondary-inverse rounded-full bg-neutral-100 hover:bg-neutral-200 transition-all duration-200 ease-in-out px-2 py-1 text-xs font-roboto-condensed font-medium leading-normal">
-                  0 Following
+                  {numberOfFollowing} Following
                 </p>
                 <p className="mr-3 mb-2 inline-flex items-center justify-center text-secondary-inverse rounded-full bg-neutral-100 hover:bg-neutral-200 transition-all duration-200 ease-in-out px-2 py-1 text-xs font-roboto-condensed font-medium leading-normal">
-                  0 Followers
+                  {numberOfFollowers} Followers
                 </p>
               </div>
             </div>

@@ -12,7 +12,7 @@ interface ImageModalProps {
   showModal: boolean;
   selectedPost: {
     likes?: string[];
-    userId: IUserDetails;
+    userId?: IUserDetails;
     comments?: IComment[];
     imageUrl: string;
     _id: string;
@@ -87,14 +87,14 @@ const ImageModal: React.FC<ImageModalProps> = ({
               {/* Image description */}
               <div className="bg-gray-100 p-2 rounded-md mb-2 flex items-start">
                 <img
-                  src={selectedPost.userId.profileimg}
-                  alt={selectedPost.userId.username}
+                  src={selectedPost.userId?.profileimg}
+                  alt={selectedPost.userId?.username}
                   className="w-8 h-8 rounded-full mr-2"
                 />
                 <div>
                   <p className="text-sm text-gray-600">
                     <span className="font-semibold mr-2">
-                      {selectedPost.userId.username}:
+                      {selectedPost.userId?.username}:
                     </span>
                     {selectedPost.description}
                   </p>

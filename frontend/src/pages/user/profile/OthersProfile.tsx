@@ -46,7 +46,7 @@ function OthersProfile() {
           <ProfileCard userDetails={userData} profile="others" />
         </div>
         <div className="p-4 lg:ml-24 lg:mr-60 mb-auto lg:mt-8">
-          <DefaultGallery userId={userId as string} />
+          <DefaultGallery userId={userId as string} profile="others" />
         </div>
       </div>
     </div>

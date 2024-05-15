@@ -164,7 +164,6 @@ function Post() {
     if (selectedPost) {
       try {
         await deletePost(selectedPost._id);
-        toast.success("Post deleted successfully");
       } catch (error) {
         console.log("Error deleting post:", error);
       }

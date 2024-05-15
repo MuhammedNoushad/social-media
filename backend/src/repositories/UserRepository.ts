@@ -199,6 +199,36 @@ class UserRepository {
       throw error;
     }
   }
+
+  // Function for fetch users data with pagination
+  async fetchUsersDataWithPagination(
+    page: number,
+    limit: number
+  ): Promise<IUsers[] | null> {
+    try {
+      const users = await User.find({ isAdmin: false })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .select("-password");
+      return users;
+    } catch (error) {
+      console.error(
+        "Error from fetchUsersDataWithPagination in UserRepository",
+        error
+      );
+      return null;
+    }
+  }
+
+  // Function for fetch total users count
+  async fetchTotalUsersCount(): Promise<any> {
+    try {
+      const totalUsers = await User.countDocuments({ isAdmin: false });
+      return totalUsers;
+    } catch (error) {
+      console.error("Error from fetchTotalUsers in UserRepository", error);
+    }
+  }
 }
 
 export default UserRepository;

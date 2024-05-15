@@ -6,13 +6,20 @@ const userRepository = new UserRepository();
 // For fetch all the users that are not admin from the database
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const usersData = await userRepository.getUsers();
+    const page = Number(req.query.page) || 1;
+    const limit = 5;
+    const usersData = await userRepository.fetchUsersDataWithPagination(
+      page,
+      limit
+    );
+    const totalUsers = await userRepository.fetchTotalUsersCount();
+    const totalPages = Math.ceil(totalUsers / limit);
 
     if (!usersData) {
       return res.status(400).json({ error: "Something went wrong" });
     }
 
-    return res.status(200).json({ success: true, usersData });
+    return res.status(200).json({ success: true, usersData, totalPages });
   } catch (error) {
     // Handle errors
     console.error("Error from getUsers admin controller", error);

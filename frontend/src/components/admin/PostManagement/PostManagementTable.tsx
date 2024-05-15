@@ -1,24 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import useReportedPosts from "../../../hooks/admin/UseReportedPosts";
 import IPosts from "../../../types/IPosts";
 import formatDate from "../../../utils/formatData";
 import axios from "../../../axios/axios";
-import { toast } from "sonner";
+import Pagination from "../common/Pagination";
 
 function PostManagementTable() {
   const [posts, setPosts] = useState<IPosts[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPosts, setTotalPosts] = useState(0);
+
   const { reportedPosts } = useReportedPosts();
 
+  const fetch = async () => {
+    const data = await reportedPosts(1);
+    if (data) {
+      const postData = data.reportedPosts;
+      const totalPosts = data.totalPosts;
+      setTotalPosts(totalPosts);
+      setPosts(postData);
+    }
+  };
+
+  // Memoize the fetch function
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedFetch = useMemo(() => fetch, []);
+
   useEffect(() => {
-    const fetch = async () => {
-      const postData = await reportedPosts();
-      if (postData) {
-        setPosts(postData);
-      }
-    };
-    fetch();
-  }, [reportedPosts]);
+    memoizedFetch();
+  }, [memoizedFetch]);
 
   //   Function for handle block
   const handleBlock = async (postId: string) => {
@@ -32,6 +44,14 @@ function PostManagementTable() {
     } catch (error) {
       console.log("Error blocking post:", error);
     }
+  };
+
+  //   Function for handle page change
+  const handlePageChange = async (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    const data = await reportedPosts(pageNumber);
+    const postData = data.reportedPosts;
+    setPosts(postData);
   };
 
   return (
@@ -97,7 +117,7 @@ function PostManagementTable() {
                           ? "bg-green-500 hover:bg-green-600"
                           : "bg-red-500 hover:bg-red-600"
                       }`}
-                      onClick={() => handleBlock(post._id)} // Pass the user's ID to handleBlock function
+                      onClick={() => handleBlock(post._id)}
                     >
                       {post.isBlocked === true ? "Unblock" : "Block"}
                     </button>
@@ -106,6 +126,13 @@ function PostManagementTable() {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="flex justify-center mt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPosts}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>

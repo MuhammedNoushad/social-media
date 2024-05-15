@@ -9,10 +9,12 @@ import { RootState } from "../../../store/store";
 import { setConnection } from "../../../store/features/connectionSlice";
 
 function UserHome() {
+  const dispatch = useDispatch();
+
   const userId = useSelector((state: RootState) => state.user._id);
+
   const { fetchAllConnections } = useFetchAllConnections();
   const { fetchAllPosts } = useFetchAllPosts();
-  const dispatch = useDispatch();
 
   // Fetch all posts
   useEffect(() => {
@@ -20,7 +22,6 @@ function UserHome() {
       try {
         await fetchAllPosts();
         const connections = await fetchAllConnections(userId);
-        console.log("dispatch", connections);
         dispatch(setConnection(connections));
       } catch (error) {
         console.log(error);

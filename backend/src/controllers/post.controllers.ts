@@ -94,7 +94,11 @@ export const report = async (req: Request, res: Response) => {
 // Function for fetch reported posts
 export const reportedPosts = async (req: Request, res: Response) => {
   try {
-    const postData = await postRepository.getAllPosts();
+    const page = Number(req.query.page) || 1;
+    const limit = 5;
+    const postData = await postRepository.fetchPostWithPagination(page, limit);
+    const totalPosts = await postRepository.getTotalCountOfReportedPosts();
+
     if (!postData) {
       return res.status(400).json({ error: "Failed to fetch posts" });
     }
@@ -103,7 +107,7 @@ export const reportedPosts = async (req: Request, res: Response) => {
       (post) => post.reports && post.reports.length > 0
     );
 
-    return res.status(200).json({ success: true, reportedPosts });
+    return res.status(200).json({ success: true, reportedPosts, totalPosts });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }

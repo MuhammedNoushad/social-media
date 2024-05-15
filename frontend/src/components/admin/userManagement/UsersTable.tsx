@@ -3,12 +3,14 @@ import useUsersData from "../../../hooks/admin/useUsersData";
 import useBlockUser from "../../../hooks/admin/useBlockUser";
 import axios from "../../../axios/axios";
 import formatDate from "../../../utils/formatData";
+import Pagination from "../common/Pagination";
 
 const UserTable: React.FC = () => {
-  const { users, setUsers } = useUsersData();
-  const blockUser = useBlockUser();
-
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { users, setUsers, totalPages, setTotalPages } = useUsersData();
+  const blockUser = useBlockUser();
 
   // Function for handle search logic
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,17 +24,24 @@ const UserTable: React.FC = () => {
       user.email?.toLowerCase().startsWith(searchTerm.toLowerCase())
   );
 
-
   const handleBlock = async (userId: string) => {
     try {
-      await blockUser(userId); // Call the blockUser function from useBlockUser hook
-      // After blocking/unblocking, fetch the updated user data again
-      const response = await axios.get("/api/admin/users");
+      await blockUser(userId);
+      const response = await axios.get("/api/admin/users?page=1");
       const updatedUsers = response.data.usersData;
       setUsers(updatedUsers);
     } catch (error) {
       console.error(error);
     }
+  };
+
+  // Function for handle page change
+  const handlePageChange = async (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    const response = await axios.get(`/api/admin/users?page=${pageNumber}`);
+    const updatedUsers = response.data.usersData;
+    setUsers(updatedUsers);
+    setTotalPages(response.data.totalPages);
   };
 
   return (
@@ -112,6 +121,13 @@ const UserTable: React.FC = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="flex justify-center mt-4">
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>

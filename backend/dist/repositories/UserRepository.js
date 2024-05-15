@@ -204,5 +204,33 @@ class UserRepository {
             }
         });
     }
+    // Function for fetch users data with pagination
+    fetchUsersDataWithPagination(page, limit) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield user_model_1.default.find({ isAdmin: false })
+                    .skip((page - 1) * limit)
+                    .limit(limit)
+                    .select("-password");
+                return users;
+            }
+            catch (error) {
+                console.error("Error from fetchUsersDataWithPagination in UserRepository", error);
+                return null;
+            }
+        });
+    }
+    // Function for fetch total users count
+    fetchTotalUsersCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const totalUsers = yield user_model_1.default.countDocuments({ isAdmin: false });
+                return totalUsers;
+            }
+            catch (error) {
+                console.error("Error from fetchTotalUsers in UserRepository", error);
+            }
+        });
+    }
 }
 exports.default = UserRepository;

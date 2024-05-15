@@ -43,7 +43,7 @@ class PostRepository {
   // Function for fetching post of user
   async getPostOfUser(userId: string): Promise<IPosts[] | null> {
     try {
-      const posts = await Post.find({ userId , isDeleted: false })
+      const posts = await Post.find({ userId, isDeleted: false })
         .populate("userId", "username _id profileimg")
         .populate("comments.userId", "username _id profileimg")
         .sort({ createdAt: -1 });
@@ -159,6 +159,43 @@ class PostRepository {
       return deletedPost;
     } catch (error) {
       console.log("Error from deletePost in PostRepository", error);
+      return null;
+    }
+  }
+
+  // Function for fetch reported posts with pagination
+  async fetchPostWithPagination(page: number, limit: number) {
+    try {
+      const posts = await Post.find({ isDeleted: false })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .populate("userId", "username _id profileimg")
+        .populate("comments.userId", "username _id profileimg")
+        .sort({ createdAt: -1 });
+      if (!posts) return null;
+      return posts.map((post) => post.toObject());
+    } catch (error) {
+      console.log(
+        "Error from fetchPostWithPagination in PostRepository",
+        error
+      );
+      return null;
+    }
+  }
+
+  // Function for fetch total count of reported posts
+  async getTotalCountOfReportedPosts() {
+    try {
+      const totalPost = await Post.countDocuments({
+        isDeleted: false,
+        reports: { $ne: [] },
+      });
+      return totalPost;
+    } catch (error) {
+      console.log(
+        "Error from getTotalCountOfReportedPosts in PostRepository",
+        error
+      );
       return null;
     }
   }

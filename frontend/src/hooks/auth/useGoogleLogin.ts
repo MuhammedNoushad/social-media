@@ -1,10 +1,11 @@
-import axios from "../../axios/axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+
+import axios from "../../axios/axios";
 import IFormInput from "../../types/IFormInputs";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/features/userDetailsSlice";
 import { addToken } from "../../store/features/tokenSlice";
-import { useNavigate } from "react-router-dom";
 
 // Hook for Google Login
 const useGoogleLogin = () => {
@@ -20,16 +21,14 @@ const useGoogleLogin = () => {
       };
       const response = await axios.post(
         "/api/auth/google-login",
-        updatedUserData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        updatedUserData
       );
 
       const data = response.data;
-      console.log(data)
+      console.log(data, "data");
 
-      if (data) {
+      if (data.success) {
+        localStorage.setItem("token", data.responseData.accessToken);
         dispatch(setUser(data.responseData));
         dispatch(
           addToken({

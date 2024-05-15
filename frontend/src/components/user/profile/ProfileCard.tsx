@@ -31,8 +31,8 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
   const connections: any = useSelector(
     (state: RootState) => state.connection.connection
   );
-  const numberOfFollowers = connections.followers.length;
-  const numberOfFollowing = connections.following.length;
+  const numberOfFollowers = connections?.followers?.length || 0;
+  const numberOfFollowing = connections?.following?.length || 0;
 
   // Function for fetch Connection
   const fetchConnection = async () => {

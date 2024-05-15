@@ -44,6 +44,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
   // Function for adding a new comment
   const handlePostComment = async () => {
     try {
+      if (!commentInput) return;
       const newComment = await postComment(commentInput, selectedPost._id);
       if (newComment) {
         setComments([...comments, newComment]);

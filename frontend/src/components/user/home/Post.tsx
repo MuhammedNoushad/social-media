@@ -22,6 +22,7 @@ import useDeletePost from "../../../hooks/user/useDeletePost";
 import { useNavigate } from "react-router-dom";
 import { shuffle } from "lodash";
 import formatDate from "../../../utils/formatData";
+import useFollow from "../../../hooks/user/useFollow";
 
 function Post() {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ function Post() {
   const { deletePost } = useDeletePost();
   const { likePost } = useLikePost();
   const { reportPost } = useReportPost();
+  const { follow, unfollow } = useFollow();
 
   const posts = useSelector((state: RootState) => state.posts.posts);
   const currentUser = useSelector((state: RootState) => state.user);
@@ -175,6 +177,23 @@ function Post() {
     closeDeleteModal();
   };
 
+  const handleFollow = async (userId: string) => {
+    try {
+      await follow(currentUser._id, userId);
+    } catch (error) {
+      console.log(error, "error from handleFollow");
+    }
+  };
+
+  // Function for handle unfollow User
+  const handleUnfollow = async (userId: string) => {
+    try {
+      await unfollow(currentUser._id, userId);
+    } catch (error) {
+      console.log(error, "error from handleUnfollow");
+    }
+  };
+
   return (
     <>
       <div className="max-w-3xl mx-auto">
@@ -260,11 +279,27 @@ function Post() {
                                   user._id === image.userId._id
                               ) ? (
                                 <>
-                                  <FaUserMinus className="mr-2" /> Unfollow
+                                  <FaUserMinus className="mr-2" />{" "}
+                                  <a
+                                    onClick={() =>
+                                      handleUnfollow(image.userId?._id)
+                                    }
+                                    href=""
+                                  >
+                                    Unfollow
+                                  </a>
                                 </>
                               ) : (
                                 <>
-                                  <FaUserPlus className="mr-2" /> Follow
+                                  <FaUserPlus className="mr-2" />{" "}
+                                  <a
+                                    onClick={() => {
+                                      handleFollow(image.userId?._id);
+                                    }}
+                                    href=""
+                                  >
+                                    Follow
+                                  </a>
                                 </>
                               )}
                             </a>
@@ -383,7 +418,7 @@ function Post() {
                     {image.likes?.length} likes
                   </div>
                   <div className="flex space-x-2 text-sm">
-                    <a className="font-medium">{image.userId?.username}</a>
+                    <a className=" font-bold">{image.userId?.username}</a>
                     <p>{image.description}</p>
                   </div>
                   <div

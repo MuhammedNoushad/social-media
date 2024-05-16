@@ -6,9 +6,37 @@ class MessageRepository {
   // Function for get messages
   async getMessages(userId: string, userToChatId: string) {
     try {
-      const conversation = await Conversation.findOne({
+      let conversation = await Conversation.findOne({
         participants: { $all: [userId, userToChatId] },
-      });
+      })
+        .populate({
+          path: "messages",
+          populate: [
+            { path: "sender", select: "-password -role" },
+            { path: "receiver", select: "-password -role" },
+          ],
+        })
+        .populate("participants", "-password -role");
+
+      if (!conversation) {
+        conversation = await Conversation.create({
+          participants: [userId, userToChatId],
+          messages: [],
+          lastMessage: "Start a conversation",
+        });
+        conversation = await conversation.populate({
+          path: "messages",
+          populate: [
+            { path: "sender", select: "-password -role" },
+            { path: "receiver", select: "-password -role" },
+          ],
+        });
+        conversation = await conversation.populate(
+          "participants",
+          "-password -role"
+        );
+      }
+
       return conversation;
     } catch (error) {
       throw error;
@@ -75,6 +103,21 @@ class MessageRepository {
         "conversation from findConversationAndAddMessage"
       );
       return conversation;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Function for fetch conversation for a specific user
+  async getConversations(userId: string) {
+    try {
+      const conversations = await Conversation.find({
+        participants: { $in: [userId] },
+      }).populate({
+        path: "messages",
+        select: "message sender receiver",
+      });
+      return conversations;
     } catch (error) {
       throw error;
     }

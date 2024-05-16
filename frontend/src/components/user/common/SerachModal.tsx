@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import SearchInput from "../../common/SearchInput";
 import UserCardList from "./UserCardList";
 // import useFetchAllUsers from "../../../hooks/user/useFetchAllUsers";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import IUserState from "../../../types/IUserState";
 import axios from "../../../axios/axios";
@@ -12,7 +12,6 @@ const SearchModal = ({ isOpen }: { isOpen: boolean; onClose: () => void }) => {
   const [usersData, setUsersData] = useState<IUserState[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userDetails = useSelector((state: RootState) => state.user);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +27,7 @@ const SearchModal = ({ isOpen }: { isOpen: boolean; onClose: () => void }) => {
       }
     };
     fetchData();
-  }, [dispatch]);
+  }, []);
 
   // Function to handle search query change
   const handleSearchQueryChange = useCallback(

@@ -1,17 +1,71 @@
-function MessageContainer() {
-  const userPhoto = "https://via.placeholder.com/150";
-  const userName = "John Doe";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+
+import axios from "../../../axios/axios";
+import { RootState } from "../../../store/store";
+import IMessage from "../../../types/IMessage";
+import IConversation from "../../../types/IConversation";
+import { useNavigate } from "react-router-dom";
+
+function MessageContainer({ userToChatId }: { userToChatId: string }) {
+  const [conversation, setConversation] = useState<IConversation>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [userToChatData, setUserToChatData] = useState<any>({});
+
+  const navigate = useNavigate();
+
+  const loggedInUser = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    // Fetch messages for the selected user
+    const fetchConversation = async () => {
+      try {
+        const response = await axios.get(
+          `/api/messages/${loggedInUser._id}/${userToChatId}`
+        );
+        const data = response.data;
+
+        if (data.success) {
+          console.log(data.conversations, "data.conversations");
+          setConversation(data.conversations);
+        } else {
+          toast.error("Error fetching messages");
+        }
+      } catch (error) {
+        toast.error("Error fetching messages");
+      }
+    };
+
+    const fetchUserToChatData = async () => {
+      try {
+        const response = await axios.get(`/api/user/${userToChatId}`);
+        const data = response.data;
+        if (data.success) {
+          setUserToChatData(data.userData);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserToChatData();
+    fetchConversation();
+  }, [loggedInUser._id, userToChatId]);
 
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between bg-gray-100 py-2 px-4  fixed top-0 w-8/12 right-0 z-10">
-        <div className="flex items-center">
+        <div
+          onClick={() => navigate(`/profile/${userToChatId}`)}
+          className="flex items-center cursor-pointer"
+        >
           <img
-            src={userPhoto}
-            alt={userName}
+            src={userToChatData.profileimg}
+            alt={userToChatData.username}
             className="w-10 h-10 rounded-full mr-2"
           />
-          <h2 className="text-lg font-semibold">{userName}</h2>
+          <h2 className="text-lg font-semibold">{userToChatData.username}</h2>
         </div>
         <div className="flex items-center">
           <button className="text-gray-500 hover:text-gray-700 focus:outline-none mr-2">
@@ -50,18 +104,55 @@ function MessageContainer() {
       </div>
       <div className="flex flex-col h-full overflow-x-auto mb-4 mt-16">
         <div className="flex flex-col h-full">
-          <div className="grid grid-cols-12 gap-y-2">
-            <div className="col-start-1 col-end-8 p-3 rounded-lg">
-              <div className="flex flex-row items-center">
-                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                  A
+          <div className="grid grid-cols-12 gap-y-2 p-6 h-5">
+            {conversation &&
+              conversation.messages?.map((message: IMessage) => (
+                <div
+                  key={message._id}
+                  className={`${
+                    message.sender._id === loggedInUser._id
+                      ? "col-start-1 col-end-8"
+                      : "col-start-6 col-end-13"
+                  } p-3 rounded-lg`}
+                >
+                  <div
+                    className={`flex ${
+                      message.sender._id === loggedInUser._id
+                        ? "items-center justify-start"
+                        : "items-center justify-start flex-row-reverse"
+                    }`}
+                  >
+                    {message.receiver._id !== loggedInUser._id && (
+                      <img
+                        src={message.receiver.profileimg}
+                        alt={message.receiver.username}
+                        className="w-10 h-10 rounded-full mr-4"
+                      />
+                    )}
+                    <div
+                      className={`${
+                        message.sender._id === loggedInUser._id
+                          ? "relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl"
+                          : "flex items-center justify-center flex-shrink-0"
+                      }`}
+                    >
+                      {message.sender._id === loggedInUser._id ? (
+                        <div className="font-roboto-condensed font-medium text-base text-black text-pretty">
+                          {message.message}
+                        </div>
+                      ) : (
+                        <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
+                          <div className="font-roboto-condensed font-medium text-base text-black text-pretty">
+                            {message.message}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-                  <div>Hey How are you today?</div>
-                </div>
-              </div>
-            </div>
-            <div className="col-start-1 col-end-8 p-3 rounded-lg">
+              ))}
+
+            {/* <div className="col-start-1 col-end-8 p-3 rounded-lg">
               <div className="flex flex-row items-center">
                 <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
                   A
@@ -81,7 +172,7 @@ function MessageContainer() {
                   <div>I'm ok what about you?</div>
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* ... other message divs */}
           </div>
         </div>
@@ -89,7 +180,7 @@ function MessageContainer() {
           <input
             type="text"
             placeholder="Type your message..."
-            className="flex-grow px-4 py-2 rounded-lg bg-white focus:outline-none"
+            className="flex-grow px-4 py-2 rounded-lg bg-white focus:outline-none font-roboto-condensed font-medium text-base text-black"
           />
           <button className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none">
             Send

@@ -199,5 +199,73 @@ class PostRepository {
       return null;
     }
   }
+
+  // Function for edit comment
+  async editComment(postId: string, commentId: string, newComment: string) {
+    try {
+      const post = await Post.findOneAndUpdate(
+        {
+          _id: postId,
+          "comments._id": commentId,
+        },
+        {
+          $set: {
+            "comments.$.comment": newComment,
+          },
+        },
+        { new: true }
+      );
+
+      return post;
+    } catch (error) {
+      console.log("Error from editComment in PostRepository", error);
+      return null;
+    }
+  }
+
+  // Function for delete comment
+  async deleteComment(postId: string, commentId: string) {
+    try {
+      const post = await Post.findOneAndUpdate(
+        {
+          _id: postId,
+          "comments._id": commentId,
+        },
+        {
+          $pull: {
+            comments: {
+              _id: commentId,
+            },
+          },
+        },
+        { new: true }
+      );
+      return post;
+    } catch (error) {
+      console.log("Error from deleteComment in PostRepository", error);
+      return null;
+    }
+  }
+
+  // Function for edit post
+  async editPost(postId: string, newDiscription: string) {
+    try {
+      const post = await Post.findOneAndUpdate(
+        {
+          _id: postId,
+        },
+        {
+          $set: {
+            description: newDiscription,
+          },
+        },
+        { new: true }
+      );
+      return post;
+    } catch (error) {
+      console.log("Error from editPost in PostRepository", error);
+      return null;
+    }
+  }
 }
 export default PostRepository;

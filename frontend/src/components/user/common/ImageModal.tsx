@@ -1,5 +1,5 @@
 // ImageModal.tsx
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FaEdit,
   FaRegFlag,
@@ -9,18 +9,21 @@ import {
   FaUserMinus,
   FaUserPlus,
 } from "react-icons/fa";
+import { toast } from "sonner";
+
 import IComment from "../../../types/IComment";
 import IUserDetails from "../../../types/IUserDetails";
 import usePostComment from "../../../hooks/user/usePostComment";
 import useLikePost from "../../../hooks/user/useLikePost";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import IConnection from "../../../types/IConnection";
 import useFollow from "../../../hooks/user/useFollow";
 import useReportPost from "../../../hooks/user/useReportPost";
 import useDeletePost from "../../../hooks/user/useDeletePost";
-import { toast } from "sonner";
 import Dialog from "../../common/Dialog";
+import axios from "../../../axios/axios";
+import { setPosts } from "../../../store/features/postsSlice";
 
 interface ImageModalProps {
   showModal: boolean;
@@ -47,6 +50,8 @@ const ImageModal: React.FC<ImageModalProps> = ({
   const [showReportDialog, setShowReportDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [commentInput, setCommentInput] = useState<string>("");
+  const [editingCommentId, setEditingCommentId] = useState("");
+  const [editedComment, setEditedComment] = useState("");
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const connections: any = useSelector(
@@ -62,6 +67,26 @@ const ImageModal: React.FC<ImageModalProps> = ({
   const { follow, unfollow } = useFollow();
   const { reportPost } = useReportPost();
   const { deletePost } = useDeletePost();
+
+  const dispatch = useDispatch();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        handleCancelEdit();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (!showModal || !selectedPost) {
     return null;
@@ -167,6 +192,69 @@ const ImageModal: React.FC<ImageModalProps> = ({
     }
   };
 
+  // Function for handle edit comment
+  const handleEditComment = (commentId: string) => {
+    setEditingCommentId(commentId);
+    setEditedComment(
+      comments.find((comment) => comment?._id === commentId)?.comment || ""
+    );
+  };
+
+  const handleSaveComment = async (commentId: string) => {
+    if (!editedComment) {
+      return setEditingCommentId("");
+    }
+    const response = await axios.put(
+      `/api/posts/comment/${selectedPost._id}/${commentId}`,
+      { comment: editedComment }
+    );
+
+    if (response.data.success) {
+      setComments(
+        comments.map((comment) =>
+          comment._id === commentId
+            ? { ...comment, comment: editedComment }
+            : comment
+        )
+      );
+      setEditingCommentId("");
+      setEditedComment("");
+      dispatch(setPosts(response.data.postData));
+      toast.success("Comment updated successfully");
+    } else {
+      toast.error("Error updating comment");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCommentId("");
+    setEditedComment("");
+  };
+
+  // Function for handle delete comment
+  const handleDeleteComment = async (commentId: string) => {
+    const originalComments = [...comments];
+    try {
+      setComments(comments.filter((comment) => comment._id !== commentId));
+
+      const response = await axios.delete(
+        `/api/posts/comment/${selectedPost._id}/${commentId}`
+      );
+
+      if (response.data.success) {
+        dispatch(setPosts(response.data.postData));
+        toast.success("Comment deleted successfully");
+      } else {
+        toast.error("Error deleting comment");
+        setComments(originalComments);
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      toast.error("Error deleting comment");
+      setComments(originalComments);
+    }
+  };
+
   // Function for handle unfollow User
   const handleUnfollow = async () => {
     try {
@@ -230,7 +318,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
                         <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
                           <li>
                             <a>
-                              <FaEdit className="mr-2" /> Edit
+                              <FaEdit className="mr-2" /> Edit 
                             </a>
                           </li>
                           <li onClick={() => openDeleteModal()}>
@@ -256,31 +344,30 @@ const ImageModal: React.FC<ImageModalProps> = ({
                             </a>
                           </li>
                           <li>
-                            <a>
-                              {connections?.following?.some(
-                                (user: IConnection) =>
-                                  user._id === selectedPost.userId?._id
-                              ) ? (
-                                <>
-                                  <FaUserMinus className="mr-2" />{" "}
-                                  <a onClick={() => handleUnfollow()} href="">
-                                    Unfollow
-                                  </a>
-                                </>
-                              ) : (
-                                <>
-                                  <FaUserPlus className="mr-2" />{" "}
-                                  <a
-                                    onClick={() => {
-                                      handleFollow();
-                                    }}
-                                    href=""
-                                  >
-                                    Follow
-                                  </a>
-                                </>
-                              )}
-                            </a>
+                            {connections?.following?.some(
+                              (user: IConnection) =>
+                                user._id === selectedPost.userId?._id
+                            ) ? (
+                              <>
+                                <FaUserMinus className="mr-2" />{" "}
+                                <span
+                                  onClick={() => handleUnfollow()}
+                                  className="cursor-pointer"
+                                >
+                                  Unfollow
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <FaUserPlus className="mr-2" />{" "}
+                                <span
+                                  onClick={() => handleFollow()}
+                                  className="cursor-pointer"
+                                >
+                                  Follow
+                                </span>
+                              </>
+                            )}
                           </li>
                         </ul>
                       )}
@@ -288,21 +375,57 @@ const ImageModal: React.FC<ImageModalProps> = ({
                   </div>
                 </div>
                 {/* Comments section */}
-                {comments?.map((comment: IComment) => (
-                  <div className="bg-gray-100 p-1 rounded-md mb-2 flex items-start">
+                {comments?.map((comment) => (
+                  <div
+                    key={comment._id}
+                    className="bg-gray-100 p-1 rounded-md mb-2 flex items-start"
+                  >
                     <img
                       src={comment.userId.profileimg}
                       alt={comment.userId.username}
                       className="w-8 h-8 rounded-full mr-2"
                     />
                     <div className="flex-1 max-w-md">
-                      <p className="text-sm text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">
-                        <span className="font-semibold mr-2">
-                          {comment.userId.username}:{" "}
-                        </span>
-                        {comment.comment}
-                      </p>
+                      {editingCommentId === comment._id ? (
+                        <div className="flex">
+                          <form
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                              handleSaveComment(comment._id);
+                            }}
+                            className="flex"
+                          >
+                            <input
+                              type="text"
+                              value={editedComment}
+                              onChange={(e) => setEditedComment(e.target.value)}
+                              className="flex-1 px-2 py-1 rounded-md"
+                              ref={inputRef}
+                            />
+                          </form>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                          <span className="font-semibold mr-2">
+                            {comment.userId.username}:{" "}
+                          </span>
+                          {comment.comment}
+                        </p>
+                      )}
                     </div>
+                    {comment.userId._id === currentUser._id &&
+                      editingCommentId !== comment._id && (
+                        <div className="flex p-2 justify-evenly w-20 cursor-pointer">
+                          <FaEdit
+                            onClick={() => handleEditComment(comment._id)}
+                            className="text-gray-600 w-4 cursor-pointer"
+                          />
+                          <FaTrash
+                            onClick={() => handleDeleteComment(comment._id)}
+                            className="text-gray-600 w-4"
+                          />
+                        </div>
+                      )}
                   </div>
                 ))}
               </div>

@@ -48,3 +48,47 @@ export const toggleLike = async (req: Request, res: Response) => {
   }
 };
 
+// Function for edit comment
+export const editComment = async (req: Request, res: Response) => {
+  try {
+    const { postId, commentId } = req.params;
+    const {  comment } = req.body;
+
+    const updatedPostData = await postRepository.editComment(
+      postId,
+      commentId,
+      comment
+    );
+
+    if (!updatedPostData)
+      return res.status(400).json({ error: "Something went wrong" });
+
+    const postData = await postRepository.getAllPosts();
+
+    res.status(200).json({ success: true, updatedPostData , postData });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for delete comment
+export const deleteComment = async (req: Request, res: Response) => {
+  try {
+    const { postId, commentId } = req.params;
+
+    const updatedPostData = await postRepository.deleteComment(
+      postId,
+
+      commentId
+    );
+
+    if (!updatedPostData)
+      res.status(400).json({ error: "Something went wrong" });
+
+    const postData = await postRepository.getAllPosts();
+
+    res.status(200).json({ success: true, updatedPostData , postData });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

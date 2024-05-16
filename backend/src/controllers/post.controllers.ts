@@ -152,3 +152,23 @@ export const deletePost = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for edit post
+export const editPost = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+    const {  description } = req.body;
+
+    const updatedPost = await postRepository.editPost(postId, description);
+
+    if (!updatedPost) {
+      res.status(400).json({ error: "Failed to edit post" });
+    }
+
+    const postData = await postRepository.getAllPosts();
+
+    return res.status(200).json({ success: true, postData });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

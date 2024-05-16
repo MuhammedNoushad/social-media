@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
-import {
-  FaEdit,
-  FaRegFlag,
-  FaTrash,
-  FaUserMinus,
-  FaUserPlus,
-} from "react-icons/fa";
+import { FaRegFlag, FaTrash, FaUserMinus, FaUserPlus } from "react-icons/fa";
 
 import { RootState } from "../../../store/store";
 import IPosts from "../../../types/IPosts";
@@ -243,11 +237,6 @@ function Post() {
                       </summary>
                       {image && image.userId?._id === currentUser._id ? (
                         <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                          <li>
-                            <a>
-                              <FaEdit className="mr-2" /> Edit
-                            </a>
-                          </li>
                           <li onClick={() => openDeleteModal(image._id)}>
                             <a>
                               <FaTrash className="mr-2" /> Delete

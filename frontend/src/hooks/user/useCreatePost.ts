@@ -15,7 +15,7 @@ const useCreatePost = () => {
 
       if (data.success) {
         toast.success(data.message);
-        navigate("/profile");
+        navigate("/home");
       }
     } catch (error) {
       console.log("error from useCreatePost", error);

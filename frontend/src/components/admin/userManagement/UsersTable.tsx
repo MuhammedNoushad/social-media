@@ -48,7 +48,7 @@ const UserTable: React.FC = () => {
     <div className="container mt-10 mx-auto sm:w-2/3 px-4 sm:px-8">
       <div className="py-8 overflow-x-auto">
         <div className="flex flex-col sm:flex-row justify-between mb-4 p-3 sm:p-0">
-          <h2 className="text-sm sm:text-xl font-semibold mb-2 sm:mb-0">
+          <h2 className="text-sm sm:text-xl font-semibold mb-2 sm:mb-0 font-roboto-condensed">
             User Management
           </h2>
           <input
@@ -56,23 +56,23 @@ const UserTable: React.FC = () => {
             placeholder="Search..."
             value={searchTerm}
             onChange={handleSearch}
-            className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-roboto-condensed"
           />
         </div>
         <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider font-roboto-condensed">
                   Photo
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider font-roboto-condensed">
                   Name
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell font-roboto-condensed">
                   Created At
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider sm:table-cell">
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider sm:table-cell font-roboto-condensed">
                   Actions
                 </th>
               </tr>
@@ -92,7 +92,7 @@ const UserTable: React.FC = () => {
                     </div>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    <p className="text-gray-900 whitespace-no-wrap">
+                    <p className="text-gray-900 whitespace-no-wrap font-roboto-condensed">
                       <span className="font-semibold">
                         {user.firstName} {user.lastName}
                       </span>
@@ -101,7 +101,7 @@ const UserTable: React.FC = () => {
                     </p>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm hidden md:table-cell">
-                    <p className="text-gray-900 whitespace-no-wrap">
+                    <p className="text-gray-900 whitespace-no-wrap font-roboto-condensed">
                       {formatDate(user.createdAt || "")}
                     </p>
                   </td>

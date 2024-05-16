@@ -18,7 +18,7 @@ import { clearState } from "../../../store/features/userDetailsSlice";
 import SearchModal from "./SerachModal";
 
 // Component for the sidebar
-const Sidebar: React.FC = () => {
+const Sidebar = ({ page }: { page: string }) => {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState("w-auto");
@@ -79,13 +79,15 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiHome />
               </span>
-              <span
-                className={`hidden ${
-                  !isSearchOpen && "lg:block"
-                } text-sm font-medium font-roboto-condensed`}
-              >
-                Home
-              </span>
+              {page !== "message" && (
+                <span
+                  className={`hidden ${
+                    !isSearchOpen && "lg:block"
+                  } text-sm font-medium font-roboto-condensed`}
+                >
+                  Home
+                </span>
+              )}
             </a>
           </li>
           <li onClick={toggleSearch}>
@@ -96,13 +98,15 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiSearch />
               </span>
-              <span
-                className={`hidden ${
-                  !isSearchOpen && "lg:block"
-                } text-sm font-medium font-roboto-condensed`}
-              >
-                Search
-              </span>
+              {page !== "message" && (
+                <span
+                  className={`hidden ${
+                    !isSearchOpen && "lg:block"
+                  } text-sm font-medium font-roboto-condensed`}
+                >
+                  Search
+                </span>
+              )}
             </a>
           </li>
           <li>
@@ -113,16 +117,18 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiCompass />
               </span>
-              <span
-                className={`hidden ${
-                  !isSearchOpen && "lg:block"
-                } text-sm font-medium font-roboto-condensed`}
-              >
-                Explore
-              </span>
+              {page !== "message" && (
+                <span
+                  className={`hidden ${
+                    !isSearchOpen && "lg:block"
+                  } text-sm font-medium font-roboto-condensed`}
+                >
+                  Explore
+                </span>
+              )}
             </a>
           </li>
-          <li>
+          <li onClick={() => navigate("/message")}>
             <a
               href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
@@ -130,13 +136,15 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiChat />
               </span>
-              <span
-                className={`hidden ${
-                  !isSearchOpen && "lg:block"
-                } text-sm font-medium font-roboto-condensed`}
-              >
-                Message
-              </span>
+              {page !== "message" && (
+                <span
+                  className={`hidden ${
+                    !isSearchOpen && "lg:block"
+                  } text-sm font-medium font-roboto-condensed`}
+                >
+                  Message
+                </span>
+              )}
             </a>
           </li>
           <li>
@@ -147,13 +155,15 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiBell />
               </span>
-              <span
-                className={`hidden ${
-                  !isSearchOpen && "lg:block"
-                } text-sm font-medium font-roboto-condensed`}
-              >
-                Notifications
-              </span>
+              {page !== "message" && (
+                <span
+                  className={`hidden ${
+                    !isSearchOpen && "lg:block"
+                  } text-sm font-medium font-roboto-condensed`}
+                >
+                  Notifications
+                </span>
+              )}
               {!isSearchOpen && (
                 <span className="hidden lg:block ml-auto mr-6 text-sm bg-red-100 rounded-full px-3 py-px text-red-500">
                   5
@@ -173,13 +183,15 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiAddToQueue />
               </span>
-              <span
-                className={`hidden ${
-                  !isSearchOpen && "lg:block"
-                } text-sm font-medium font-roboto-condensed`}
-              >
-                Create
-              </span>
+              {page !== "message" && (
+                <span
+                  className={`hidden ${
+                    !isSearchOpen && "lg:block"
+                  } text-sm font-medium font-roboto-condensed`}
+                >
+                  Create
+                </span>
+              )}
             </a>
           </li>
           <li
@@ -194,13 +206,15 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiUser />
               </span>
-              <span
-                className={`hidden ${
-                  !isSearchOpen && "lg:block"
-                } text-sm font-medium font-roboto-condensed`}
-              >
-                Profile
-              </span>
+              {page !== "message" && (
+                <span
+                  className={`hidden ${
+                    !isSearchOpen && "lg:block"
+                  } text-sm font-medium font-roboto-condensed`}
+                >
+                  Profile
+                </span>
+              )}
             </a>
           </li>
           <li onClick={handleLogout}>
@@ -211,13 +225,15 @@ const Sidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiLogOut />
               </span>
-              <span
-                className={`hidden ${
-                  !isSearchOpen && "lg:block"
-                } text-sm font-medium font-roboto-condensed`}
-              >
-                Logout
-              </span>
+              {page !== "message" && (
+                <span
+                  className={`hidden ${
+                    !isSearchOpen && "lg:block"
+                  } text-sm font-medium font-roboto-condensed`}
+                >
+                  Logout
+                </span>
+              )}
             </a>
           </li>
         </ul>

@@ -286,7 +286,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
             <div className="w-1/3 h-full p-4 flex flex-col">
               <div className="flex-grow ">
                 {/* Image description */}
-                <div className="bg-gray-100 p-2 rounded-md mb-2 flex items-center">
+                <div className="bg-gray-100 p-2 rounded-md mb-2 flex items-center ">
                   <img
                     src={selectedPost.userId?.profileimg}
                     alt={selectedPost.userId?.username}
@@ -295,7 +295,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
                   <div className="flex items-center">
                     <div>
                       <p className="text-sm text-gray-600">
-                        <span className="font-semibold mr-2">
+                        <span className="font-semibold mr-2 font-roboto-condensed">
                           {selectedPost.userId?.username}:
                         </span>
                         {selectedPost.description}
@@ -315,10 +315,10 @@ const ImageModal: React.FC<ImageModalProps> = ({
                       </summary>
                       {selectedPost &&
                       selectedPost.userId?._id === currentUser._id ? (
-                        <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                        <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 font-roboto-condensed">
                           <li>
                             <a>
-                              <FaEdit className="mr-2" /> Edit 
+                              <FaEdit className="mr-2" /> Edit
                             </a>
                           </li>
                           <li onClick={() => openDeleteModal()}>
@@ -328,7 +328,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
                           </li>
                         </ul>
                       ) : (
-                        <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                        <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 font-roboto-condensed">
                           <li>
                             <a
                               onClick={() => {
@@ -348,25 +348,15 @@ const ImageModal: React.FC<ImageModalProps> = ({
                               (user: IConnection) =>
                                 user._id === selectedPost.userId?._id
                             ) ? (
-                              <>
-                                <FaUserMinus className="mr-2" />{" "}
-                                <span
-                                  onClick={() => handleUnfollow()}
-                                  className="cursor-pointer"
-                                >
-                                  Unfollow
-                                </span>
-                              </>
+                              <a onClick={() => handleUnfollow()}>
+                                <FaUserMinus className="mr-2" />
+                                Unfollow
+                              </a>
                             ) : (
-                              <>
-                                <FaUserPlus className="mr-2" />{" "}
-                                <span
-                                  onClick={() => handleFollow()}
-                                  className="cursor-pointer"
-                                >
-                                  Follow
-                                </span>
-                              </>
+                              <a onClick={() => handleFollow()}>
+                                <FaUserPlus className="mr-2" />
+                                Follow
+                              </a>
                             )}
                           </li>
                         </ul>
@@ -399,14 +389,14 @@ const ImageModal: React.FC<ImageModalProps> = ({
                               type="text"
                               value={editedComment}
                               onChange={(e) => setEditedComment(e.target.value)}
-                              className="flex-1 px-2 py-1 rounded-md"
+                              className="flex-1 px-2 py-1 rounded-md font-roboto-condensed"
                               ref={inputRef}
                             />
                           </form>
                         </div>
                       ) : (
-                        <p className="text-sm text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">
-                          <span className="font-semibold mr-2">
+                        <p className="text-sm text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap font-roboto-condensed">
+                          <span className="font-semibold mr-2 ">
                             {comment.userId.username}:{" "}
                           </span>
                           {comment.comment}
@@ -534,12 +524,12 @@ const ImageModal: React.FC<ImageModalProps> = ({
                   {/* Like Sections */}
 
                   <input
-                    className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] !pr-9 border-blue-gray-200 focus:border-gray-900"
+                    className="peer w-full h-full bg-transparent text-blue-gray-700 font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] !pr-9 border-blue-gray-200 focus:border-gray-900 font-roboto-condensed"
                     placeholder=" "
                     value={commentInput}
                     onChange={(e) => setCommentInput(e.target.value)}
                   />
-                  <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+                  <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900 font-roboto-condensed">
                     Add a comment...
                   </label>
                 </div>
@@ -551,37 +541,37 @@ const ImageModal: React.FC<ImageModalProps> = ({
 
       <dialog id="my_modal_1" className="modal">
         <ul className="modal-box w-80 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-          <h3 className="font-bold text-lg">
+          <h3 className="font-bold text-lg font-roboto-condensed">
             Why are you reporting this post?
           </h3>
           <form method="dialog">
             <button
               onClick={() => handleReport("It's spam")}
-              className="cursor-pointer w-full mt-4 px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600"
+              className="cursor-pointer w-full mt-4 px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600 font-roboto-condensed"
             >
               It's spam
             </button>
             <button
               onClick={() => handleReport("Nudity or sexual activity")}
-              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600"
+              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600 font-roboto-condensed"
             >
               Nudity or sexual activity
             </button>
             <button
               onClick={() => handleReport("Scam or fraud")}
-              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600"
+              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600 font-roboto-condensed"
             >
               Scam or fraud
             </button>
             <button
               onClick={() => handleReport("False information")}
-              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600"
+              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600 font-roboto-condensed"
             >
               False information
             </button>
             <button
               onClick={() => handleReport("I just don't like it")}
-              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600"
+              className="cursor-pointer w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600 font-roboto-condensed"
             >
               I just don't like it
             </button>

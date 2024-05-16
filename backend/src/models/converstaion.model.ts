@@ -12,6 +12,10 @@ const converstaionSchema = new Schema<IConversation>(
       required: true,
       default: [],
     },
+    lastMessage : {
+      type: String,
+      default: null
+    }
   },
   { timestamps: true }
 );

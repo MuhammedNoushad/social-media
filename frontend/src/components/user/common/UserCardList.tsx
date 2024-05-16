@@ -64,10 +64,10 @@ const UserCardList: React.FC<IUserCardListProps> = ({ users }) => {
               alt={user.username}
             />
             <div className="ml-2 flex flex-col">
-              <div className="leading-snug text-sm text-gray-900 font-bold">
+              <div className="leading-snug text-sm text-gray-900 font-bold font-roboto-condensed">
                 {user.firstName + " " + user.lastName}
               </div>
-              <div className="leading-snug text-xs text-gray-600">
+              <div className="leading-snug text-xs text-gray-600 font-roboto-condensed">
                 @{user.username}
               </div>
             </div>
@@ -84,12 +84,12 @@ const UserCardList: React.FC<IUserCardListProps> = ({ users }) => {
                 onClick={() => {
                   handleFollow(user._id);
                 }}
-                className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100"
+                className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100 font-roboto-condensed"
               >
                 Follow Back
               </button>
             ) : (
-              <button className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100">
+              <button className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100 font-roboto-condensed">
                 Follow
               </button>
             ))}

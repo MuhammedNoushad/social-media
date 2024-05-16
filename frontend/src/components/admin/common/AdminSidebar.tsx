@@ -53,7 +53,7 @@ const AdminSidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiHome />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span className="hidden lg:block text-sm font-medium font-roboto-condensed">
                 Dashboard
               </span>
             </a>
@@ -66,7 +66,7 @@ const AdminSidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiUser />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Users</span>
+              <span className="hidden lg:block text-sm font-medium font-roboto-condensed">Users</span>
             </a>
           </li>
           <li onClick={() => navigate("/admin/post-management")}>
@@ -77,7 +77,7 @@ const AdminSidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiBarChartAlt />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span className="hidden lg:block text-sm font-medium font-roboto-condensed">
                 Reports
               </span>
             </a>
@@ -90,7 +90,7 @@ const AdminSidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiMessageSquare />
               </span>
-              <span className="hidden lg:block text-sm font-medium">Ads</span>
+              <span className="hidden lg:block text-sm font-medium font-roboto-condensed">Ads</span>
             </a>
           </li>
           <li onClick={handleLogout}>
@@ -101,7 +101,7 @@ const AdminSidebar: React.FC = () => {
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
                 <BiLogOut />
               </span>
-              <span className="hidden lg:block text-sm font-medium">
+              <span className="hidden lg:block text-sm font-medium font-roboto-condensed">
                 Logout
               </span>
             </a>

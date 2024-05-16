@@ -15,6 +15,7 @@ import UserCreatePost from "../pages/user/home/UserCreatePost";
 import RestrictedAuthRoute from "./RestrictedAuthRoute";
 import NotFoundRoute from "./NotFoundRoute";
 import OthersProfile from "../pages/user/profile/OthersProfile";
+import UserMessage from "../pages/user/home/UserMessage";
 
 function UserRouter() {
   return (
@@ -108,6 +109,14 @@ function UserRouter() {
         element={
           <PrivateRoute role="user">
             <UserCreatePost />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/message"
+        element={
+          <PrivateRoute role="user">
+            <UserMessage />
           </PrivateRoute>
         }
       />

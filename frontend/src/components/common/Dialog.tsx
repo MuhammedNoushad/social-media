@@ -29,14 +29,14 @@ function Dialog({
           <div className="text-center">
             {/* Title */}
             <h3
-              className="text-lg font-semibold text-gray-900"
+              className="text-lg font-semibold text-gray-900 font-roboto-condensed"
               id="modal-title"
             >
               {title}
             </h3>
             <div className="mt-2">
               {/* Message */}
-              <p className="text-sm text-gray-500">{message}</p>
+              <p className="text-sm text-gray-500 font-roboto-condensed">{message}</p>
             </div>
           </div>
 
@@ -46,14 +46,14 @@ function Dialog({
               <button
                 onClick={onConfirm}
                 type="button"
-                className="inline-block px-4 py-2 mr-3 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 hover:bg-red-700"
+                className="inline-block px-4 py-2 mr-3 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 hover:bg-red-700 font-roboto-condensed"
               >
                 Confirm
               </button>
               <button
                 onClick={onCancel}
                 type="button"
-                className="inline-block px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 hover:text-gray-500"
+                className="inline-block px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 hover:text-gray-500 font-roboto-condensed"
               >
                 Cancel
               </button>

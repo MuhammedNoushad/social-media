@@ -39,7 +39,7 @@ function OthersProfile() {
   return (
     <div className="flex h-screen">
       <div className="w-2/12 ">
-        <Sidebar />
+        <Sidebar page="others-profile" />
       </div>
       <div className="flex-grow flex flex-col w-10/12 gap:6 lg:gap-12">
         <div className="flex-grow lg:mb-4 lg:mr-44 lg:py-4 lg:max-h-[26vh]">

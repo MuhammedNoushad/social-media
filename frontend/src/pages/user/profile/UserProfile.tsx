@@ -10,7 +10,7 @@ function UserProfile() {
   return (
     <div className="flex h-screen">
       <div className="w-2/12 ">
-        <Sidebar />
+        <Sidebar page="profile" />
       </div>
       <div className="flex-grow flex flex-col w-10/12 gap:6 lg:gap-12">
         <div className="flex-grow lg:p-4 lg:mr-44 lg:max-h-[26vh]">

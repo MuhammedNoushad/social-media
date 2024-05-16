@@ -50,6 +50,7 @@ class MessageRepository {
           await Conversation.create({
             participants: [userId, userToChatId],
             messages: [message],
+            lastMessage: message.message,
           })
         ).populate({
           path: "messages",
@@ -58,7 +59,10 @@ class MessageRepository {
       } else {
         conversation = await Conversation.findOneAndUpdate(
           { participants: { $all: [userId, userToChatId] } },
-          { $push: { messages: message } },
+          {
+            $push: { messages: message },
+            $set: { lastMessage: message.message },
+          },
           { upsert: true, new: true }
         ).populate({
           path: "messages",

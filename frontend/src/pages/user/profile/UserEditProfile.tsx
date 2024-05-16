@@ -6,7 +6,7 @@ const UserEditProfile: React.FC = () => {
   return (
     <div className="flex h-screen">
       <div>
-        <Sidebar />
+        <Sidebar page="edit-profile" />
       </div>
       <div className="flex-grow flex lg:pl-60  justify-center">
         <EditProfileCard />

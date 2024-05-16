@@ -5,7 +5,7 @@ function UserCreatePost() {
   return (
     <div className="flex h-screen">
       <div>
-        <Sidebar />
+        <Sidebar page="create-post" />
       </div>
       <div className="flex-grow flex justify-center ">
         <PostCreate />

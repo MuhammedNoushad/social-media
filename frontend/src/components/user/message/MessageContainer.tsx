@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 
@@ -7,13 +7,17 @@ import { RootState } from "../../../store/store";
 import IMessage from "../../../types/IMessage";
 import IConversation from "../../../types/IConversation";
 import { useNavigate } from "react-router-dom";
+import useMessage from "../../../hooks/user/useMessage";
 
 function MessageContainer({ userToChatId }: { userToChatId: string }) {
   const [conversation, setConversation] = useState<IConversation>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [userToChatData, setUserToChatData] = useState<any>({});
 
+  const messgeRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  const { sendMessage } = useMessage();
 
   const loggedInUser = useSelector((state: RootState) => state.user);
 
@@ -52,6 +56,26 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
     fetchUserToChatData();
     fetchConversation();
   }, [loggedInUser._id, userToChatId]);
+
+  // Function for handle message submit
+  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const message = messgeRef.current?.value;
+      if (!message) return;
+
+      const response = await sendMessage(
+        message,
+        loggedInUser._id,
+        userToChatId
+      );
+      if (response) console.log(response);
+    } catch (error) {
+      toast.error("Error sending message");
+    } finally {
+      if (messgeRef.current) messgeRef.current.value = "";
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -112,14 +136,14 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
                   className={`${
                     message.sender._id === loggedInUser._id
                       ? "col-start-1 col-end-8"
-                      : "col-start-6 col-end-13"
+                      : "col-start-6 col-end-13 flex flex-row-reverse"
                   } p-3 rounded-lg`}
                 >
                   <div
                     className={`flex ${
                       message.sender._id === loggedInUser._id
                         ? "items-center justify-start"
-                        : "items-center justify-start flex-row-reverse"
+                        : "items-center justify-end flex-row-reverse"
                     }`}
                   >
                     {message.receiver._id !== loggedInUser._id && (
@@ -132,8 +156,8 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
                     <div
                       className={`${
                         message.sender._id === loggedInUser._id
-                          ? "relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl"
-                          : "flex items-center justify-center flex-shrink-0"
+                          ? "bg-indigo-100 py-2 px-4 shadow rounded-xl ml-4"
+                          : " py-2 px-4 rounded-xl mr-4 "
                       }`}
                     >
                       {message.sender._id === loggedInUser._id ? (
@@ -141,7 +165,7 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
                           {message.message}
                         </div>
                       ) : (
-                        <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
+                        <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl text-pretty">
                           <div className="font-roboto-condensed font-medium text-base text-black text-pretty">
                             {message.message}
                           </div>
@@ -151,42 +175,25 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
                   </div>
                 </div>
               ))}
-
-            {/* <div className="col-start-1 col-end-8 p-3 rounded-lg">
-              <div className="flex flex-row items-center">
-                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                  A
-                </div>
-                <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-                  <div>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Vel ipsa commodi illum saepe numquam maxime asperiores
-                    voluptate sit, minima perspiciatis.
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-start-6 col-end-13 p-3 rounded-lg">
-              <div className="flex items-center justify-start flex-row-reverse">
-                <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                  <div>I'm ok what about you?</div>
-                </div>
-              </div>
-            </div> */}
-            {/* ... other message divs */}
           </div>
         </div>
-        <div className="flex items-center border mx-4 border-gray-300 p-1 rounded-lg mt-4">
+      </div>
+      <form onSubmit={handleSendMessage}>
+        <div className="flex items-center border mx-4 border-gray-300 p-1 rounded-lg my-4">
           <input
+            ref={messgeRef}
             type="text"
             placeholder="Type your message..."
             className="flex-grow px-4 py-2 rounded-lg bg-white focus:outline-none font-roboto-condensed font-medium text-base text-black"
           />
-          <button className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none">
+          <button
+            type="submit"
+            className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none"
+          >
             Send
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

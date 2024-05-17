@@ -47,8 +47,8 @@ class MessageRepository {
   async createMessage(userId: string, userToChatId: string, message: string) {
     try {
       const newMessage = await Message.create({
-        sender: userId,
-        receiver: userToChatId,
+        sender: userToChatId,
+        receiver: userId,
         message: message,
       });
 

@@ -88,7 +88,7 @@ const PostCreate: React.FC = () => {
 
   return (
     <div className="bg-white ml-4  shadow w-3/4 p-4 py-8">
-      <div className="heading text-center font-bold text-2xl m-5 text-gray-800 bg-white">
+      <div className="heading text-center font-bold text-2xl m-5 text-gray-800 bg-white font-roboto-condensed">
         New Post
       </div>
       <form

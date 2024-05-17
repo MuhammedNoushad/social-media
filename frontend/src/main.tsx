@@ -7,7 +7,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import "./index.css";
-
+import { SocketProvider } from "./Context/SocketContext.tsx";
 
 ReactDOM.render(
   <GoogleOAuthProvider
@@ -16,7 +16,9 @@ ReactDOM.render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Toaster richColors position="top-right" />
-        <App />
+        <SocketProvider>
+          <App />
+        </SocketProvider>
       </PersistGate>
     </Provider>
   </GoogleOAuthProvider>,

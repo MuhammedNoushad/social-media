@@ -69,7 +69,10 @@ class MessageRepository {
         participants: { $all: [userId, userToChatId] },
       }).populate({
         path: "messages",
-        select: "message sender receiver",
+        populate: [
+          { path: "sender", select: "-password -role" },
+          { path: "receiver", select: "-password -role" },
+        ],
       });
 
       // Check if the conversation is an array or a single document
@@ -82,7 +85,10 @@ class MessageRepository {
           })
         ).populate({
           path: "messages",
-          select: "message sender receiver",
+          populate: [
+            { path: "sender", select: "-password -role" },
+            { path: "receiver", select: "-password -role" },
+          ],
         });
       } else {
         conversation = await Conversation.findOneAndUpdate(
@@ -92,10 +98,15 @@ class MessageRepository {
             $set: { lastMessage: message.message },
           },
           { upsert: true, new: true }
-        ).populate({
-          path: "messages",
-          select: "message sender receiver",
-        });
+        )
+          .populate({
+            path: "messages",
+            populate: [
+              { path: "sender", select: "-password -role" },
+              { path: "receiver", select: "-password -role" },
+            ],
+          })
+          .populate("participants", "-password -role");
       }
 
       console.log(

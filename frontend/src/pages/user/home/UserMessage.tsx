@@ -17,8 +17,12 @@ function UserMessage() {
       <div className=" w-auto lg:w-3/12 ">
         <MessageList onHandleUserSelection={handleUserSelection} />
       </div>
-      <div className=" w-8/12 hidden lg:block">
-        {selectedUser ? <MessageContainer userToChatId={selectedUser} /> : <MessagePlaceholder />}
+      <div className=" w-8/12 ">
+        {selectedUser ? (
+          <MessageContainer userToChatId={selectedUser} />
+        ) : (
+          <MessagePlaceholder />
+        )}
       </div>
     </div>
   );

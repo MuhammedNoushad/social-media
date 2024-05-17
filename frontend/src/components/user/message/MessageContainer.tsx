@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
+import { newtonsCradle } from "ldrs";
 
 import axios from "../../../axios/axios";
 import { RootState } from "../../../store/store";
@@ -8,18 +9,31 @@ import IMessage from "../../../types/IMessage";
 import IConversation from "../../../types/IConversation";
 import { useNavigate } from "react-router-dom";
 import useMessage from "../../../hooks/user/useMessage";
+import { useSocketContext } from "../../../Context/SocketContext";
+
+newtonsCradle.register();
 
 function MessageContainer({ userToChatId }: { userToChatId: string }) {
   const [conversation, setConversation] = useState<IConversation>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [userToChatData, setUserToChatData] = useState<any>({});
+  const [messageLoading, setMessageLoading] = useState(false);
 
   const messgeRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const { sendMessage } = useMessage();
+  const { onlineUsers, socket } = useSocketContext();
 
   const loggedInUser = useSelector((state: RootState) => state.user);
+
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  }, [conversation?.messages]);
 
   useEffect(() => {
     // Fetch messages for the selected user
@@ -57,9 +71,21 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
     fetchConversation();
   }, [loggedInUser._id, userToChatId]);
 
+  // Listen for new messages
+  useEffect(() => {
+    socket?.on("newConversation", (conversation: IConversation) => {
+      console.log("newConversation", conversation);
+      setConversation(conversation);
+    });
+    return () => {
+      socket?.off("newConversation");
+    };
+  }, [socket, conversation, setConversation]);
+
   // Function for handle message submit
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setMessageLoading(true);
     try {
       const message = messgeRef.current?.value;
       if (!message) return;
@@ -69,10 +95,13 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
         loggedInUser._id,
         userToChatId
       );
-      if (response) console.log(response);
+      if (response) {
+        setConversation(response);
+      }
     } catch (error) {
       toast.error("Error sending message");
     } finally {
+      setMessageLoading(false);
       if (messgeRef.current) messgeRef.current.value = "";
     }
   };
@@ -89,7 +118,25 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
             alt={userToChatData.username}
             className="w-10 h-10 rounded-full mr-2"
           />
-          <h2 className="text-lg font-semibold">{userToChatData.username}</h2>
+          <h2 className="text-lg font-semibold font-roboto-condensed">
+            {userToChatData.username}
+          </h2>
+          <span
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              onlineUsers.includes(userToChatId)
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            } ml-2`}
+          >
+            <span
+              className={`${
+                onlineUsers.includes(userToChatId)
+                  ? "bg-green-600"
+                  : "bg-red-600"
+              } w-2 h-2 rounded-full mr-1.5`}
+            />
+            {onlineUsers.includes(userToChatId) ? "Online" : "Offline"}
+          </span>
         </div>
         <div className="flex items-center">
           <button className="text-gray-500 hover:text-gray-700 focus:outline-none mr-2">
@@ -132,6 +179,7 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
             {conversation &&
               conversation.messages?.map((message: IMessage) => (
                 <div
+                  ref={lastMessageRef}
                   key={message._id}
                   className={`${
                     message.sender._id === loggedInUser._id
@@ -188,9 +236,14 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
           />
           <button
             type="submit"
-            className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none"
+            className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none flex items-center"
+            disabled={messageLoading}
           >
-            Send
+            {messageLoading ? (
+              <l-newtons-cradle size="20" speed="1.4" color="white" />
+            ) : (
+              "Send"
+            )}
           </button>
         </div>
       </form>

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import MessageRepository from "../repositories/MessageRepository";
+import { getRecieverSocketId, io } from "../socket/socket";
 
 const messageRepository = new MessageRepository();
 
@@ -35,9 +36,6 @@ export const setMessage = async (req: Request, res: Response) => {
       userToChatId,
       message
     );
-
-    console.log(newMessage, "newMessage");
-
     const conversation = await messageRepository.findConversationAndAddMessage(
       userId,
       userToChatId,
@@ -46,6 +44,13 @@ export const setMessage = async (req: Request, res: Response) => {
 
     if (!conversation) {
       return res.status(400).json({ error: "Failed to fetch messages" });
+    }
+
+    // socket connection for sending message
+    const recieverSocketId = getRecieverSocketId(userToChatId);
+
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("newConversation", conversation);
     }
 
     res.status(200).json({ success: true, conversation });

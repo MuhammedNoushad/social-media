@@ -11,10 +11,10 @@ import adminRoute from "./routes/admin.routes";
 import postRoute from "./routes/post.routes";
 import connectionRoute from "./routes/connection.routes";
 import messageRoute from "./routes/message.routes";
+import { app, server } from "./socket/socket";
 
 dotenv.config();
 
-const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOptions = {
@@ -37,7 +37,7 @@ app.use("/api/messages", messageRoute);
 // Connect to MongoDB and start the server
 connectToMongoDB()
   .then(() => {
-    const server: Server = app.listen(port, () => {
+    server.listen(port, () => {
       console.log(`Server is running at http://localhost:${port}`);
     });
   })

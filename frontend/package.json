@@ -16,6 +16,7 @@
     "axios": "^1.6.8",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
+    "ldrs": "^1.0.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -25,6 +26,7 @@
     "react-spinners": "^0.13.8",
     "redux-persist": "^6.0.0",
     "rsuite": "^5.60.0",
+    "socket.io-client": "^4.7.5",
     "sonner": "^1.4.41",
     "universal-cookie": "^7.1.4",
     "uuid": "^9.0.1"

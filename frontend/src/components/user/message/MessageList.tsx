@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import IUserDetails from "../../../types/IUserDetails";
 import axios from "../../../axios/axios";
 import { RootState } from "../../../store/store";
-// import { useNavigate } from "react-router-dom";
+import { useSocketContext } from "../../../Context/SocketContext";
 
 function MessageList({
   onHandleUserSelection,
@@ -14,7 +14,7 @@ function MessageList({
   const [users, setUsers] = useState<IUserDetails[]>([]);
   const loggedUser = useSelector((state: RootState) => state.user);
 
-  // const navigate = useNavigate
+  const { onlineUsers  } = useSocketContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +49,11 @@ function MessageList({
             key={user._id}
             className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
           >
-            <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
+            <div
+              className={`w-12 h-12 bg-gray-300 rounded-full mr-3 relative me-4 avatar ${
+                onlineUsers.includes(user._id) ? "online" : ""
+              }`}
+            >
               <img
                 src={user.profileimg}
                 alt={`${user.username} Avatar`}

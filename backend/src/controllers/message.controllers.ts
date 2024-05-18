@@ -13,8 +13,6 @@ export const getMessage = async (req: Request, res: Response) => {
       userToChatId
     );
 
-    console.log(conversations, "conversations");
-
     if (!conversations) {
       return res.status(400).json({ error: "Failed to fetch messages" });
     }

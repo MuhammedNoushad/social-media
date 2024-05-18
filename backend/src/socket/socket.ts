@@ -31,6 +31,38 @@ io.on("connection", (socket) => {
 
   io.emit("onlineUsers", Object.keys(userSocketMap));
 
+  socket.on("videoCall", (data) => {
+    const recieverSocketId = getRecieverSocketId(data.userToChatId);
+
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("videoCall", data);
+    }
+  });
+
+  socket.on("rejectCall", (data) => {
+    const recieverSocketId = getRecieverSocketId(data.userToChatId);
+
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("rejectCall", data);
+    }
+  });
+
+  socket.on("rejectIncomingCall", (data) => {
+    const recieverSocketId = getRecieverSocketId(data);
+
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("rejectIncomingCall", data);
+    }
+  });
+
+  socket.on("acceptIncomingCall", (data) => {
+    const recieverSocketId = getRecieverSocketId(data);
+
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("acceptIncomingCall", data);
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("Disconnected from socket.io", socket.id);
     delete userSocketMap[userId];

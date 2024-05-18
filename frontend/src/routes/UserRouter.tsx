@@ -16,6 +16,7 @@ import RestrictedAuthRoute from "./RestrictedAuthRoute";
 import NotFoundRoute from "./NotFoundRoute";
 import OthersProfile from "../pages/user/profile/OthersProfile";
 import UserMessage from "../pages/user/home/UserMessage";
+import VideoCall from "../components/user/message/video call/VideoCall";
 
 function UserRouter() {
   return (
@@ -117,6 +118,14 @@ function UserRouter() {
         element={
           <PrivateRoute role="user">
             <UserMessage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/video-call/:roomID/:username"
+        element={
+          <PrivateRoute role="user">
+            <VideoCall />
           </PrivateRoute>
         }
       />

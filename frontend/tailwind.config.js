@@ -11,6 +11,10 @@ export default {
       },
     },
   },
-  // eslint-disable-next-line no-undef
-  plugins: [require("daisyui")],
+  plugins: [
+    // eslint-disable-next-line no-undef
+    require("daisyui"),
+    // eslint-disable-next-line no-undef
+    require("tailwind-scrollbar-hide"), // Adding the scrollbar-hide plugin
+  ],
 }

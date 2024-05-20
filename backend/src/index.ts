@@ -12,6 +12,7 @@ import postRoute from "./routes/post.routes";
 import connectionRoute from "./routes/connection.routes";
 import messageRoute from "./routes/message.routes";
 import { app, server } from "./socket/socket";
+import storyRoute from "./routes/story.routes";
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use("/api/admin", adminRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/connection", connectionRoute);
 app.use("/api/messages", messageRoute);
+app.use("/api/story", storyRoute);
 
 // Connect to MongoDB and start the server
 connectToMongoDB()

@@ -13,11 +13,13 @@ export const addNewStory = async (req: Request, res: Response) => {
 
     const newStory = await storyRepository.createNewStory(userId, storyImg);
 
+    const stories = await storyRepository.fetchAllStories();
+
     if (newStory) {
       res.status(200).json({
         success: true,
         message: "Story created successfully",
-        newStory,
+        stories,
       });
     } else {
       res.status(400).json({ error: "Something went wrong" });

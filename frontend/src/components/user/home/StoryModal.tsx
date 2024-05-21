@@ -44,83 +44,89 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
     );
   };
 
+  const showNextAndPrevButtons = stories.story && stories.story.length > 1;
+  const showNextButton =
+    showNextAndPrevButtons && currentSlide < stories.story.length - 1;
+  const showPrevButton = showNextAndPrevButtons && currentSlide > 0;
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="fixed inset-0 bg-black opacity-50" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-4xl">
-        <div data-hs-carousel='{"isAutoPlay": true}' className="relative">
-          <div className="hs-carousel relative overflow-hidden w-full min-h-96 bg-gray-200 rounded-lg">
-            <div className="hs-carousel-body flex flex-nowrap transition-transform duration-700" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-              {stories.story && stories.story.length > 0 && stories.story.map((slide, index) => (
-                <div key={index} className="hs-carousel-slide flex-shrink-0 w-full">
-                  <div className="flex justify-center h-full p-6">
+      <div
+        className="fixed inset-0 bg-black opacity-70"
+        onClick={() => {
+          onClose();
+          setCurrentSlide(0);
+        }}
+      />
+      <div className="relative z-10 w-full max-w-4xl p-6 bg-white rounded-lg shadow-lg">
+        <div className="relative">
+          <div className="overflow-hidden w-full min-h-[24rem] bg-gray-100 rounded-lg">
+            <div
+              className="flex transition-transform duration-700"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {stories.story &&
+                stories.story.map((slide, index) => (
+                  <div
+                    key={index}
+                    className="flex-shrink-0 w-full flex justify-center items-center p-4"
+                  >
                     <img
                       src={slide.storyImg}
-                      alt="story"
-                      className="max-w-5xl object-cover rounded-lg"
+                      alt={`Story ${index + 1}`}
+                      className="w-full h-full object-cover rounded-lg shadow-md"
+                      style={{ width: "500px", height: "500px" }}
                     />
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
-          <button
-            type="button"
-            className="hs-carousel-prev absolute inset-y-0 start-0 inline-flex justify-center items-center w-[46px] h-full text-gray-800 hover:bg-gray-800/10 rounded-s-lg dark:text-white dark:hover:bg-white/10"
-            onClick={handlePrevSlide}
-          >
-            <span className="text-2xl" aria-hidden="true">
+          {showPrevButton && (
+            <button
+              type="button"
+              className="absolute inset-y-0 left-0 flex items-center justify-center p-2 m-2 text-red-900 bg-tr rounded-full hover:bg-gray-100 "
+              onClick={handlePrevSlide}
+            >
               <svg
-                className="flex-shrink-0 size-5"
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
+                className="w-6 h-6"
                 fill="none"
+                viewBox="0 0 24 24"
                 stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeWidth={2}
               >
-                <path d="m15 18-6-6 6-6"></path>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
-            </span>
-            <span className="sr-only">Previous</span>
-          </button>
-          <button
-            type="button"
-            className="hs-carousel-next absolute inset-y-0 end-0 inline-flex justify-center items-center w-[46px] h-full text-gray-800 hover:bg-gray-800/10 rounded-e-lg dark:text-white dark:hover:bg-white/10"
-            onClick={handleNextSlide}
-          >
-            <span className="text-2xl" aria-hidden="true">
+            </button>
+          )}
+          {showNextButton && (
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 flex items-center justify-center p-2 m-2 text-red-900 bg-tr rounded-full hover:bg-gray-100"
+              onClick={handleNextSlide}
+            >
               <svg
-                className="flex-shrink-0 size-5"
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
+                className="w-6 h-6"
                 fill="none"
+                viewBox="0 0 24 24"
                 stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeWidth={2}
               >
-                <path d="m9 18 6-6-6-6"></path>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
-            </span>
-            <span className="sr-only">Next</span>
-          </button>
-          <div className="hs-carousel-pagination flex justify-center absolute bottom-3 start-0 end-0 space-x-2">
-            {stories.story && stories.story.length > 0 && stories.story.map((_, index) => (
-              <span
-                key={index}
-                className={`hs-carousel-active:bg-blue-700 hs-carousel-active:border-blue-700 size-3 border border-gray-400 rounded-full cursor-pointer dark:border-neutral-600 dark:hs-carousel-active:bg-blue-500 dark:hs-carousel-active:border-blue-500 ${currentSlide === index ? "bg-blue-700 border-blue-700 dark:bg-blue-500 dark:border-blue-500" : ""}`}
-                onClick={() => setCurrentSlide(index)}
-              />
-            ))}
-          </div>
+            </button>
+          )}
         </div>
       </div>
     </div>

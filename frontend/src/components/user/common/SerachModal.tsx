@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
+
 import SearchInput from "../../common/SearchInput";
 import UserCardList from "./UserCardList";
-// import useFetchAllUsers from "../../../hooks/user/useFetchAllUsers";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import IUserState from "../../../types/IUserState";
@@ -48,7 +48,7 @@ const SearchModal = ({ isOpen }: { isOpen: boolean; onClose: () => void }) => {
 
   return isOpen ? (
     <div
-      className={`fixed left-16 top-0 bottom-0 w-80 mt-5 p-2 bg-white border-x-4 border-l-red-500 z-50 transform translate-x-0 transition-transform ease-in-out duration-800`}
+      className={`fixed left-16 top-0 bottom-0 w-80  p-4 bg-white border-x-4 border-l-red-500 z-50 transform translate-x-0 transition-transform ease-in-out duration-800`}
     >
       <div className="flex justify-between items-center p-4 border-b border-gray-200">
         <SearchInput onChange={handleSearchQueryChange} value={searchQuery} />

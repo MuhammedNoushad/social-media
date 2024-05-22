@@ -79,10 +79,8 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
   }, [loggedInUser._id, userToChatId]);
 
   useEffect(() => {
-    socket?.on("acceptIncomingCall", (data) => {
-      console.log("inside acceptIncomingCall");
+    socket?.on("acceptIncomingCall", () => {
       setIncomingCallModal(false);
-      console.log(data, "acceptIncomingCall");
       navigate(`/video-call/${userId}/${loggedInUser.username}`);
     });
 

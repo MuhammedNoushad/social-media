@@ -1,8 +1,11 @@
 import ConnectionRepository from "../repositories/ConnectionRepository";
+import NotificationRepository from "../repositories/NotificationRepository";
 import UserRepository from "../repositories/UserRepository";
+import { getRecieverSocketId, io } from "../socket/socket";
 
 const userRepository = new UserRepository();
 const connectionRepository = new ConnectionRepository();
+const notificationRepository = new NotificationRepository();
 
 // Function for following
 export const follow = async (req: any, res: any) => {
@@ -30,6 +33,22 @@ export const follow = async (req: any, res: any) => {
       return res.status(400).json({ error: "Already following" });
     }
 
+    await notificationRepository.createNotification(
+      userId,
+      followingId,
+      "follow"
+    );
+
+    const notifications = await notificationRepository.fetchNotifications(
+      followingId
+    );
+
+    const recieverId = getRecieverSocketId(followingId);
+
+    if (recieverId) {
+      io.to(recieverId).emit("notification", notifications);
+    }
+
     await connectionRepository.followUser(userId, followingId);
 
     return res.status(200).json({ success: true, followUser });
@@ -42,7 +61,6 @@ export const follow = async (req: any, res: any) => {
 export const unfollow = async (req: any, res: any) => {
   try {
     const { userId, unfollowingId } = req.body;
-
 
     const unfollowUser = await userRepository.findById(unfollowingId);
 
@@ -73,7 +91,7 @@ export const fetchAllConnections = async (req: any, res: any) => {
 
     return res.status(200).json({ success: true, connections });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

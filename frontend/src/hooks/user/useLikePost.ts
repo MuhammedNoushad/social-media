@@ -7,10 +7,11 @@ import { setPosts } from "../../store/features/postsSlice";
 const useLikePost = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
-  const likePost = async (postId: string) => {
+  const likePost = async (postId: string , postOwnerId: string) => {
     try {
       const response = await axios.post(`/api/posts/toggle-like/${postId}`, {
         userId: user._id,
+        postOwnerId,
       });
       const data = response.data;
 

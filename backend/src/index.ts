@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { Server } from "http";
 import cookieParser from "cookie-parser";
 
 import authRoute from "./routes/auth.routes";
@@ -13,6 +12,7 @@ import connectionRoute from "./routes/connection.routes";
 import messageRoute from "./routes/message.routes";
 import { app, server } from "./socket/socket";
 import storyRoute from "./routes/story.routes";
+import notificationRoute from "./routes/notification.routes";
 
 dotenv.config();
 
@@ -30,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/user/notification", notificationRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/connection", connectionRoute);

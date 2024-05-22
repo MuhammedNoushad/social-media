@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BiHome,
   BiSearch,
@@ -9,21 +9,34 @@ import {
   BiUser,
   BiLogOut,
 } from "react-icons/bi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { clearToken } from "../../../store/features/tokenSlice";
 import Dialog from "../../common/Dialog";
 import { clearState } from "../../../store/features/userDetailsSlice";
 import SearchModal from "./SerachModal";
+import NotificationModal from "./NotificationModal";
+import useFetchNotifications from "../../../hooks/user/useFetchNotifications";
+import { RootState } from "../../../store/store";
+import INotification from "../../../types/INotification";
 
 // Component for the sidebar
 const Sidebar = ({ page }: { page: string }) => {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState("w-auto");
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [notifications, setNotifications] = useState<INotification[]>([]);
+
+  const loggedInUser = useSelector((state: RootState) => state.user);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { fetchNotifications, markAllAsRead } = useFetchNotifications();
+
+  let countOfUnreadNotifications = 0;
 
   // Function to handle logout
   const handleLogout = (e: React.MouseEvent<HTMLLIElement>) => {
@@ -51,7 +64,46 @@ const Sidebar = ({ page }: { page: string }) => {
 
     setIsSearchOpen(!isSearchOpen);
     setSidebarWidth(isSearchOpen ? "w-auto" : "w-14");
+
+    if (isNotificationOpen) {
+      setIsNotificationOpen(false);
+    }
   };
+
+  // Function for toggel notification modal
+  const handleNotificationtoggle = async (
+    e: React.MouseEvent<HTMLLIElement>
+  ) => {
+    e.preventDefault();
+
+    const response = await markAllAsRead(loggedInUser._id);
+    if (response) {
+      setNotifications(response);
+    }
+
+    setIsNotificationOpen(!isNotificationOpen);
+    setSidebarWidth(isNotificationOpen ? "w-auto" : "w-14");
+
+    if (isSearchOpen) {
+      setIsSearchOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await fetchNotifications(loggedInUser._id);
+      setNotifications(response);
+    };
+
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (notifications.length > 0) {
+    countOfUnreadNotifications = notifications.filter(
+      (notification) => !notification.isRead
+    ).length;
+  }
 
   // Render the sidebar
   return (
@@ -82,7 +134,7 @@ const Sidebar = ({ page }: { page: string }) => {
               {page !== "message" && (
                 <span
                   className={`hidden ${
-                    !isSearchOpen && "lg:block"
+                    !isSearchOpen && !isNotificationOpen && "lg:block"
                   } text-sm font-medium font-roboto-condensed`}
                 >
                   Home
@@ -101,7 +153,7 @@ const Sidebar = ({ page }: { page: string }) => {
               {page !== "message" && (
                 <span
                   className={`hidden ${
-                    !isSearchOpen && "lg:block"
+                    !isSearchOpen && !isNotificationOpen && "lg:block"
                   } text-sm font-medium font-roboto-condensed`}
                 >
                   Search
@@ -120,7 +172,7 @@ const Sidebar = ({ page }: { page: string }) => {
               {page !== "message" && (
                 <span
                   className={`hidden ${
-                    !isSearchOpen && "lg:block"
+                    !isSearchOpen && !isNotificationOpen && "lg:block"
                   } text-sm font-medium font-roboto-condensed`}
                 >
                   Explore
@@ -139,7 +191,7 @@ const Sidebar = ({ page }: { page: string }) => {
               {page !== "message" && (
                 <span
                   className={`hidden ${
-                    !isSearchOpen && "lg:block"
+                    !isSearchOpen && !isNotificationOpen && "lg:block"
                   } text-sm font-medium font-roboto-condensed`}
                 >
                   Message
@@ -147,7 +199,7 @@ const Sidebar = ({ page }: { page: string }) => {
               )}
             </a>
           </li>
-          <li>
+          <li onClick={handleNotificationtoggle}>
             <a
               href=""
               className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
@@ -158,15 +210,15 @@ const Sidebar = ({ page }: { page: string }) => {
               {page !== "message" && (
                 <span
                   className={`hidden ${
-                    !isSearchOpen && "lg:block"
+                    !isSearchOpen && !isNotificationOpen && "lg:block"
                   } text-sm font-medium font-roboto-condensed`}
                 >
                   Notifications
                 </span>
               )}
-              {!isSearchOpen && (
+              {!isSearchOpen && !isNotificationOpen && countOfUnreadNotifications > 0 && (
                 <span className="hidden lg:block ml-auto mr-6 text-sm bg-red-100 rounded-full px-3 py-px text-red-500">
-                  5
+                  {countOfUnreadNotifications}
                 </span>
               )}
             </a>
@@ -186,7 +238,7 @@ const Sidebar = ({ page }: { page: string }) => {
               {page !== "message" && (
                 <span
                   className={`hidden ${
-                    !isSearchOpen && "lg:block"
+                    !isSearchOpen && !isNotificationOpen && "lg:block"
                   } text-sm font-medium font-roboto-condensed`}
                 >
                   Create
@@ -209,7 +261,7 @@ const Sidebar = ({ page }: { page: string }) => {
               {page !== "message" && (
                 <span
                   className={`hidden ${
-                    !isSearchOpen && "lg:block"
+                    !isSearchOpen && !isNotificationOpen && "lg:block"
                   } text-sm font-medium font-roboto-condensed`}
                 >
                   Profile
@@ -228,7 +280,7 @@ const Sidebar = ({ page }: { page: string }) => {
               {page !== "message" && (
                 <span
                   className={`hidden ${
-                    !isSearchOpen && "lg:block"
+                    !isSearchOpen && !isNotificationOpen && "lg:block"
                   } text-sm font-medium font-roboto-condensed`}
                 >
                   Logout
@@ -238,6 +290,11 @@ const Sidebar = ({ page }: { page: string }) => {
           </li>
         </ul>
       </div>
+      <NotificationModal
+        setNotifications={setNotifications}
+        notifications={notifications}
+        isOpen={isNotificationOpen}
+      />
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}

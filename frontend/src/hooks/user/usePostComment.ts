@@ -7,11 +7,16 @@ import { setPosts } from "../../store/features/postsSlice";
 const usePostComment = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
-  const postComment = async (comment: string, postId: string) => {
+  const postComment = async (
+    comment: string,
+    postId: string,
+    postOwnerId: string
+  ) => {
     try {
       const response = await axios.post(`/api/posts/add-comment/${postId}`, {
         comment,
         userId: user._id,
+        postOwnerId,
       });
       const data = response.data;
 

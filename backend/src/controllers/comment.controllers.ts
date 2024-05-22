@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
 import PostRepository from "../repositories/PostRepository";
+import NotificationRepository from "../repositories/NotificationRepository";
+import { getRecieverSocketId, io } from "../socket/socket";
 
 const postRepository = new PostRepository();
+const notificationRepository = new NotificationRepository();
 
 export const addComment = async (req: Request, res: Response) => {
   try {
     const { postId } = req.params;
-    const { userId, comment } = req.body;
+    const { userId, comment, postOwnerId } = req.body;
 
     const commentData = await postRepository.addComment(
       postId,
@@ -17,6 +20,22 @@ export const addComment = async (req: Request, res: Response) => {
       commentData?.comments?.[commentData?.comments?.length - 1];
 
     const postData = await postRepository.getAllPosts();
+
+    await notificationRepository.createNotification(
+      userId,
+      postOwnerId,
+      "comment"
+    );
+
+    const notifications = await notificationRepository.fetchNotifications(
+      postOwnerId
+    );
+
+    const recieverId = getRecieverSocketId(postOwnerId);
+
+    if (recieverId) {
+      io.to(recieverId).emit("notification", notifications);
+    }
 
     if (commentData) {
       return res.status(200).json({ success: true, postData, newComment });
@@ -33,7 +52,7 @@ export const addComment = async (req: Request, res: Response) => {
 export const toggleLike = async (req: Request, res: Response) => {
   try {
     const { postId } = req.params;
-    const { userId } = req.body;
+    const { userId, postOwnerId } = req.body;
 
     const updatedPostData = await postRepository.toggleLike(postId, userId);
 
@@ -41,6 +60,22 @@ export const toggleLike = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Something went wrong" });
 
     const postData = await postRepository.getAllPosts();
+
+    await notificationRepository.createNotification(
+      userId,
+      postOwnerId,
+      "like"
+    );
+
+    const notifications = await notificationRepository.fetchNotifications(
+      postOwnerId
+    );
+
+    const recieverId = getRecieverSocketId(postOwnerId);
+
+    if (recieverId) {
+      io.to(recieverId).emit("notification", notifications);
+    }
 
     return res.status(200).json({ success: true, postData });
   } catch (error) {
@@ -52,7 +87,7 @@ export const toggleLike = async (req: Request, res: Response) => {
 export const editComment = async (req: Request, res: Response) => {
   try {
     const { postId, commentId } = req.params;
-    const {  comment } = req.body;
+    const { comment } = req.body;
 
     const updatedPostData = await postRepository.editComment(
       postId,
@@ -65,7 +100,7 @@ export const editComment = async (req: Request, res: Response) => {
 
     const postData = await postRepository.getAllPosts();
 
-    res.status(200).json({ success: true, updatedPostData , postData });
+    res.status(200).json({ success: true, updatedPostData, postData });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }
@@ -87,7 +122,7 @@ export const deleteComment = async (req: Request, res: Response) => {
 
     const postData = await postRepository.getAllPosts();
 
-    res.status(200).json({ success: true, updatedPostData , postData });
+    res.status(200).json({ success: true, updatedPostData, postData });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }

@@ -17,6 +17,7 @@ import NotFoundRoute from "./NotFoundRoute";
 import OthersProfile from "../pages/user/profile/OthersProfile";
 import UserMessage from "../pages/user/home/UserMessage";
 import VideoCall from "../components/user/message/video call/VideoCall";
+import Explore from "../pages/user/home/Explore";
 
 function UserRouter() {
   return (
@@ -126,6 +127,14 @@ function UserRouter() {
         element={
           <PrivateRoute role="user">
             <VideoCall />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/explore"
+        element={
+          <PrivateRoute role="user">
+            <Explore />
           </PrivateRoute>
         }
       />

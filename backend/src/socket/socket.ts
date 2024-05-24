@@ -1,15 +1,20 @@
 import express from "express";
 import { Server } from "socket.io";
 import http from "http";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const app = express();
+
+const clientURL = process.env.CLIENT_URL || "http://localhost:5173";
 
 // Initialize socket.io
 export const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: clientURL,
     methods: ["GET", "POST"],
   },
 });
@@ -21,8 +26,6 @@ export const getRecieverSocketId = (userId: string) => {
 const userSocketMap: Record<string, string> = {};
 
 io.on("connection", (socket) => {
-  console.log("Connected to socket.io", socket.id);
-
   const userId = socket.handshake.query.userId as string;
 
   if (userId != "undefined") {
@@ -64,7 +67,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("Disconnected from socket.io", socket.id);
     delete userSocketMap[userId];
 
     io.emit("onlineUsers", Object.keys(userSocketMap));

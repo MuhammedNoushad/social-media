@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Story from "../models/story.model";
 
 class StoryRepository {
@@ -40,10 +41,12 @@ class StoryRepository {
   }
 
   // Function for deleting a story
-  async deleteStory(storyId: string) {
+  async deleteStory(storyId: string, userId: string) {
     try {
-      const deletedStory = await Story.findByIdAndDelete(storyId);
-      return deletedStory;
+      await Story.updateOne(
+        { userId, "story._id": storyId },
+        { $pull: { story: { _id: storyId } } }
+      );
     } catch (error) {
       throw error;
     }

@@ -15,7 +15,22 @@ const useFetchStoryOfSingleUser = () => {
     }
   };
 
-  return { fetchStoryOfSingleUser };
+  // Function for delete story
+  const deleteStory = async (storyId: string, userId: string) => {
+    try {
+      const response = await axios.delete(`/api/story/${storyId}/${userId}`);
+      const data = response.data;
+
+      console.log(data, " form delete story");
+      if (data.success) {
+        return data.stories;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return { fetchStoryOfSingleUser, deleteStory };
 };
 
 export default useFetchStoryOfSingleUser;

@@ -63,6 +63,32 @@ class ConnectionRepository {
       throw error;
     }
   }
+
+  // Function for fetch all followings
+  async fetchAllFollowings(userId: string) {
+    try {
+      const followings = await Connection.findOne({ userId }).populate({
+        path: "following",
+        select: "-password",
+      });
+      return followings;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Function for fetch all followers
+  async fetchAllFollowers(userId: string) {
+    try {
+      const followers = await Connection.findOne({ userId }).populate({
+        path: "followers",
+        select: "-password",
+      });
+      return followers;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default ConnectionRepository;

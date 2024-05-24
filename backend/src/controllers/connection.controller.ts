@@ -95,3 +95,29 @@ export const fetchAllConnections = async (req: any, res: any) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for fetch all followings
+export const fetchAllFollowings = async (req: any, res: any) => {
+  try {
+    const { userId } = req.params;
+
+    const followings = await connectionRepository.fetchAllFollowings(userId);
+
+    return res.status(200).json({ success: true, followings });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for fetch all followers
+export const fetchAllFollowers = async (req: any, res: any) => {
+  try {
+    const { userId } = req.params;
+
+    const followers = await connectionRepository.fetchAllFollowers(userId);
+
+    return res.status(200).json({ success: true, followers });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}

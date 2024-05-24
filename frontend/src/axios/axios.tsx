@@ -1,18 +1,31 @@
 import axios from "axios";
+import handleInvalidToken from "../utils/handleInvalidToken";
 
 const instance = axios.create({
-  baseURL: "http://127.0.0.1:5000",
+  baseURL: import.meta.env.VITE_REACT_APP_BASE_URL,
 });
 
 instance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem("token");
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Check if the error is due to an invalid token
+    if (error.response && error.response.status === 401) {
+      // Handle the invalid token
+      handleInvalidToken();
+    }
     return Promise.reject(error);
   }
 );

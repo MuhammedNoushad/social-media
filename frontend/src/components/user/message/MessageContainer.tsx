@@ -12,6 +12,7 @@ import IConversation from "../../../types/IConversation";
 import { useNavigate } from "react-router-dom";
 import useMessage from "../../../hooks/user/useMessage";
 import { useSocketContext } from "../../../Context/SocketContext";
+import formatTimestamp from "../../../utils/formatTimestamp";
 
 newtonsCradle.register();
 
@@ -255,49 +256,55 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
               {conversation &&
                 conversation.messages?.map((message: IMessage) => (
                   <div
-                    ref={lastMessageRef}
-                    key={message._id}
-                    className={`${
+                  ref={lastMessageRef}
+                  key={message._id}
+                  className={`${
+                    message.sender._id === loggedInUser._id
+                      ? "col-start-1 col-end-8"
+                      : "col-start-6 col-end-13 flex flex-row-reverse"
+                  } p-3 rounded-lg`}
+                >
+                  <div
+                    className={`flex ${
                       message.sender._id === loggedInUser._id
-                        ? "col-start-1 col-end-8"
-                        : "col-start-6 col-end-13 flex flex-row-reverse"
-                    } p-3 rounded-lg`}
+                        ? "items-center justify-start"
+                        : "items-center justify-end flex-row-reverse"
+                    }`}
                   >
+                    {message.receiver._id !== loggedInUser._id && (
+                      <img
+                        src={message.receiver.profileimg}
+                        alt={message.receiver.username}
+                        className="w-10 h-10 rounded-full mr-4"
+                      />
+                    )}
                     <div
-                      className={`flex ${
+                      className={`${
                         message.sender._id === loggedInUser._id
-                          ? "items-center justify-start"
-                          : "items-center justify-end flex-row-reverse"
+                          ? "bg-indigo-100 py-2 px-4 shadow rounded-xl ml-4"
+                          : " py-2 px-4 rounded-xl mr-4 "
                       }`}
                     >
-                      {message.receiver._id !== loggedInUser._id && (
-                        <img
-                          src={message.receiver.profileimg}
-                          alt={message.receiver.username}
-                          className="w-10 h-10 rounded-full mr-4"
-                        />
-                      )}
-                      <div
-                        className={`${
-                          message.sender._id === loggedInUser._id
-                            ? "bg-indigo-100 py-2 px-4 shadow rounded-xl ml-4"
-                            : " py-2 px-4 rounded-xl mr-4 "
-                        }`}
-                      >
-                        {message.sender._id === loggedInUser._id ? (
+                      {message.sender._id === loggedInUser._id ? (
+                        <div className="font-roboto-condensed font-medium text-base text-black text-pretty">
+                          {message.message}
+                          <div className="text-xs text-gray-500 mt-1">
+                            {formatTimestamp(message.createdAt)}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl text-pretty">
                           <div className="font-roboto-condensed font-medium text-base text-black text-pretty">
                             {message.message}
-                          </div>
-                        ) : (
-                          <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl text-pretty">
-                            <div className="font-roboto-condensed font-medium text-base text-black text-pretty">
-                              {message.message}
+                            <div className="text-xs text-gray-500 mt-1">
+                              {formatTimestamp(message.createdAt)}
                             </div>
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   </div>
+                </div>
                 ))}
             </div>
           </div>

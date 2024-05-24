@@ -24,6 +24,7 @@ import useDeletePost from "../../../hooks/user/useDeletePost";
 import Dialog from "../../common/Dialog";
 import axios from "../../../axios/axios";
 import { setPosts } from "../../../store/features/postsSlice";
+import { useNavigate } from "react-router-dom";
 
 interface ImageModalProps {
   showModal: boolean;
@@ -52,6 +53,10 @@ const ImageModal: React.FC<ImageModalProps> = ({
   const [commentInput, setCommentInput] = useState<string>("");
   const [editingCommentId, setEditingCommentId] = useState("");
   const [editedComment, setEditedComment] = useState("");
+  const [editingDescription, setEditingDescription] = useState(false);
+  const [editedDescription, setEditedDescription] = useState(
+    selectedPost?.description || ""
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const connections: any = useSelector(
@@ -69,8 +74,10 @@ const ImageModal: React.FC<ImageModalProps> = ({
   const { deletePost } = useDeletePost();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const detailsRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -82,9 +89,26 @@ const ImageModal: React.FC<ImageModalProps> = ({
       }
     };
 
+    const editOption = document.querySelector(".edit-option");
+    if (editOption) {
+      editOption.addEventListener("click", () => {
+        if (detailsRef.current) {
+          detailsRef.current.open = false;
+        }
+      });
+    }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      if (editOption) {
+        editOption.removeEventListener("click", () => {
+          if (detailsRef.current) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            detailsRef.current.open = false;
+          }
+        });
+      }
     };
   }, []);
 
@@ -272,6 +296,32 @@ const ImageModal: React.FC<ImageModalProps> = ({
     }
   };
 
+  // Function for Editing description
+  const handleSaveDescription = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (editedDescription === selectedPost.description) {
+      setEditingDescription(false);
+      return;
+    }
+
+    try {
+      const response = await axios.put(`/api/posts/${selectedPost._id}`, {
+        description: editedDescription,
+      });
+
+      if (response.data.success) {
+        setEditingDescription(false);
+        dispatch(setPosts(response.data.postData));
+        toast.success("Description updated successfully");
+      } else {
+        toast.error("Error updating description");
+      }
+    } catch (error) {
+      console.error("Error updating description:", error);
+      toast.error("Error updating description");
+    }
+  };
+
   return (
     <>
       <div className="fixed z-50 inset-0 flex items-center justify-center">
@@ -296,20 +346,36 @@ const ImageModal: React.FC<ImageModalProps> = ({
                 {/* Image description */}
                 <div className="bg-gray-100 p-2 rounded-md mb-2 flex items-center ">
                   <img
+                    onClick={() =>
+                      navigate(`/profile/${selectedPost.userId?._id}`)
+                    }
                     src={selectedPost.userId?.profileimg}
                     alt={selectedPost.userId?.username}
-                    className="w-8 h-8 rounded-full mr-2"
+                    className="w-8 h-8 rounded-full mr-2 cursor-pointer"
                   />
                   <div className="flex items-center">
                     <div>
-                      <p className="text-sm text-gray-600">
-                        <span className="font-semibold mr-2 font-roboto-condensed">
-                          {selectedPost.userId?.username}:
-                        </span>
-                        {selectedPost.description}
-                      </p>
+                      {editingDescription ? (
+                        <form onSubmit={(e) => handleSaveDescription(e)}>
+                          <input
+                            type="text"
+                            value={editedDescription}
+                            onChange={(e) =>
+                              setEditedDescription(e.target.value)
+                            }
+                            // onBlur={handleSaveDescription}
+                          />
+                        </form>
+                      ) : (
+                        <p className="text-sm text-gray-600">
+                          <span className="font-semibold mr-2 font-roboto-condensed">
+                            {selectedPost.userId?.username}:
+                          </span>
+                          {editedDescription || selectedPost.description}
+                        </p>
+                      )}
                     </div>
-                    <details className="dropdown">
+                    <details ref={detailsRef} className="dropdown">
                       <summary className="mr-4 btn btn-ghost text-white hover:text-white hover:bg-transparent">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -324,7 +390,10 @@ const ImageModal: React.FC<ImageModalProps> = ({
                       {selectedPost &&
                       selectedPost.userId?._id === currentUser._id ? (
                         <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 font-roboto-condensed">
-                          <li>
+                          <li
+                            className="edit-option"
+                            onClick={() => setEditingDescription(true)}
+                          >
                             <a>
                               <FaEdit className="mr-2" /> Edit
                             </a>

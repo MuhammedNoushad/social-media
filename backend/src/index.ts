@@ -17,9 +17,10 @@ import notificationRoute from "./routes/notification.routes";
 dotenv.config();
 
 const port = process.env.PORT || 5000;
+const clientURL = process.env.CLIENT_URL || "http://localhost:5173";
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: clientURL,
   credentials: true,
 };
 

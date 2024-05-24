@@ -6,6 +6,6 @@ const storyRoute = express.Router();
 storyRoute.get('/', fetchAllStories);
 storyRoute.get('/:userId', fetchSingleUserStory);
 storyRoute.post("/:userId", addNewStory);
-storyRoute.delete("/:storyId",deleteStory)
+storyRoute.delete("/:storyId/:userId",deleteStory)
 
 export default storyRoute;

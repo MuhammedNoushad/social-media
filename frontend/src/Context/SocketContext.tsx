@@ -29,7 +29,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     let newSocket: Socket | null = null;
 
     if (token) {
-      newSocket = io("http://localhost:5000", {
+      newSocket = io(import.meta.env.VITE_REACT_APP_BASE_URL, {
         query: {
           userId: user._id,
         },

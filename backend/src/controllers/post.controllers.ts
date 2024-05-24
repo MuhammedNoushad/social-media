@@ -159,6 +159,8 @@ export const editPost = async (req: Request, res: Response) => {
     const { postId } = req.params;
     const {  description } = req.body;
 
+    console.log(postId, description, "from edit post controller");
+
     const updatedPost = await postRepository.editPost(postId, description);
 
     if (!updatedPost) {

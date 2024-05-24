@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import useFetchStoryOfSingleUser from "../../../hooks/user/useFetchStoryOfSingleUser";
+import { BiTrash } from "react-icons/bi";
+import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
 
 interface CarouselModalProps {
   statusUserId: string;
@@ -9,6 +13,7 @@ interface CarouselModalProps {
 
 interface Story {
   story: {
+    _id: string;
     storyImg: string;
   }[];
 }
@@ -21,7 +26,9 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
   const [currentSlide, setCurrentSlide] = useState(0);
   const [stories, setStories] = useState<Story>({ story: [] });
 
-  const { fetchStoryOfSingleUser } = useFetchStoryOfSingleUser();
+  const { fetchStoryOfSingleUser, deleteStory } = useFetchStoryOfSingleUser();
+
+  const loggedInUser = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -42,6 +49,17 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
     setCurrentSlide((prevSlide) =>
       prevSlide === stories.story.length - 1 ? 0 : prevSlide + 1
     );
+  };
+
+  // Function for delete story
+  const handleDeleteStory = async (storyId: string) => {
+    const response = await deleteStory(storyId, loggedInUser._id);
+
+    if (response) {
+      toast.success("Story deleted successfully");
+      setStories(response);
+      onClose();
+    }
   };
 
   const showNextAndPrevButtons = stories.story && stories.story.length > 1;
@@ -68,19 +86,29 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {stories.story &&
-                stories.story.map((slide, index) => (
-                  <div
-                    key={index}
-                    className="flex-shrink-0 w-full flex justify-center items-center p-4"
-                  >
-                    <img
-                      src={slide.storyImg}
-                      alt={`Story ${index + 1}`}
-                      className="w-full h-full object-cover rounded-lg shadow-md"
-                      style={{ width: "500px", height: "500px" }}
-                    />
-                  </div>
-                ))}
+                stories.story.map((slide, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative flex-shrink-0 w-full flex justify-center items-center p-4"
+                    >
+                      <img
+                        src={slide.storyImg}
+                        alt={`Story ${index + 1}`}
+                        className="w-full h-full object-cover rounded-lg shadow-md"
+                        style={{ width: "500px", height: "500px" }}
+                      />
+                      {loggedInUser?._id === statusUserId && (
+                        <button
+                          onClick={() => handleDeleteStory(slide._id)}
+                          className="absolute cursor-pointer top-2 z-20 right-12 bg-red-500 text-white  py-1 px-2 rounded-3xl"
+                        >
+                          <BiTrash />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
             </div>
           </div>
           {showPrevButton && (

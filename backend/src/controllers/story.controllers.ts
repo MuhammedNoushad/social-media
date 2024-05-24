@@ -47,13 +47,12 @@ export const fetchAllStories = async (req: Request, res: Response) => {
 // Function for delete story
 export const deleteStory = async (req: Request, res: Response) => {
   try {
-    const { storyId } = req.params;
-    const deletedStory = await storyRepository.deleteStory(storyId);
-    if (deletedStory) {
-      res.status(200).json({ success: true, message: "Story deleted" });
-    } else {
-      res.status(400).json({ error: "Something went wrong" });
-    }
+    const { storyId, userId } = req.params;
+    await storyRepository.deleteStory(storyId, userId);
+
+    const stories = await storyRepository.fetchSingleUserStory(userId);
+
+    res.status(200).json({ success: true, message: "Story deleted", stories });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -72,5 +71,5 @@ export const fetchSingleUserStory = async (req: Request, res: Response) => {
     }
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
-  } 
+  }
 };

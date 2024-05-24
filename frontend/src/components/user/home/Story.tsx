@@ -48,6 +48,8 @@ const StoryComponent: React.FC = () => {
     (story) => story.userId._id === loggedInUser._id
   );
 
+  console.log(loggedInUserStory, "logged in user story");
+
   const showStoryModal = (userId: string) => {
     setOpenModal(true);
     setStatusId(userId);
@@ -137,7 +139,7 @@ const StoryComponent: React.FC = () => {
           </div>
 
           {/* LoggedIn User Story */}
-          {loggedInUserStory.length > 0 && (
+          {loggedInUserStory && loggedInUserStory[0]?.story?.length > 0 && (
             <div className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-24">
               <img
                 onClick={() => {

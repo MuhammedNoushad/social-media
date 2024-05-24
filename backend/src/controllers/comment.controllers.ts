@@ -21,20 +21,22 @@ export const addComment = async (req: Request, res: Response) => {
 
     const postData = await postRepository.getAllPosts();
 
-    await notificationRepository.createNotification(
-      userId,
-      postOwnerId,
-      "comment"
-    );
+    if (userId !== postOwnerId) {
+      await notificationRepository.createNotification(
+        userId,
+        postOwnerId,
+        "comment"
+      );
 
-    const notifications = await notificationRepository.fetchNotifications(
-      postOwnerId
-    );
+      const notifications = await notificationRepository.fetchNotifications(
+        postOwnerId
+      );
 
-    const recieverId = getRecieverSocketId(postOwnerId);
+      const recieverId = getRecieverSocketId(postOwnerId);
 
-    if (recieverId) {
-      io.to(recieverId).emit("notification", notifications);
+      if (recieverId) {
+        io.to(recieverId).emit("notification", notifications);
+      }
     }
 
     if (commentData) {
@@ -61,20 +63,22 @@ export const toggleLike = async (req: Request, res: Response) => {
 
     const postData = await postRepository.getAllPosts();
 
-    await notificationRepository.createNotification(
-      userId,
-      postOwnerId,
-      "like"
-    );
+    if (postOwnerId !== userId) {
+      await notificationRepository.createNotification(
+        userId,
+        postOwnerId,
+        "like"
+      );
 
-    const notifications = await notificationRepository.fetchNotifications(
-      postOwnerId
-    );
+      const notifications = await notificationRepository.fetchNotifications(
+        postOwnerId
+      );
 
-    const recieverId = getRecieverSocketId(postOwnerId);
+      const recieverId = getRecieverSocketId(postOwnerId);
 
-    if (recieverId) {
-      io.to(recieverId).emit("notification", notifications);
+      if (recieverId) {
+        io.to(recieverId).emit("notification", notifications);
+      }
     }
 
     return res.status(200).json({ success: true, postData });

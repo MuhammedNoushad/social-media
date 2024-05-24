@@ -7,6 +7,7 @@ interface IReport {
 }
 
 interface IPosts {
+  id: Key | null | undefined;
   _id: string;
   userId: IUserDetails;
   description: string;

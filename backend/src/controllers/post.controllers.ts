@@ -157,7 +157,7 @@ export const deletePost = async (req: Request, res: Response) => {
 export const editPost = async (req: Request, res: Response) => {
   try {
     const { postId } = req.params;
-    const {  description } = req.body;
+    const { description } = req.body;
 
     console.log(postId, description, "from edit post controller");
 
@@ -170,6 +170,23 @@ export const editPost = async (req: Request, res: Response) => {
     const postData = await postRepository.getAllPosts();
 
     return res.status(200).json({ success: true, postData });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for fetch all liked users
+export const fetchAllLikedUsers = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+
+    const likedUsers = await postRepository.fetchAllLikedUsers(postId);
+
+    if (!likedUsers) {
+      return res.status(400).json({ error: "Failed to fetch liked users" });
+    }
+
+    return res.status(200).json({ success: true, likedUsers });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }

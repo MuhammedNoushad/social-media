@@ -17,6 +17,8 @@ import { useNavigate } from "react-router-dom";
 import { shuffle } from "lodash";
 import formatDate from "../../../utils/formatData";
 import useFollow from "../../../hooks/user/useFollow";
+import LikedUsersModal from "./LikedUsersModal";
+import useFetchAllConnections from "../../../hooks/user/useFetchAllConnections";
 
 function Post() {
   const navigate = useNavigate();
@@ -24,6 +26,8 @@ function Post() {
   const [showModal, setShowModal] = useState(false);
   const [showReportDialog, setShowReportDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showLikedUsersModal, setShowLikedUsersModal] = useState(false);
+  const [likedUsers, setLikedUsers] = useState<IUserDetails[]>([]);
   const [postReported, setPostReported] = useState("");
   const [selectedPost, setSelectedPost] = useState<{
     userId?: IUserDetails;
@@ -38,6 +42,7 @@ function Post() {
   const { likePost } = useLikePost();
   const { reportPost } = useReportPost();
   const { follow, unfollow } = useFollow();
+  const { fetchAllLikedUsers } = useFetchAllConnections();
 
   const posts = useSelector((state: RootState) => state.posts.posts);
   const currentUser = useSelector((state: RootState) => state.user);
@@ -185,6 +190,26 @@ function Post() {
     } catch (error) {
       console.log(error, "error from handleUnfollow");
     }
+  };
+
+  // Function for show the liked users
+  const handleShowLikedUsers = async (postId: string) => {
+    try {
+      const likedUsers = await fetchAllLikedUsers(postId);
+
+      if (likedUsers) {
+        setLikedUsers(likedUsers);
+        setShowLikedUsersModal(true);
+      }
+    } catch (error) {
+      toast.error("An error occurred while fetching liked users");
+    }
+  };
+
+  // Function for close the modal
+  const handleCloseLikedUsersModal = () => {
+    setShowLikedUsersModal(false);
+    setLikedUsers([]);
   };
 
   return (
@@ -416,7 +441,10 @@ function Post() {
                       </svg>
                     </div>
                   </div>
-                  <div className="my-2 font-medium text-sm">
+                  <div
+                    onClick={() => handleShowLikedUsers(image._id)}
+                    className="cursor-pointer my-2 font-medium text-sm"
+                  >
                     {image.likes?.length} likes
                   </div>
                   <div className="flex space-x-2 text-sm">
@@ -504,6 +532,12 @@ function Post() {
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
       />
+      {showLikedUsersModal && (
+        <LikedUsersModal
+          likedUsers={likedUsers}
+          onClose={handleCloseLikedUsersModal}
+        />
+      )}
     </>
   );
 }

@@ -267,5 +267,19 @@ class PostRepository {
       return null;
     }
   }
+
+  // Function for  fetch all liked users
+  async fetchAllLikedUsers(postId: string) {
+    try {
+      const post = await Post.findById(postId).populate("likes");
+
+      if (!post) return null;
+
+      return post.likes;
+    } catch (error) {
+      console.log("Error from fetchAllLikedUsers in PostRepository", error);
+      return null;
+    }
+  }
 }
 export default PostRepository;

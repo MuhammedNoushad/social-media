@@ -1,3 +1,4 @@
+import { Key } from "react";
 import IComment from "./IComment";
 import IUserDetails from "./IUserDetails";
 

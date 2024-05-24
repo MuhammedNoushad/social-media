@@ -3,6 +3,7 @@ import {
   createNewPost,
   deletePost,
   editPost,
+  fetchAllLikedUsers,
   fetchAllPosts,
   getPostOfUser,
   report,
@@ -24,6 +25,7 @@ postRoute.put('/comment/:postId/:commentId',editComment);
 postRoute.delete('/comment/:postId/:commentId',deleteComment)
 
 postRoute.post('/toggle-like/:postId',toggleLike)
+postRoute.get('/liked-users/:postId',fetchAllLikedUsers)
 
 postRoute.post('/report/:postId',report)
 

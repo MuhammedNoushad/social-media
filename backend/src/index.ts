@@ -13,6 +13,7 @@ import messageRoute from "./routes/message.routes";
 import { app, server } from "./socket/socket";
 import storyRoute from "./routes/story.routes";
 import notificationRoute from "./routes/notification.routes";
+import adRoute from "./routes/ad.routes";
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/user/notification", notificationRoute);
 app.use("/api/admin", adminRoute);
+app.use("/api/ad", adRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/connection", connectionRoute);
 app.use("/api/messages", messageRoute);

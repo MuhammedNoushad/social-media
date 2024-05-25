@@ -19,7 +19,7 @@ function PostManagementTable() {
     if (data) {
       const postData = data.reportedPosts;
       const totalPosts = data.totalPosts;
-      setTotalPosts(totalPosts);
+      setTotalPosts(totalPosts - 1);
       setPosts(postData);
     }
   };

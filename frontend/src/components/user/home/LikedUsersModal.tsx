@@ -30,7 +30,7 @@ const LikedUsersModal: React.FC<LikedUsersModalProps> = ({
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3
-                  className="text-lg leading-6 font-medium text-gray-900"
+                  className="text-lg leading-6 font-medium text-gray-900 font-roboto-condensed"
                   id="modal-headline"
                 >
                   Liked Users
@@ -48,7 +48,7 @@ const LikedUsersModal: React.FC<LikedUsersModalProps> = ({
                           alt={`${user.firstName} ${user.lastName}`}
                           className="w-10 h-10 rounded-full object-cover mr-4"
                         />
-                        <div className="text-sm text-gray-700">
+                        <div className="text-sm text-gray-700 font-roboto-condensed">
                           {user.firstName} {user.lastName}
                         </div>
                       </li>

@@ -41,8 +41,8 @@ const SearchModal = ({ isOpen }: { isOpen: boolean; onClose: () => void }) => {
     ? usersData.filter(
         (user) =>
           user._id !== userDetails._id &&
-          (user.firstName.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-            user.username.toLowerCase().startsWith(searchQuery.toLowerCase()))
+          (user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.username.toLowerCase().includes(searchQuery.toLowerCase()))
       )
     : [];
 

@@ -3,9 +3,11 @@ import Ad from "../models/ad.model";
 
 class AdRepository {
   // Function for fetch all ads
-  async fetchAllAds( page: number, limit: number ) {
+  async fetchAllAds(page: number, limit: number) {
     try {
-      const ads = await Ad.find().skip((page - 1) * limit).limit(limit);
+      const ads = await Ad.find()
+        .skip((page - 1) * limit)
+        .limit(limit);
       return ads;
     } catch (error) {
       throw error;
@@ -56,6 +58,25 @@ class AdRepository {
     try {
       const totalAds = await Ad.countDocuments();
       return totalAds;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Function for delete ad
+  async deleteAd(adId: string) {
+    try {
+      await Ad.findByIdAndDelete(adId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Function for fetch a single ad 
+  async fetchSingleAd(adId: string) {
+    try {
+      const ad = await Ad.findById(adId);
+      return ad;
     } catch (error) {
       throw error;
     }

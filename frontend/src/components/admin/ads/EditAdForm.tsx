@@ -1,18 +1,23 @@
 import { UploadButton } from "@bytescale/upload-widget-react";
 import axios from "axios";
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import usePostAds from "../../../hooks/admin/usePostAds";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import useFetchAd from "../../../hooks/admin/useFetchAd";
 import IAds from "../../../types/IAds";
 import { useNavigate } from "react-router-dom";
+import usePostAds from "../../../hooks/admin/usePostAds";
 
 interface Errors {
   [key: string]: string;
 }
 
+interface EditAdFormProps {
+  adId: string | undefined;
+}
+
 const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;
 const cloudname: string = import.meta.env.VITE_REACT_APP_CLOUDNAME;
 
-const CreateAdForm: React.FC = () => {
+const EditAdForm: React.FC<EditAdFormProps> = ({ adId }) => {
   const [picLoading, setPicLoading] = useState(false);
   const [formData, setFormData] = useState<IAds>({
     adImageUrl: "",
@@ -23,9 +28,24 @@ const CreateAdForm: React.FC = () => {
   const [errors, setErrors] = useState<Errors>({});
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
-  const { postAds, loading } = usePostAds();
+  const { fetchSingleAd } = useFetchAd(1);
+  const { editAds, editLoading } = usePostAds();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAd = async () => {
+      if (adId) {
+        const ad = await fetchSingleAd(adId);
+        if (ad) {
+          setFormData(ad);
+          setUploadedImage(ad.adImageUrl);
+        }
+      }
+    };
+    fetchAd();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -46,11 +66,10 @@ const CreateAdForm: React.FC = () => {
       // Handle form submission logic here
       formData.adImageUrl = uploadedImage || "";
 
-      const response = await postAds(formData);
+      const response = await editAds(formData, adId || "");
       if (response) {
         navigate("/admin/ads");
       }
-      console.log(formData);
     } else {
       setErrors(errors);
     }
@@ -64,7 +83,7 @@ const CreateAdForm: React.FC = () => {
     if (!formData.adTitle || formData.adTitle.trim() === "") {
       errors.adTitle = "Ad Title is required";
     }
-    if (!formData.adDescription || formData.adDescription.trim() == "") {
+    if (!formData.adDescription || formData.adDescription.trim() === "") {
       errors.adDescription = "Ad Description is required";
     }
     if (!uploadedImage) {
@@ -115,6 +134,7 @@ const CreateAdForm: React.FC = () => {
   const removeUploadedImage = () => {
     setUploadedImage(null);
   };
+
   return (
     <div className="flex justify-center w-full items-center h-screen">
       <form
@@ -242,10 +262,10 @@ const CreateAdForm: React.FC = () => {
           type="submit"
           className="mt-8 btn btn-success text-white font-roboto-condensed w-full"
         >
-          {loading ? (
+          {editLoading ? (
             <span className="loading loading-spinner"></span>
           ) : (
-            "Create"
+            "Edit Ad"
           )}
         </button>
       </form>
@@ -253,4 +273,4 @@ const CreateAdForm: React.FC = () => {
   );
 };
 
-export default CreateAdForm;
+export default EditAdForm;

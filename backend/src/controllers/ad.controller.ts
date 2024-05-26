@@ -40,6 +40,28 @@ export const editAd = async (req: Request, res: Response) => {
       adImageUrl,
       adLink
     );
+    res.status(200).json({ success: true, ad, message: "Ad updated successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for delete ad
+export const deleteAd = async (req: Request, res: Response) => {
+  try {
+    const { adId } = req.params;
+    await adRepository.deleteAd(adId);
+    res.status(200).json({ success: true, message: "Ad deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for fetch single ad  
+export const fetchSingleAd = async (req: Request, res: Response) => {
+  try {
+    const { adId } = req.params;
+    const ad = await adRepository.fetchSingleAd(adId);
     res.status(200).json({ success: true, ad });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });

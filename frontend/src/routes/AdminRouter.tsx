@@ -7,6 +7,7 @@ import AdminHome from "../pages/admin/home/AdminHome";
 import PostManagement from "../pages/admin/posts/PostManagement";
 import AdManagement from "../pages/admin/ads/AdManagement";
 import CreateAds from "../pages/admin/ads/CreateAds";
+import EditAd from "../pages/admin/ads/EditAd";
 
 function AdminRouter() {
   return (
@@ -49,6 +50,14 @@ function AdminRouter() {
         element={
           <PrivateRoute role="admin">
             <CreateAds />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/ads/edit/:adId"
+        element={
+          <PrivateRoute role="admin">
+            <EditAd />
           </PrivateRoute>
         }
       />

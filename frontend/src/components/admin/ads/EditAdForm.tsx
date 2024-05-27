@@ -265,7 +265,7 @@ const EditAdForm: React.FC<EditAdFormProps> = ({ adId }) => {
           {editLoading ? (
             <span className="loading loading-spinner"></span>
           ) : (
-            "Edit Ad"
+            "Update Ad"
           )}
         </button>
       </form>

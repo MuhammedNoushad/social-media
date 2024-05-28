@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { useEffect, useRef } from "react";
 
-function VideoCall() {
+function AudioCall() {
   const navigate = useNavigate();
   const { roomID, username } = useParams();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,7 +27,6 @@ function VideoCall() {
 
   const myCall = async (element: HTMLElement | null) => {
     if (!element) return;
-
     const appID = 1348115007;
     const serverSecret = "236873ee0f056898a58e263787adc6c1";
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
@@ -40,10 +39,11 @@ function VideoCall() {
     const zc = ZegoUIKitPrebuilt.create(kitToken);
     zc.joinRoom({
       container: element,
-      scenario: {
-        mode: ZegoUIKitPrebuilt.OneONoneCall,
-      },
+      scenario: { mode: ZegoUIKitPrebuilt.GroupCall }, // Use VoiceOnlyCall for audio-only
       showPreJoinView: false,
+      turnOnCameraWhenJoining: false,
+      showMyCameraToggleButton: false,
+      turnOnMicrophoneWhenJoining: true,
       onLeaveRoom: () => {
         navigate("/message");
       },
@@ -57,4 +57,4 @@ function VideoCall() {
   );
 }
 
-export default VideoCall;
+export default AudioCall;

@@ -18,6 +18,7 @@ import OthersProfile from "../pages/user/profile/OthersProfile";
 import UserMessage from "../pages/user/home/UserMessage";
 import VideoCall from "../components/user/message/video call/VideoCall";
 import Explore from "../pages/user/home/Explore";
+import AudioCall from "../components/user/message/video call/AudioCall";
 
 function UserRouter() {
   return (
@@ -127,6 +128,14 @@ function UserRouter() {
         element={
           <PrivateRoute role="user">
             <VideoCall />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/voice-call/:roomID/:username"
+        element={
+          <PrivateRoute role="user">
+            <AudioCall />
           </PrivateRoute>
         }
       />

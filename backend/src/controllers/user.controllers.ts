@@ -86,4 +86,4 @@ export const fetchCountUsers = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }
-}
+};

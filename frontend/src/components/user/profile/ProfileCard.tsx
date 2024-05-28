@@ -212,7 +212,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
                     </button>
                   )}
 
-                  <button className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-lg">
+                  <button onClick={()=> {navigate('/message')}} className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-lg">
                     <BiMessageSquareAdd className="mr-2" /> Message
                   </button>
                 </div>

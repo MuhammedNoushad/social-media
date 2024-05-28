@@ -17,9 +17,10 @@ userRoute.delete(
   verifyToken,
   deleteProfilePic
 );
-userRoute.get("/:userId", verifyToken, fetchSigleUser);
-userRoute.get("/users", verifyToken, fetchAllUsers);
-
 userRoute.get("/users/count",verifyToken, fetchCountUsers);
+
+userRoute.get("/users", verifyToken, fetchAllUsers);
+userRoute.get("/:userId", verifyToken, fetchSigleUser);
+
 
 export default userRoute;

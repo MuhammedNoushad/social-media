@@ -34,6 +34,36 @@ io.on("connection", (socket) => {
 
   io.emit("onlineUsers", Object.keys(userSocketMap));
 
+  // socket connection for voice call
+  socket.on("voiceCall", (data) => {
+    const recieverSocketId = getRecieverSocketId(data.userToChatId);
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("voiceCall", data);
+    }
+  });
+
+  socket.on("rejectVoiceCall", (data) => {
+    const recieverSocketId = getRecieverSocketId(data.userToChatId);
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("rejectVoiceCall", data);
+    }
+  });
+
+  socket.on("rejectIncomingVoiceCall", (data) => {
+    const recieverSocketId = getRecieverSocketId(data);
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("rejectIncomingVoiceCall", data);
+    }
+  });
+
+  socket.on("acceptIncomingVoiceCall", (data) => {
+    const recieverSocketId = getRecieverSocketId(data);
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("acceptIncomingVoiceCall", data);
+    }
+  });
+
+  // socket connection for video call
   socket.on("videoCall", (data) => {
     const recieverSocketId = getRecieverSocketId(data.userToChatId);
 

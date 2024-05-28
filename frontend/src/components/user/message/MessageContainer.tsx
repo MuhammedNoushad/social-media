@@ -22,7 +22,9 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
   const [userToChatData, setUserToChatData] = useState<any>({});
   const [messageLoading, setMessageLoading] = useState(false);
   const [showCallModal, setShowCallModal] = useState(false);
+  const [showVoiceCallModal, setShowVoiceCallModal] = useState(false);
   const [incomingCallModal, setIncomingCallModal] = useState(false);
+  const [incomingVoiceCallModal, setIncomingVoiceCallModal] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [callingUser, setCallingUser] = useState<any>({});
 
@@ -85,10 +87,52 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
       navigate(`/video-call/${userId}/${loggedInUser.username}`);
     });
 
+    socket?.on("acceptIncomingVoiceCall", () => {
+      setIncomingVoiceCallModal(false);
+      navigate(`/voice-call/${userId}/${loggedInUser.username}`);
+    });
+
     return () => {
       socket?.off("acceptIncomingCall");
     };
-  }, [loggedInUser.username, navigate, socket, setIncomingCallModal, userId]);
+  }, [
+    loggedInUser.username,
+    navigate,
+    socket,
+    setIncomingCallModal,
+    userId,
+    setIncomingVoiceCallModal,
+  ]);
+
+  useEffect(() => {
+    socket?.on("voiceCall", (data) => {
+      setCallingUser(data.loggedInUser);
+      setIncomingVoiceCallModal(true);
+    });
+
+    socket?.on("rejectVoiceCall", (data) => {
+      setIncomingVoiceCallModal(false);
+      console.log("Received rejectVoiceCall event:", data);
+    });
+
+    socket?.on("rejectIncomingVoiceCall", (data) => {
+      console.log("inside rejectIncomingVoiceCall");
+      setShowVoiceCallModal(false);
+      console.log("Received rejectIncomingVoiceCall event:", data);
+    });
+
+    return () => {
+      socket?.off("voiceCall");
+      socket?.off("rejectVoiceCall");
+      socket?.off("rejectIncomingVoiceCall");
+    };
+  }, [
+    socket,
+    setIncomingVoiceCallModal,
+    incomingVoiceCallModal,
+    setCallingUser,
+    callingUser,
+  ]);
 
   // Listen for new messages
   useEffect(() => {
@@ -153,11 +197,22 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
     }
   };
 
+  // Fucntion for handle voice call
+  const handleVoiceCall = () => {
+    socket?.emit("voiceCall", { userToChatId, loggedInUser });
+    setShowVoiceCallModal(true);
+  };
+
   // Function for handle video call
   const handleVideoCall = () => {
-    console.log("handleVideoCall");
     socket?.emit("videoCall", { userToChatId, loggedInUser });
     setShowCallModal(true);
+  };
+
+  // Function for handle reject voice call
+  const handleRejectVoiceCall = () => {
+    socket?.emit("rejectVoiceCall", { userToChatId, loggedInUser });
+    setShowVoiceCallModal(false);
   };
 
   // Function for handle reject call
@@ -172,11 +227,24 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
     setIncomingCallModal(false);
   };
 
+  // Function for handle reject on incoming voice call
+  const handleRejectIncomingVoiceCall = () => {
+    socket?.emit("rejectIncomingVoiceCall", callingUser._id);
+    setIncomingVoiceCallModal(false);
+  };
+
   // Function for handle accept on incoming call
   const handleAcceptIncomingCall = () => {
     socket?.emit("acceptIncomingCall", callingUser._id);
     setIncomingCallModal(false);
     navigate(`/video-call/${userToChatId}/${loggedInUser.username}`);
+  };
+
+  // Function for handle accept on incoming voice call
+  const handleAcceptIncomingVoiceCall = () => {
+    socket?.emit("acceptIncomingVoiceCall", callingUser._id);
+    setIncomingVoiceCallModal(false);
+    navigate(`/voice-call/${userToChatId}/${loggedInUser.username}`);
   };
 
   return (
@@ -213,7 +281,11 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
             </span>
           </div>
           <div className="flex items-center">
-            <button className="text-gray-500 hover:text-gray-700 focus:outline-none mr-2">
+            <button
+              type="button"
+              onClick={handleVoiceCall}
+              className="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -256,55 +328,55 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
               {conversation &&
                 conversation.messages?.map((message: IMessage) => (
                   <div
-                  ref={lastMessageRef}
-                  key={message._id}
-                  className={`${
-                    message.sender._id === loggedInUser._id
-                      ? "col-start-1 col-end-8"
-                      : "col-start-6 col-end-13 flex flex-row-reverse"
-                  } p-3 rounded-lg`}
-                >
-                  <div
-                    className={`flex ${
+                    ref={lastMessageRef}
+                    key={message._id}
+                    className={`${
                       message.sender._id === loggedInUser._id
-                        ? "items-center justify-start"
-                        : "items-center justify-end flex-row-reverse"
-                    }`}
+                        ? "col-start-1 col-end-8"
+                        : "col-start-6 col-end-13 flex flex-row-reverse"
+                    } p-3 rounded-lg`}
                   >
-                    {message.receiver._id !== loggedInUser._id && (
-                      <img
-                        src={message.receiver.profileimg}
-                        alt={message.receiver.username}
-                        className="w-10 h-10 rounded-full mr-4"
-                      />
-                    )}
                     <div
-                      className={`${
+                      className={`flex ${
                         message.sender._id === loggedInUser._id
-                          ? "bg-indigo-100 py-2 px-4 shadow rounded-xl ml-4"
-                          : " py-2 px-4 rounded-xl mr-4 "
+                          ? "items-center justify-start"
+                          : "items-center justify-end flex-row-reverse"
                       }`}
                     >
-                      {message.sender._id === loggedInUser._id ? (
-                        <div className="font-roboto-condensed font-medium text-base text-black text-pretty">
-                          {message.message}
-                          <div className="text-xs text-gray-500 mt-1">
-                            {formatTimestamp(message.createdAt)}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl text-pretty">
+                      {message.receiver._id !== loggedInUser._id && (
+                        <img
+                          src={message.receiver.profileimg}
+                          alt={message.receiver.username}
+                          className="w-10 h-10 rounded-full mr-4"
+                        />
+                      )}
+                      <div
+                        className={`${
+                          message.sender._id === loggedInUser._id
+                            ? "bg-indigo-100 py-2 px-4 shadow rounded-xl ml-4"
+                            : " py-2 px-4 rounded-xl mr-4 "
+                        }`}
+                      >
+                        {message.sender._id === loggedInUser._id ? (
                           <div className="font-roboto-condensed font-medium text-base text-black text-pretty">
                             {message.message}
                             <div className="text-xs text-gray-500 mt-1">
                               {formatTimestamp(message.createdAt)}
                             </div>
                           </div>
-                        </div>
-                      )}
+                        ) : (
+                          <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl text-pretty">
+                            <div className="font-roboto-condensed font-medium text-base text-black text-pretty">
+                              {message.message}
+                              <div className="text-xs text-gray-500 mt-1">
+                                {formatTimestamp(message.createdAt)}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
                 ))}
             </div>
           </div>
@@ -332,6 +404,23 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
         </form>
       </div>
 
+      {/* Model for voice call  */}
+      <OutGoingCall
+        callerName={userToChatData.username}
+        callerImage={userToChatData.profileimg ?? "/public/avathar.jpeg"}
+        onClose={handleRejectVoiceCall}
+        isOpen={showVoiceCallModal}
+      />
+
+      <IncomingCall
+        callerName={callingUser.username}
+        callerImage={callingUser.profileimg ?? "/public/avathar.jpeg"}
+        onClose={handleRejectIncomingVoiceCall}
+        isOpen={incomingVoiceCallModal}
+        onAcceptCall={handleAcceptIncomingVoiceCall}
+      />
+
+      {/* Model for video call  */}
       <OutGoingCall
         callerName={userToChatData.username}
         callerImage={userToChatData.profileimg ?? "/public/avathar.jpeg"}

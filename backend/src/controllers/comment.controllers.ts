@@ -131,3 +131,15 @@ export const deleteComment = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+// Function fetch the count of posts in the database
+
+export const fetchCountPosts = async (req: Request, res: Response) => {
+  try {
+    const totalPosts = await postRepository.fetchTotalPostsCount();
+    return res.status(200).json({ success: true, totalPosts });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}

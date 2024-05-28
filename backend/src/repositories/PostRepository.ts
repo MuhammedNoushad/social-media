@@ -166,7 +166,7 @@ class PostRepository {
   // Function for fetch reported posts with pagination
   async fetchPostWithPagination(page: number, limit: number) {
     try {
-      const posts = await Post.find({ isDeleted: false })
+      const posts = await Post.find({ isDeleted: false, reports: { $ne: [] } })
         .skip((page - 1) * limit)
         .limit(limit)
         .populate("userId", "username _id profileimg")
@@ -196,7 +196,6 @@ class PostRepository {
         "Error from getTotalCountOfReportedPosts in PostRepository",
         error
       );
-      return null;
     }
   }
 
@@ -279,6 +278,67 @@ class PostRepository {
     } catch (error) {
       console.log("Error from fetchAllLikedUsers in PostRepository", error);
       return null;
+    }
+  }
+
+  // Function for fetch the total count of posts
+  async fetchTotalPostsCount() {
+    try {
+      const totalPost = await Post.countDocuments({ isDeleted: false });
+      return totalPost;
+    } catch (error) {
+      console.log("Error from fetchTotalPostsCount in PostRepository", error);
+    }
+  }
+
+  // Function for fetch total likes from all the posts
+  async fetchTotalLikes() {
+    try {
+      const totalLikes = await Post.aggregate([
+        { $match: { isDeleted: false } }, 
+        { $unwind: "$likes" }, 
+        { $group: { _id: null, totalLikes: { $sum: 1 } } }, 
+      ]);
+
+      if (totalLikes.length > 0) {
+        return totalLikes[0].totalLikes;
+      } else {
+        return 0;
+      }
+    } catch (error) {
+      console.log("Error from fetchTotalLikes in PostRepository", error);
+    }
+  }
+
+  // Function for fetch data for chart post 
+  async fetchDataForChartPost() {
+    try {
+      const chartData = await Post.aggregate([
+        {
+          $group: {
+            _id: {
+              $dateToString: {
+                format: "%Y-%m",
+                date: "$createdAt"
+              }
+            },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { _id: 1 } },
+        { $group: {
+          _id: null,
+          posts: { $push: "$count" }
+        }},
+        { $project: {
+          _id: 0,
+          success: { $literal: true },
+          chartData: "$posts"
+        }}
+      ])
+      return chartData;
+    } catch (error) {
+      console.log("Error from fetchDataForChartPost in PostRepository", error);
     }
   }
 }

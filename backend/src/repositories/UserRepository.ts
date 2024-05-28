@@ -229,6 +229,53 @@ class UserRepository {
       console.error("Error from fetchTotalUsers in UserRepository", error);
     }
   }
+
+  // Function for fetch latest registered user
+  async fetchLatestUsers(limit: number): Promise<IUsers[] | null> {
+    try {
+      const users = await User.find({ isAdmin: false })
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .select("-password");
+      return users;
+    } catch (error) {
+      console.error("Error from fetchLatestUsers in UserRepository", error);
+      return null;
+    }
+  }
+
+  // Function for fetch data for chart
+  async fetchDataForChart(): Promise<any> {
+    try {
+      const userData = await User.aggregate([
+        {
+          $group: {
+            _id: {
+              $dateToString: {
+                format: "%Y-%m",
+                date: "$createdAt"
+              }
+            },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { _id: 1 } },
+        { $group: {
+          _id: null,
+          users: { $push: "$count" }
+        }},
+        { $project: {
+          _id: 0,
+          success: { $literal: true },
+          chartData: "$users"
+        }}
+      ])
+
+      return userData;
+    } catch (error) {
+      console.error("Error from fetchLatestUsers in UserRepository", error);
+    }
+  }
 }
 
 export default UserRepository;

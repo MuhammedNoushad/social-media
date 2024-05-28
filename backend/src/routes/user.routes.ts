@@ -2,6 +2,7 @@ import express from "express";
 import {
   deleteProfilePic,
   fetchAllUsers,
+  fetchCountUsers,
   fetchSigleUser,
   updateProfile,
 } from "../controllers/user.controllers";
@@ -16,7 +17,9 @@ userRoute.delete(
   verifyToken,
   deleteProfilePic
 );
-userRoute.get("/users", verifyToken, fetchAllUsers);
 userRoute.get("/:userId", verifyToken, fetchSigleUser);
+userRoute.get("/users", verifyToken, fetchAllUsers);
+
+userRoute.get("/users/count",verifyToken, fetchCountUsers);
 
 export default userRoute;

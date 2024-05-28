@@ -18,8 +18,9 @@ function PostManagementTable() {
     const data = await reportedPosts(1);
     if (data) {
       const postData = data.reportedPosts;
-      const totalPosts = data.totalPosts;
-      setTotalPosts(totalPosts - 1);
+      const totalPosts = data.totalPages;
+      console.log(data.totalPages);
+      setTotalPosts(totalPosts);
       setPosts(postData);
     }
   };
@@ -53,6 +54,8 @@ function PostManagementTable() {
     const postData = data.reportedPosts;
     setPosts(postData);
   };
+
+  console.log(posts, "posts");
 
   return (
     <div className="container mt-10 mx-auto sm:w-2/3 px-4 sm:px-8">

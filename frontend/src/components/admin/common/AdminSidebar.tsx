@@ -35,7 +35,7 @@ const AdminSidebar: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-row bg-gray-100">
+    <div className="min-h-screen flex flex-row">
       <div className="fixed top-0 bottom-0 flex flex-col bg-white rounded-r-3xl overflow-hidden lg:w-56 w-16">
         <div className="flex items-center justify-center h-20 shadow-md">
           <img

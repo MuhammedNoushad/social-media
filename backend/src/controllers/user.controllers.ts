@@ -77,3 +77,13 @@ export const fetchSigleUser = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for count all the users in the database
+export const fetchCountUsers = async (req: Request, res: Response) => {
+  try {
+    const totalUsers = await userRepository.fetchTotalUsersCount();
+    return res.status(200).json({ success: true, totalUsers });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}

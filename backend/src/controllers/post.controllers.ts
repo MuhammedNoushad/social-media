@@ -96,18 +96,19 @@ export const reportedPosts = async (req: Request, res: Response) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = 5;
-    const postData = await postRepository.fetchPostWithPagination(page, limit);
-    const totalPosts = await postRepository.getTotalCountOfReportedPosts();
+    const reportedPosts = await postRepository.fetchPostWithPagination(
+      page,
+      limit
+    );
+    const totalPosts =
+      (await postRepository.getTotalCountOfReportedPosts()) || 0;
 
-    if (!postData) {
+    if (!reportedPosts) {
       return res.status(400).json({ error: "Failed to fetch posts" });
     }
+    const totalPages = Math.ceil(totalPosts / limit);
 
-    const reportedPosts = postData.filter(
-      (post) => post.reports && post.reports.length > 0
-    );
-
-    return res.status(200).json({ success: true, reportedPosts, totalPosts });
+    return res.status(200).json({ success: true, reportedPosts, totalPages });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }
@@ -187,6 +188,19 @@ export const fetchAllLikedUsers = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({ success: true, likedUsers });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// function for fetch total likes from all the posts 
+export const fetchTotalLikes = async (req: Request, res: Response) => {
+  try {
+    const totalLikes = await postRepository.fetchTotalLikes();
+    if (!totalLikes) {
+      return res.status(400).json({ error: "Failed to fetch total likes" });
+    }
+    return res.status(200).json({ success: true, totalLikes });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }

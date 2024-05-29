@@ -104,7 +104,7 @@ const StoryComponent: React.FC = () => {
                 <>
                   <img
                     onClick={storyLoading ? () => {} : onClick}
-                    src={loggedInUser.profileimg}
+                    src={loggedInUser.profileimg || "/avathar.png"} 
                     alt={loggedInUser.username}
                     className={`w-16 h-16 rounded-full ${
                       storyLoading && "opacity-50 cursor-not-allowed"

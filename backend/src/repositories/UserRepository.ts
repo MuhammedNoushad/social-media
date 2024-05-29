@@ -253,23 +253,27 @@ class UserRepository {
             _id: {
               $dateToString: {
                 format: "%Y-%m",
-                date: "$createdAt"
-              }
+                date: "$createdAt",
+              },
             },
-            count: { $sum: 1 }
-          }
+            count: { $sum: 1 },
+          },
         },
         { $sort: { _id: 1 } },
-        { $group: {
-          _id: null,
-          users: { $push: "$count" }
-        }},
-        { $project: {
-          _id: 0,
-          success: { $literal: true },
-          chartData: "$users"
-        }}
-      ])
+        {
+          $group: {
+            _id: null,
+            users: { $push: "$count" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            success: { $literal: true },
+            chartData: "$users",
+          },
+        },
+      ]);
 
       return userData;
     } catch (error) {

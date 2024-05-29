@@ -44,7 +44,7 @@ const LikedUsersModal: React.FC<LikedUsersModalProps> = ({
                         className="cursor-pointer flex items-center py-2 hover:bg-gray-100 rounded-md transition-colors duration-200 ease-in-out"
                       >
                         <img
-                          src={user.profileimg || "/public/avathar.jpeg"}
+                          src={user.profileimg || "/public/avathar.png"}
                           alt={`${user.firstName} ${user.lastName}`}
                           className="w-10 h-10 rounded-full object-cover mr-4"
                         />

@@ -5,7 +5,9 @@ import { useEffect, useRef } from "react";
 
 function VideoCall() {
   const navigate = useNavigate();
+
   const { roomID, username } = useParams();
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

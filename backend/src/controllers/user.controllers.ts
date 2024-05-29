@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import UserRepository from "../repositories/UserRepository";
+import ConnectionRepository from "../repositories/ConnectionRepository";
 
 const userRepository = new UserRepository();
+const connectionRepository = new ConnectionRepository();
 
 // Function for updating user profile
 export const updateProfile = async (req: Request, res: Response) => {
@@ -83,6 +85,17 @@ export const fetchCountUsers = async (req: Request, res: Response) => {
   try {
     const totalUsers = await userRepository.fetchTotalUsersCount();
     return res.status(200).json({ success: true, totalUsers });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function for suggest users for the logged in users
+export const suggestUsers = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const users = await connectionRepository.suggestUsers(userId);
+    return res.status(200).json({ success: true, users });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }

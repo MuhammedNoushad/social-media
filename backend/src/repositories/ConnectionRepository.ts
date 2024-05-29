@@ -1,7 +1,8 @@
 import { ObjectId } from "mongodb";
 
-import { follow } from "../controllers/connection.controller";
 import Connection from "../models/connection.model";
+import User from "../models/user.model";
+import IConnection from "../interfaces/IConnection";
 
 class ConnectionRepository {
   // Function for following
@@ -85,6 +86,41 @@ class ConnectionRepository {
         select: "-password",
       });
       return followers;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Function for fetch not following users
+  async suggestUsers(userId: string) {
+    try {
+      // Fetch the connection for the user and populate the following field
+      const connection = await Connection.findOne({ userId }).populate({
+        path: "following",
+        select: "_id",
+      });
+
+      if (!connection) {
+        return [];
+      }
+
+      // Extract the list of followed user IDs
+      const followedUserIds = connection.following.map((follower) =>
+        follower._id.toString()
+      );
+
+      // Find users that are not followed by the user and exclude the user themselves
+      const suggestedUsers = await User.find({
+        isAdmin: false,
+        isBlock: false,
+        _id: {
+          $nin: [...followedUserIds, userId],
+        },
+      })
+        .select("-password")
+        .limit(5);
+
+      return suggestedUsers;
     } catch (error) {
       throw error;
     }

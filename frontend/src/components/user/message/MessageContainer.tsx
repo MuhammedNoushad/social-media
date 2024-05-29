@@ -110,15 +110,13 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
       setIncomingVoiceCallModal(true);
     });
 
-    socket?.on("rejectVoiceCall", (data) => {
+    socket?.on("rejectVoiceCall", () => {
       setIncomingVoiceCallModal(false);
-      console.log("Received rejectVoiceCall event:", data);
     });
 
-    socket?.on("rejectIncomingVoiceCall", (data) => {
-      console.log("inside rejectIncomingVoiceCall");
+    socket?.on("rejectIncomingVoiceCall", () => {
+      toast.error("Voice call rejected");
       setShowVoiceCallModal(false);
-      console.log("Received rejectIncomingVoiceCall event:", data);
     });
 
     return () => {
@@ -151,9 +149,9 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
     });
 
     socket?.on("rejectIncomingCall", (data) => {
-      console.log("inside rejectIncomingCall");
+      console.log(data);
+      toast.error("Video call rejected");
       setShowCallModal(false);
-      console.log("Received rejectIncomingCall event:", data);
     });
 
     return () => {
@@ -407,14 +405,14 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
       {/* Model for voice call  */}
       <OutGoingCall
         callerName={userToChatData.username}
-        callerImage={userToChatData.profileimg ?? "/public/avathar.jpeg"}
+        callerImage={userToChatData.profileimg ?? "/public/avathar.png"}
         onClose={handleRejectVoiceCall}
         isOpen={showVoiceCallModal}
       />
 
       <IncomingCall
         callerName={callingUser.username}
-        callerImage={callingUser.profileimg ?? "/public/avathar.jpeg"}
+        callerImage={callingUser.profileimg ?? "/public/avathar.png"}
         onClose={handleRejectIncomingVoiceCall}
         isOpen={incomingVoiceCallModal}
         onAcceptCall={handleAcceptIncomingVoiceCall}
@@ -423,14 +421,14 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
       {/* Model for video call  */}
       <OutGoingCall
         callerName={userToChatData.username}
-        callerImage={userToChatData.profileimg ?? "/public/avathar.jpeg"}
+        callerImage={userToChatData.profileimg ?? "/public/avathar.png"}
         onClose={handleRejectCall}
         isOpen={showCallModal}
       />
 
       <IncomingCall
         callerName={callingUser.username}
-        callerImage={callingUser.profileimg ?? "/public/avathar.jpeg"}
+        callerImage={callingUser.profileimg ?? "/public/avathar.png"}
         onClose={handleRejectIncomingCall}
         isOpen={incomingCallModal}
         onAcceptCall={handleAcceptIncomingCall}

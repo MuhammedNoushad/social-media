@@ -21,7 +21,9 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
   const [following, setFollowing] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [followedByUser, setFollowedByUser] = useState(false);
-  const [modalType, setModalType] = useState< "followers" | "following" | ""> ("");
+  const [modalType, setModalType] = useState<"followers" | "following" | "">(
+    ""
+  );
 
   const user = useSelector((state: RootState) => state.user);
   const post = useSelector((state: RootState) => state.posts.posts);
@@ -118,7 +120,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
               <div className="relative inline-block shrink-0 rounded-2xl">
                 <img
                   className="object-cover inline-block shrink-0 rounded-full w-[50px] h-[50px] sm:w-[80px] sm:h-[80px] lg:w-[120px] lg:h-[120px]"
-                  src={userDetails.profileimg || "/public/avathar.jpeg"}
+                  src={userDetails.profileimg || "/public/avathar.png"}
                   alt="image"
                 />
               </div>
@@ -212,7 +214,12 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
                     </button>
                   )}
 
-                  <button onClick={()=> {navigate('/message')}} className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-lg">
+                  <button
+                    onClick={() => {
+                      navigate("/message");
+                    }}
+                    className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-lg"
+                  >
                     <BiMessageSquareAdd className="mr-2" /> Message
                   </button>
                 </div>

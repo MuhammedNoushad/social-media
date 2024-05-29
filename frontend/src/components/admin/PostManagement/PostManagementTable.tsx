@@ -91,7 +91,7 @@ function PostManagementTable() {
                       <div className="flex-shrink-0 w-10 h-10">
                         <img
                           className="w-full h-full rounded-full"
-                          src={post.imageUrl || "/public/avathar.jpeg"}
+                          src={post.imageUrl || "/public/avathar.png"}
                           alt="reported post"
                         />
                       </div>

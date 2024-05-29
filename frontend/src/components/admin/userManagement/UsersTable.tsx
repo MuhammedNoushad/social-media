@@ -85,7 +85,7 @@ const UserTable: React.FC = () => {
                       <div className="flex-shrink-0 w-10 h-10">
                         <img
                           className="w-full h-full rounded-full"
-                          src={user.profileimg || "/public/avathar.jpeg"}
+                          src={user.profileimg || "/public/avathar.png"}
                           alt={`${user.firstName} ${user.lastName}'s profile photo`}
                         />
                       </div>

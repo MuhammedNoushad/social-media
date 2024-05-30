@@ -12,7 +12,7 @@ const LatestUsers: React.FC<LatestUsersProps> = () => {
     <div className="bg-white shadow rounded-lg mb-4 p-4 sm:p-6 h-full">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-bold leading-none text-gray-900">
-          Latest Customers
+          Latest Registered Users
         </h3>
         <a
           onClick={()=>{navigate('/admin/user-management')}}

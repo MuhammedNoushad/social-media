@@ -3,12 +3,15 @@ import useFetchAllConnections from "../../../hooks/user/useFetchAllConnections";
 import useFollow from "../../../hooks/user/useFollow";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
+import { useNavigate } from "react-router-dom";
 
 const FriendSuggestion = () => {
   const { suggestedUsers, setSuggestedUsers } = useFetchAllConnections();
   const { follow, loadingFollow, followingUserId } = useFollow();
 
   const user = useSelector((state: RootState) => state.user);
+
+  const navigate = useNavigate();
 
   // Function for handle follow user
   const handleFollow = async (userId: string) => {
@@ -38,7 +41,10 @@ const FriendSuggestion = () => {
               >
                 <div className="flex items-center">
                   <img
-                    className="w-10 h-10 rounded-full"
+                    onClick={() => {
+                      navigate(`/profile/${user._id}`);
+                    }}
+                    className="w-10 h-10 rounded-full cursor-pointer"
                     src={user.profileimg}
                     alt={user.username}
                   />

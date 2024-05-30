@@ -19,7 +19,6 @@ function PostManagementTable() {
     if (data) {
       const postData = data.reportedPosts;
       const totalPosts = data.totalPages;
-      console.log(data.totalPages);
       setTotalPosts(totalPosts);
       setPosts(postData);
     }
@@ -38,8 +37,13 @@ function PostManagementTable() {
     try {
       const response = await axios.put(`/api/admin/block-post/${postId}`);
       const data = response.data;
-
+  
       if (data.success) {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post._id === postId ? { ...post, isBlocked: !post.isBlocked } : post
+          )
+        );
         toast.success(data.message);
       }
     } catch (error) {
@@ -54,8 +58,6 @@ function PostManagementTable() {
     const postData = data.reportedPosts;
     setPosts(postData);
   };
-
-  console.log(posts, "posts");
 
   return (
     <div className="container mt-10 mx-auto sm:w-2/3 px-4 sm:px-8">

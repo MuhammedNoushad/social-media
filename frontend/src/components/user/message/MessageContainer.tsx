@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { newtonsCradle } from "ldrs";
 import OutGoingCall from "./video call/modal/OutGoingCallModal";
 import IncomingCall from "./video call/modal/IncomingCallModal";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
 import axios from "../../../axios/axios";
 import { RootState } from "../../../store/store";
@@ -25,6 +26,8 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
   const [showVoiceCallModal, setShowVoiceCallModal] = useState(false);
   const [incomingCallModal, setIncomingCallModal] = useState(false);
   const [incomingVoiceCallModal, setIncomingVoiceCallModal] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [callingUser, setCallingUser] = useState<any>({});
 
@@ -37,6 +40,8 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
   const loggedInUser = useSelector((state: RootState) => state.user);
 
   const lastMessageRef = useRef<HTMLDivElement>(null);
+  const inputContainerRef: RefObject<HTMLDivElement> | undefined =
+    useRef<HTMLDivElement>(null);
 
   const userId = loggedInUser._id;
 
@@ -245,6 +250,13 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
     navigate(`/voice-call/${userToChatId}/${loggedInUser.username}`);
   };
 
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    if (messgeRef.current) {
+      messgeRef.current.value += emojiData.emoji;
+    }
+    setShowEmojiPicker(false);
+  };
+
   return (
     <>
       <div className="flex flex-col h-full">
@@ -380,7 +392,29 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
           </div>
         </div>
         <form onSubmit={handleSendMessage}>
-          <div className="flex items-center border mx-4 border-gray-300 p-1 rounded-lg my-4">
+          <div
+            className="flex items-center border mx-4 border-gray-300 p-1 rounded-lg my-4"
+            ref={inputContainerRef}
+          >
+            <button
+              type="button"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            >
+              😀
+            </button>
+            {showEmojiPicker && inputContainerRef.current && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: inputContainerRef.current.offsetTop - 450,
+                  left: inputContainerRef.current.offsetLeft,
+                  zIndex: 10,
+                }}
+              >
+                <EmojiPicker onEmojiClick={handleEmojiClick} />
+              </div>
+            )}
             <input
               ref={messgeRef}
               type="text"

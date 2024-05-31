@@ -72,6 +72,14 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("endCall", (data) => {
+    console.log(data,'inside disconnect call')
+    const recieverSocketId = getRecieverSocketId(data.userToChatId);
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("disconnectCall", data);
+    }
+  });
+
   socket.on("rejectCall", (data) => {
     const recieverSocketId = getRecieverSocketId(data.userToChatId);
 

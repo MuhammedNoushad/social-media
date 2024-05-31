@@ -1,12 +1,40 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { useEffect, useRef } from "react";
+import { toast } from "sonner";
 
 function AudioCall() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { roomID, username } = useParams();
+
   const containerRef = useRef<HTMLDivElement>(null);
+  const zcRef = useRef<ZegoUIKitPrebuilt | null>(null);
+
+  const userToChatId = location.state?.userToChatId;
+
+   // Function for handle leaving room
+   const handleLeaveRoom = () => {
+    myCall(null);
+    toast.info("Call ended");
+    navigate("/message", { state: { userId: userToChatId } });
+  };
+
+  // Function for handle other user leaves
+  const handleUserLeave = () => {
+    myCall(null);
+    toast.info("Call ended");
+    navigate("/message", { state: { userId: roomID } });
+  };
+
+   // Cleanup function
+   const cleanup = () => {
+    if (zcRef.current) {
+      zcRef.current.destroy();
+      zcRef.current = null;
+    }
+  };
 
   useEffect(() => {
     // Check if the reload has already occurred
@@ -22,6 +50,7 @@ function AudioCall() {
     // Cleanup the reload flag when component unmounts
     return () => {
       sessionStorage.removeItem("hasReloaded");
+      cleanup()
     };
   }, []);
 
@@ -39,13 +68,22 @@ function AudioCall() {
     const zc = ZegoUIKitPrebuilt.create(kitToken);
     zc.joinRoom({
       container: element,
-      scenario: { mode: ZegoUIKitPrebuilt.GroupCall }, // Use VoiceOnlyCall for audio-only
+      scenario: { mode: ZegoUIKitPrebuilt.GroupCall }, 
       showPreJoinView: false,
       turnOnCameraWhenJoining: false,
       showMyCameraToggleButton: false,
       turnOnMicrophoneWhenJoining: true,
-      onLeaveRoom: () => {
-        navigate("/message");
+       onLeaveRoom: () => {
+        cleanup();
+        handleLeaveRoom();
+      },
+      onUserLeave: () => {
+        cleanup();
+        handleUserLeave();
+      },
+      leaveRoomDialogConfig: {
+        titleText: "End the call?",
+        descriptionText: "Are you sure you want to end the call?",
       },
     });
   };

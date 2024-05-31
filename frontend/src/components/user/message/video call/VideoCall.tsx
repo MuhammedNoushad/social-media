@@ -1,14 +1,40 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { useEffect, useRef } from "react";
+import { toast } from "sonner";
 
 function VideoCall() {
+  const location = useLocation();
   const navigate = useNavigate();
-
   const { roomID, username } = useParams();
+  const zcRef = useRef<ZegoUIKitPrebuilt | null>(null);
+
+  const userToChatId = location.state?.userToChatId;
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Function for handle leaving room
+  const handleLeaveRoom = () => {
+    myCall(null);
+    toast.info("Call ended");
+    navigate("/message", { state: { userId: userToChatId } });
+  };
+
+  // Function for handle other user leaves
+  const handleUserLeave = () => {
+    myCall(null);
+    toast.info("Call ended");
+    navigate("/message", { state: { userId: roomID } });
+  };
+
+    // Cleanup function
+    const cleanup = () => {
+      if (zcRef.current) {
+        zcRef.current.destroy();
+        zcRef.current = null;
+      }
+    };
 
   useEffect(() => {
     // Check if the reload has already occurred
@@ -24,6 +50,7 @@ function VideoCall() {
     // Cleanup the reload flag when component unmounts
     return () => {
       sessionStorage.removeItem("hasReloaded");
+      cleanup();
     };
   }, []);
 
@@ -40,6 +67,7 @@ function VideoCall() {
       username
     );
     const zc = ZegoUIKitPrebuilt.create(kitToken);
+
     zc.joinRoom({
       container: element,
       scenario: {
@@ -47,7 +75,16 @@ function VideoCall() {
       },
       showPreJoinView: false,
       onLeaveRoom: () => {
-        navigate("/message");
+        cleanup();
+        handleLeaveRoom();
+      },
+      onUserLeave: () => {
+        cleanup();
+        handleUserLeave();
+      },
+      leaveRoomDialogConfig: {
+        titleText: "End the call?",
+        descriptionText: "Are you sure you want to end the call?",
       },
     });
   };

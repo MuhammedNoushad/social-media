@@ -89,12 +89,16 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
   useEffect(() => {
     socket?.on("acceptIncomingCall", () => {
       setIncomingCallModal(false);
-      navigate(`/video-call/${userId}/${loggedInUser.username}`);
+      navigate(`/video-call/${userId}/${loggedInUser.username}`, {
+        state: { userToChatId: userToChatId },
+      });
     });
 
     socket?.on("acceptIncomingVoiceCall", () => {
       setIncomingVoiceCallModal(false);
-      navigate(`/voice-call/${userId}/${loggedInUser.username}`);
+      navigate(`/voice-call/${userId}/${loggedInUser.username}`, {
+        state: { userToChatId: userToChatId },
+      });
     });
 
     return () => {
@@ -107,6 +111,7 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
     setIncomingCallModal,
     userId,
     setIncomingVoiceCallModal,
+    userToChatId,
   ]);
 
   useEffect(() => {
@@ -148,13 +153,11 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
       setIncomingCallModal(data);
     });
 
-    socket?.on("rejectCall", (data) => {
+    socket?.on("rejectCall", () => {
       setIncomingCallModal(false);
-      console.log("Received rejectCall event:", data);
     });
 
-    socket?.on("rejectIncomingCall", (data) => {
-      console.log(data);
+    socket?.on("rejectIncomingCall", () => {
       toast.error("Video call rejected");
       setShowCallModal(false);
     });

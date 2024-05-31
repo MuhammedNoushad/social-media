@@ -109,10 +109,6 @@ class MessageRepository {
           .populate("participants", "-password -role");
       }
 
-      console.log(
-        conversation,
-        "conversation from findConversationAndAddMessage"
-      );
       return conversation;
     } catch (error) {
       throw error;

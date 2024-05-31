@@ -48,8 +48,6 @@ const StoryComponent: React.FC = () => {
     (story) => story.userId._id === loggedInUser._id
   );
 
-  console.log(loggedInUserStory, "logged in user story");
-
   const showStoryModal = (userId: string) => {
     setOpenModal(true);
     setStatusId(userId);
@@ -104,7 +102,7 @@ const StoryComponent: React.FC = () => {
                 <>
                   <img
                     onClick={storyLoading ? () => {} : onClick}
-                    src={loggedInUser.profileimg || "/avathar.png"} 
+                    src={loggedInUser.profileimg || "/avathar.png"}
                     alt={loggedInUser.username}
                     className={`w-16 h-16 rounded-full ${
                       storyLoading && "opacity-50 cursor-not-allowed"
@@ -155,9 +153,9 @@ const StoryComponent: React.FC = () => {
             </div>
           )}
 
-          {storyOfOthers.map((story, index) => (
+          {storyOfOthers.map((story) => (
             <div
-              key={index}
+              key={story._id}
               className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-24"
             >
               <img

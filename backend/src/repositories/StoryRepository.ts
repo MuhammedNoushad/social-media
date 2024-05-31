@@ -55,8 +55,30 @@ class StoryRepository {
   // Function for fetch single user story
   async fetchSingleUserStory(userId: string) {
     try {
-      const stories = await Story.findOne({ userId });
+      const stories = await Story.findOne({ userId }).populate({
+        path: "story.viewed",
+        model: "User",
+      });
       return stories;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Function for updating story views
+  async updateStoryViews(
+    storyId: string,
+    userId: string,
+    viewedUserId: string
+  ) {
+    try {
+      await Story.updateOne(
+        {
+          userId,
+          story: { $elemMatch: { _id: new mongoose.Types.ObjectId(storyId) } },
+        },
+        { $addToSet: { "story.$.viewed": viewedUserId } }
+      );
     } catch (error) {
       throw error;
     }

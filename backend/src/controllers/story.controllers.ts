@@ -73,3 +73,21 @@ export const fetchSingleUserStory = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for update story views
+export const updateStoryViews = async (req: Request, res: Response) => {
+  try {
+    const { storyId, userId } = req.params;
+    const { viewedUserId } = req.body;
+
+    if (userId === viewedUserId) {
+      return res.status(400).json({ error: "You can't view your own story" });
+    }
+
+    await storyRepository.updateStoryViews(storyId, userId, viewedUserId);
+    const stories = await storyRepository.fetchSingleUserStory(userId);
+    res.status(200).json({ success: true, message: "Story updated", stories });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

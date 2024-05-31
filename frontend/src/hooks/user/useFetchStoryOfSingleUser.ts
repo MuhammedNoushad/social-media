@@ -30,7 +30,26 @@ const useFetchStoryOfSingleUser = () => {
     }
   };
 
-  return { fetchStoryOfSingleUser, deleteStory };
+  // Function for push user id to story view
+  const addStoryView = async (
+    storyId: string,
+    userId: string,
+    viewedUserId: string
+  ) => {
+    try {
+      const response = await axios.put(`/api/story/${storyId}/${userId}`, {
+        viewedUserId,
+      });
+      const data = response.data;
+      if (data.success) {
+        return data.stories;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return { fetchStoryOfSingleUser, deleteStory, addStoryView };
 };
 
 export default useFetchStoryOfSingleUser;

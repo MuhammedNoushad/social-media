@@ -110,6 +110,11 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
     setShowModal(false);
   };
 
+  // Function for redirect to message of user
+  const handleProfileMessage = ( userId:string) => {
+    navigate("/message", { state: { userId } });
+  }
+
   return (
     <>
       <div className="relative w-auto min-w-0 break-words bg-light/30 draggable max-h-max font-roboto-condensed">
@@ -216,7 +221,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
 
                   <button
                     onClick={() => {
-                      navigate("/message");
+                      handleProfileMessage( userDetails._id);
                     }}
                     className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-lg"
                   >

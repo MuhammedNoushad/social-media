@@ -74,3 +74,17 @@ export const fetchConverstions = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Function for fetch user to chat based on latest message
+export const fetchUsersToChat = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const conversations = await messageRepository.getUsersToChat(userId);
+    if (!conversations) {
+      return res.status(400).json({ error: "Failed to fetch users" });
+    }
+    res.status(200).json({ success: true, conversations });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

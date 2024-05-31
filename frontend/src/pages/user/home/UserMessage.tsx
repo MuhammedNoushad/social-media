@@ -3,9 +3,13 @@ import Sidebar from "../../../components/user/common/Sidebar";
 import MessageContainer from "../../../components/user/message/MessageContainer";
 import MessageList from "../../../components/user/message/MessageList";
 import MessagePlaceholder from "../../../components/user/common/MessagePlaceholder";
+import { useLocation } from "react-router-dom";
 
 function UserMessage() {
-  const [selectedUser, setSelectedUser] = useState<string>("");
+  const location = useLocation();
+  const userToChatId = location.state?.userId;
+
+  const [selectedUser, setSelectedUser] = useState<string>(userToChatId || "");
   const handleUserSelection = (userId: string) => {
     setSelectedUser(userId);
   };

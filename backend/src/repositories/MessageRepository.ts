@@ -133,6 +133,21 @@ class MessageRepository {
       throw error;
     }
   }
+
+  // Function for fetch the users recently chat with
+  async getUsersToChat(userId: string) {
+    try {
+      // Fetch conversations involving the user and sort by the most recent chatted with
+      const conversations = await Conversation.find({
+        participants: { $in: [userId] },
+      })
+        .sort({ updatedAt: -1 })
+        .populate("participants", "-password -role");
+      return conversations;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default MessageRepository;

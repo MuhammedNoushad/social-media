@@ -28,7 +28,7 @@ class PostRepository {
       const posts = await Post.find({ isDeleted: false })
         .sort({ createdAt: -1 })
         .populate("reports.userId", "username _id profileimg")
-        .populate("userId", "username _id profileimg")
+        .populate("userId", "username _id profileimg isVerified")
         .populate("comments.userId", "username _id profileimg");
       if (posts) {
         return posts.map((post) => post.toObject());

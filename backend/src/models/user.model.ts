@@ -35,6 +35,10 @@ const userSchema = new Schema<IUsers>(
     phone: {
       type: Number,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
     isAdmin: {
       type: Boolean,
       default: false,

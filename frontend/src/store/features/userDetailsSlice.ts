@@ -13,6 +13,7 @@ const initialState: IUserState = {
   phone: undefined,
   isBlock: false,
   isAdmin: false,
+  isVerified: false,
 };
 
 const userDetailsSlice = createSlice({

@@ -280,6 +280,20 @@ class UserRepository {
       console.error("Error from fetchLatestUsers in UserRepository", error);
     }
   }
+
+  // Function for verify the user account
+  async verifyUserAccount(userId: string) {
+    try {
+      await User.findByIdAndUpdate(
+        userId,
+        { isVerified: true },
+        { upsert: true }
+      );
+    } catch (error) {
+      console.error("Error from verifyUserAccount in UserRepository", error);
+      throw error;
+    }
+  }
 }
 
 export default UserRepository;

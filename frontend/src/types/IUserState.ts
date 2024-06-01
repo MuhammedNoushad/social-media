@@ -8,6 +8,7 @@ export default interface IUserState {
   dob?: string;
   bio?: string;
   phone?: number;
+  isVerified?: boolean;
   isBlock?: boolean;
   isAdmin?: boolean;
   createdAt?: string;

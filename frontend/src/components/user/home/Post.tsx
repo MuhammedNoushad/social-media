@@ -254,7 +254,24 @@ function Post() {
                           }}
                           className="font-medium text-sm cursor-pointer"
                         >
-                          {image.userId?.username}
+                          <p className="inline-flex items-center text-secondary-inverse font-normal text-base font-roboto-condensed">
+                            {image.userId.username}
+                            {image.userId.isVerified && (
+                              <span className="ml-1">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="w-4 h-4"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    fill="#052ae6"
+                                    fillRule="evenodd"
+                                    d="M4.252 14H4a2 2 0 1 1 0-4h.252c.189-.734.48-1.427.856-2.064l-.18-.179a2 2 0 1 1 2.83-2.828l.178.179A7.952 7.952 0 0 1 10 4.252V4a2 2 0 1 1 4 0v.252c.734.189 1.427.48 2.064.856l.179-.18a2 2 0 1 1 2.828 2.83l-.179.178c.377.637.667 1.33.856 2.064H20a2 2 0 1 1 0 4h-.252a7.952 7.952 0 0 1-.856 2.064l.18.179a2 2 0 1 1-2.83 2.828l-.178-.179a7.952 7.952 0 0 1-2.064.856V20a2 2 0 1 1-4 0v-.252a7.952 7.952 0 0 1-2.064-.856l-.179.18a2 2 0 1 1-2.828-2.83l.179-.178A7.952 7.952 0 0 1 4.252 14M9 10l-2 2l4 4l6-6l-2-2l-4 4z"
+                                  />
+                                </svg>
+                              </span>
+                            )}
+                          </p>
                         </h6>
                         <span className="text-gray-500 text-2xl">&middot;</span>
                         <span className="text-gray-500 text-xs">

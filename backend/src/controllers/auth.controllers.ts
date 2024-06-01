@@ -123,6 +123,8 @@ export const login = async (req: Request, res: Response) => {
     // Fetching the user details from the database
     const userDetails = await userRepository.findUser(email);
 
+    console.log(userDetails, "userDetails");
+
     if (!userDetails) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -160,6 +162,7 @@ export const login = async (req: Request, res: Response) => {
             userDetails.phone !== undefined ? userDetails.phone : undefined,
           isBlock: userDetails.isBlock || false,
           isAdmin: userDetails.isAdmin || false,
+          isVerified: userDetails.isVerified || false,
           accessToken,
           role,
         };

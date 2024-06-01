@@ -34,6 +34,7 @@
     "nodemailer": "^6.9.13",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
+    "razorpay": "^2.9.4",
     "rimraf": "^5.0.5",
     "socket.io": "^4.7.5",
     "typescript": "^5.4.5"

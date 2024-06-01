@@ -8,7 +8,6 @@ const useFetchNotifications = () => {
       const response = await axios.get(`/api/user/notification/${userId}`);
       const data = response.data;
 
-      console.log(data.notifications, "notifications");
       if (data.success) {
         return data.notifications;
       }
@@ -23,7 +22,6 @@ const useFetchNotifications = () => {
     try {
       const response = await axios.post(`/api/user/notification/${userId}`);
       const data = response.data;
-      console.log(data.notifications, "notifications");
       if (data.success) {
         return data.notifications;
       }

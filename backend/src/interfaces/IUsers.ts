@@ -11,6 +11,7 @@ interface IUsers extends Document {
   dob?: string;
   profileimg?: string;
   phone?: number;
+  isVerified?: boolean;
   isBlock?: boolean;
   isAdmin?: boolean;
 }

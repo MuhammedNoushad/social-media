@@ -9,6 +9,7 @@ export default interface IUserDetails {
   dob?: string;
   profileimg?: string;
   phone?: number;
+  isVerified?: boolean;
   isBlock?: boolean;
   isAdmin?: boolean;
 }

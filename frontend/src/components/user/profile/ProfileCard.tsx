@@ -4,20 +4,30 @@ import {
   BiUser,
   BiMessageSquareAdd,
   BiUserPlus,
+  BiCheck,
 } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+
 import IUserState from "../../../types/IUserState";
 import axios from "../../../axios/axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import useFollow from "../../../hooks/user/useFollow";
 import ConnectionModal from "./ConnectionModal";
+import RenderRazorpay from "../razorPay/RenderRazorPay";
 
 const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
   userDetails,
   profile,
 }) => {
   const navigate = useNavigate();
+
+  const [displayRazorpay, setDisplayRazorpay] = useState(false);
+  const [orderDetails, setOrderDetails] = useState({
+    orderId: "",
+    currency: "",
+    amount: 0,
+  });
   const [following, setFollowing] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [followedByUser, setFollowedByUser] = useState(false);
@@ -26,6 +36,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
   );
 
   const user = useSelector((state: RootState) => state.user);
+  console.log(user, "user");
   const post = useSelector((state: RootState) => state.posts.posts);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const connections: any = useSelector(
@@ -111,9 +122,29 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
   };
 
   // Function for redirect to message of user
-  const handleProfileMessage = ( userId:string) => {
+  const handleProfileMessage = (userId: string) => {
     navigate("/message", { state: { userId } });
-  }
+  };
+
+  // Function for handle verification purchase
+  const handlePurchase = async () => {
+    try {
+      const response = await axios.post(`/api/payment/`);
+      const data = response.data;
+
+      if (data.success) {
+        const { orderId, currency, amount } = data.responseData;
+        setOrderDetails({
+          orderId,
+          currency,
+          amount,
+        });
+        setDisplayRazorpay(true);
+      }
+    } catch (error) {
+      console.log(error, "error from handlePurchase");
+    }
+  };
 
   return (
     <>
@@ -134,8 +165,23 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
               <div className="flex flex-wrap items-center justify-between mb-2">
                 <div className="flex flex-col items-center">
                   <div className="flex items-center mb-2">
-                    <p className="text-secondary-inverse font-bold hover:text-red-600 transition-colors duration-200 ease-in-out text-[1.2rem] mr-1 font-roboto-condensed">
-                      {userDetails.firstName} {userDetails.lastName}
+                    <p className="inline-flex items-center text-secondary-inverse font-bold hover:text-red-600 transition-colors duration-200 ease-in-out text-[1.2rem] mr-1 font-roboto-condensed">
+                      {userDetails.username}
+                      {userDetails.isVerified && (
+                        <span className="ml-1">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              fill="#052ae6"
+                              fillRule="evenodd"
+                              d="M4.252 14H4a2 2 0 1 1 0-4h.252c.189-.734.48-1.427.856-2.064l-.18-.179a2 2 0 1 1 2.83-2.828l.178.179A7.952 7.952 0 0 1 10 4.252V4a2 2 0 1 1 4 0v.252c.734.189 1.427.48 2.064.856l.179-.18a2 2 0 1 1 2.828 2.83l-.179.178c.377.637.667 1.33.856 2.064H20a2 2 0 1 1 0 4h-.252a7.952 7.952 0 0 1-.856 2.064l.18.179a2 2 0 1 1-2.83 2.828l-.178-.179a7.952 7.952 0 0 1-2.064.856V20a2 2 0 1 1-4 0v-.252a7.952 7.952 0 0 1-2.064-.856l-.179.18a2 2 0 1 1-2.828-2.83l.179-.178A7.952 7.952 0 0 1 4.252 14M9 10l-2 2l4 4l6-6l-2-2l-4 4z"
+                            />
+                          </svg>
+                        </span>
+                      )}
                     </p>
                     {profile === "own" && (
                       <a
@@ -153,7 +199,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
                       <span className="mr-1">
                         <BiUser />
                       </span>{" "}
-                      @{userDetails.username}{" "}
+                      {userDetails.firstName} {userDetails.lastName}
                     </a>
                     <a
                       href={`mailto:${userDetails.email}`}
@@ -193,6 +239,29 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
                   </p>
                 </div>
               </div>
+              {profile === "own" && user.isVerified === false && (
+                <div className="flex justify-center my-4">
+                  <div className="flex items-center bg-gray-100 rounded-lg p-2">
+                    <div className="flex items-center mr-4">
+                      <span className="text-green-500 text-xl mr-2">
+                        <BiCheck />
+                      </span>
+                      <div>
+                        <h3 className="text-sm font-semibold">Get Verified</h3>
+                        <p className="text-xs text-gray-500">
+                          Boost credibility
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handlePurchase}
+                      className="bg-green-500 text-white py-1 px-3 rounded-md text-sm transition duration-200 hover:bg-green-600"
+                    >
+                      Purchase
+                    </button>
+                  </div>
+                </div>
+              )}
               {/* follow and message button here */}
               {profile === "others" && (
                 <div className="flex justify-center my-4">
@@ -221,7 +290,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
 
                   <button
                     onClick={() => {
-                      handleProfileMessage( userDetails._id);
+                      handleProfileMessage(userDetails._id);
                     }}
                     className="flex items-center justify-center  bg-neutral-100 hover:bg-neutral-200 text-black font-roboto-condensed font-medium px-4 py-2 rounded-lg"
                   >
@@ -239,6 +308,16 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
           followers={connections.followers}
           following={connections.following}
           onClose={handleCloseModal}
+        />
+      )}
+      {displayRazorpay && (
+        <RenderRazorpay
+          setDisplayRazorpay={setDisplayRazorpay}
+          amount={orderDetails.amount}
+          currency={orderDetails.currency}
+          orderId={orderDetails.orderId}
+          keyId="rzp_test_3CEVpy1JezNykg"
+          keySecret="ZYKVp92VufAjeFaMHJloI15f"
         />
       )}
     </>

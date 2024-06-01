@@ -14,6 +14,7 @@ import { app, server } from "./socket/socket";
 import storyRoute from "./routes/story.routes";
 import notificationRoute from "./routes/notification.routes";
 import adRoute from "./routes/ad.routes";
+import orderRoute from "./routes/order.routes";
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use("/api/posts", postRoute);
 app.use("/api/connection", connectionRoute);
 app.use("/api/messages", messageRoute);
 app.use("/api/story", storyRoute);
+app.use("/api/payment", orderRoute);
 
 // Connect to MongoDB and start the server
 connectToMongoDB()

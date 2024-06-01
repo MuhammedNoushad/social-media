@@ -1,8 +1,9 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import Sidebar from "../../../components/user/common/Sidebar";
 import { DefaultGallery } from "../../../components/user/profile/ProfielPostGallery";
 import ProfileCard from "../../../components/user/profile/ProfileCard";
-import { useEffect, useState } from "react";
 import useFetchSingleUser from "../../../hooks/user/useFetchSingleUser";
 import IUserState from "../../../types/IUserState";
 
@@ -22,6 +23,7 @@ function OthersProfile() {
     phone: undefined,
     isBlock: false,
     isAdmin: false,
+    isVerified: false,
   };
 
   const [userData, setUserData] = useState<IUserState>(initialUserData);

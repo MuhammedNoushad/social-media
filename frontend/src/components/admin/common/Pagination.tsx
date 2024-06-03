@@ -10,7 +10,7 @@ function Pagination({
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   return (
-    <>
+    <div className="mb-5">
       <ol className="flex justify-center gap-1 text-xs font-medium">
         <li>
           {/* Previous Page Button */}
@@ -78,7 +78,7 @@ function Pagination({
           </button>
         </li>
       </ol>
-    </>
+    </div>
   );
 }
 

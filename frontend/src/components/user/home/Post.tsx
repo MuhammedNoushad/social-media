@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { FaRegFlag, FaTrash, FaUserMinus, FaUserPlus } from "react-icons/fa";
@@ -20,6 +20,7 @@ import useFollow from "../../../hooks/user/useFollow";
 import LikedUsersModal from "./LikedUsersModal";
 import useFetchAllConnections from "../../../hooks/user/useFetchAllConnections";
 import AdPost from "../common/AdPost";
+import Pagination from "../../admin/common/Pagination";
 
 function Post() {
   const navigate = useNavigate();
@@ -30,6 +31,9 @@ function Post() {
   const [showLikedUsersModal, setShowLikedUsersModal] = useState(false);
   const [likedUsers, setLikedUsers] = useState<IUserDetails[]>([]);
   const [postReported, setPostReported] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const postsPerPage = 10;
   const [selectedPost, setSelectedPost] = useState<{
     userId?: IUserDetails;
     imageUrl: string;
@@ -58,42 +62,56 @@ function Post() {
     connections?.following?.length > 0 ||
     posts.some((post: IPosts) => post.userId?._id === currentUser._id);
 
-  let filteredPosts = isFollowingAnyUser
+    let filteredPosts = isFollowingAnyUser
     ? posts.filter((post: IPosts) => {
         const isFollowingOrOwnPost =
-          connections?.following?.some(
-            (user: IConnection) => user._id === post.userId?._id
-          ) || post.userId?._id === currentUser._id;
-
+          connections?.following?.some((user: IConnection) => user._id === post.userId?._id) ||
+          post.userId?._id === currentUser._id;
+  
         const hasReportedPost = post.reports?.some((report) => {
           return report.userId._id === currentUser._id;
         });
-
+  
         const isNotReportedByCurrentUser = !hasReportedPost;
-
+  
         return isFollowingOrOwnPost && isNotReportedByCurrentUser;
       })
     : shuffle(posts).slice(0, 5);
-
+  
   if (filteredPosts.length < 5) {
     const remainingPosts = shuffle(
-      posts.filter(
-        (post: IPosts) =>
-          !filteredPosts.some((filteredPost) => filteredPost._id === post._id)
-      )
+      posts.filter((post: IPosts) => !filteredPosts.some((filteredPost) => filteredPost._id === post._id))
     ).slice(0, 5 - filteredPosts.length);
     filteredPosts = [...filteredPosts, ...remainingPosts];
   }
-
+  
+  // Pagination logic
+  const startIndex = (currentPage - 1) * postsPerPage;
+  const endIndex = startIndex + postsPerPage;
+  const currentPosts = filteredPosts.slice(startIndex, endIndex);
+  
   // Insert ad posts after every 3 user posts
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const postsWithAds: IPosts[] | any = [];
-  for (let i = 0; i < filteredPosts.length; i++) {
-    postsWithAds.push(filteredPosts[i]);
+  for (let i = 0; i < currentPosts.length; i++) {
+    postsWithAds.push(currentPosts[i]);
     if ((i + 1) % 3 === 0) {
       postsWithAds.push({ isAd: true });
     }
   }
+
+  useEffect(() => {
+    const totalPages = Math.ceil(posts.length / postsPerPage);
+    setTotalPages(totalPages);
+  }, [posts.length]);
+  
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, [currentPage]);
+  
 
   const handleImageClick = (post: {
     userId: IUserDetails;
@@ -222,6 +240,8 @@ function Post() {
     setShowLikedUsersModal(false);
     setLikedUsers([]);
   };
+
+
 
   return (
     <>
@@ -570,6 +590,11 @@ function Post() {
           onClose={handleCloseLikedUsersModal}
         />
       )}
+       <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={setCurrentPage}
+    />
     </>
   );
 }

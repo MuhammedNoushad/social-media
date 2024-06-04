@@ -28,6 +28,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
     currency: "",
     amount: 0,
   });
+  const [purchaseLoading, setPurchaseLoading] = useState(false);
   const [following, setFollowing] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [followedByUser, setFollowedByUser] = useState(false);
@@ -129,6 +130,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
   // Function for handle verification purchase
   const handlePurchase = async () => {
     try {
+      setPurchaseLoading(true);
       const response = await axios.post(`/api/payment/`);
       const data = response.data;
 
@@ -143,6 +145,8 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
       }
     } catch (error) {
       console.log(error, "error from handlePurchase");
+    } finally {
+      setPurchaseLoading(false);
     }
   };
 
@@ -257,7 +261,11 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
                       onClick={handlePurchase}
                       className="bg-green-500 text-white py-1 px-3 rounded-md text-sm transition duration-200 hover:bg-green-600"
                     >
-                      Purchase
+                      {purchaseLoading ? (
+                        <span className="loading loading-spinner"></span>
+                      ) : (
+                        <span>Purchase</span>
+                      )}
                     </button>
                   </div>
                 </div>

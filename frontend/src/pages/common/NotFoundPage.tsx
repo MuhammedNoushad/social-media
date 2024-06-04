@@ -17,7 +17,7 @@ const NotFoundPage: React.FC = () => {
 
   return (
     <div className="flex h-screen">
-      <div>{isAdmin ? <AdminSidebar /> : <Sidebar />}</div>
+      <div>{isAdmin ? <AdminSidebar /> : <Sidebar  page="not-found"/>}</div>
       <div className="flex-grow flex  justify-center px-4 sm:px-0">
         <NotFoundCard />
       </div>

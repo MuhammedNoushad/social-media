@@ -21,6 +21,7 @@ import LikedUsersModal from "./LikedUsersModal";
 import useFetchAllConnections from "../../../hooks/user/useFetchAllConnections";
 import AdPost from "../common/AdPost";
 import Pagination from "../../admin/common/Pagination";
+import PostShimmer from "../../skeleton/PostShimmer";
 
 function Post() {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ function Post() {
   const [postReported, setPostReported] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const postsPerPage = 10;
+  const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState<{
     userId?: IUserDetails;
     imageUrl: string;
@@ -57,39 +58,44 @@ function Post() {
   );
 
   const detailsElement = document.querySelector("details");
+  const postsPerPage = 10;
 
   const isFollowingAnyUser =
     connections?.following?.length > 0 ||
     posts.some((post: IPosts) => post.userId?._id === currentUser._id);
 
-    let filteredPosts = isFollowingAnyUser
+  let filteredPosts = isFollowingAnyUser
     ? posts.filter((post: IPosts) => {
         const isFollowingOrOwnPost =
-          connections?.following?.some((user: IConnection) => user._id === post.userId?._id) ||
-          post.userId?._id === currentUser._id;
-  
+          connections?.following?.some(
+            (user: IConnection) => user._id === post.userId?._id
+          ) || post.userId?._id === currentUser._id;
+
         const hasReportedPost = post.reports?.some((report) => {
           return report.userId._id === currentUser._id;
         });
-  
+
         const isNotReportedByCurrentUser = !hasReportedPost;
-  
+
         return isFollowingOrOwnPost && isNotReportedByCurrentUser;
       })
     : shuffle(posts).slice(0, 5);
-  
+
   if (filteredPosts.length < 5) {
     const remainingPosts = shuffle(
-      posts.filter((post: IPosts) => !filteredPosts.some((filteredPost) => filteredPost._id === post._id))
+      posts.filter(
+        (post: IPosts) =>
+          !filteredPosts.some((filteredPost) => filteredPost._id === post._id)
+      )
     ).slice(0, 5 - filteredPosts.length);
     filteredPosts = [...filteredPosts, ...remainingPosts];
   }
-  
+
   // Pagination logic
   const startIndex = (currentPage - 1) * postsPerPage;
   const endIndex = startIndex + postsPerPage;
   const currentPosts = filteredPosts.slice(startIndex, endIndex);
-  
+
   // Insert ad posts after every 3 user posts
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const postsWithAds: IPosts[] | any = [];
@@ -103,15 +109,15 @@ function Post() {
   useEffect(() => {
     const totalPages = Math.ceil(posts.length / postsPerPage);
     setTotalPages(totalPages);
+    setLoading(false);
   }, [posts.length]);
-  
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   }, [currentPage]);
-  
 
   const handleImageClick = (post: {
     userId: IUserDetails;
@@ -241,13 +247,14 @@ function Post() {
     setLikedUsers([]);
   };
 
-
-
   return (
     <>
       <div className="max-w-3xl mx-auto">
         <div className=" max-w-lg mx-auto ">
-          {postsWithAds &&
+          {loading ? (
+            <PostShimmer />
+          ) : (
+            postsWithAds &&
             postsWithAds.map((image: IPosts, index: number) =>
               "isAd" in image && image.isAd ? (
                 <AdPost key={`ad-${index}`} />
@@ -513,7 +520,8 @@ function Post() {
                   <hr className="border-gray-700" />
                 </div>
               )
-            )}
+            )
+          )}
         </div>
       </div>
       {showModal && selectedPost && (
@@ -590,11 +598,11 @@ function Post() {
           onClose={handleCloseLikedUsersModal}
         />
       )}
-       <Pagination
-      currentPage={currentPage}
-      totalPages={totalPages}
-      onPageChange={setCurrentPage}
-    />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </>
   );
 }

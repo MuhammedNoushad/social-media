@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const post_controllers_1 = require("../controllers/post.controllers");
+const verifyToken_1 = __importDefault(require("../middleware/verifyToken"));
+const comment_controllers_1 = require("../controllers/comment.controllers");
+const postRoute = express_1.default.Router();
+postRoute.get("/", verifyToken_1.default, post_controllers_1.fetchAllPosts);
+postRoute.put("/:postId", post_controllers_1.editPost);
+postRoute.post("/:userId", verifyToken_1.default, post_controllers_1.createNewPost);
+postRoute.get("/:userId", verifyToken_1.default, post_controllers_1.getPostOfUser);
+postRoute.delete("/:postId", post_controllers_1.deletePost);
+postRoute.post("/add-comment/:postId", comment_controllers_1.addComment);
+postRoute.put("/comment/:postId/:commentId", comment_controllers_1.editComment);
+postRoute.delete("/comment/:postId/:commentId", comment_controllers_1.deleteComment);
+postRoute.post("/toggle-like/:postId", comment_controllers_1.toggleLike);
+postRoute.get("/liked-users/:postId", post_controllers_1.fetchAllLikedUsers);
+postRoute.get("/posts/count", comment_controllers_1.fetchCountPosts);
+postRoute.get('/posts/total-likes', post_controllers_1.fetchTotalLikes);
+postRoute.post("/report/:postId", post_controllers_1.report);
+exports.default = postRoute;

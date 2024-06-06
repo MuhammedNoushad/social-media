@@ -2,7 +2,7 @@ import axios from "axios";
 import handleInvalidToken from "../utils/handleInvalidToken";
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_REACT_APP_BASE_URL,
+  baseURL: 'https://muhammednoushad.online',
 });
 
 instance.interceptors.request.use(

@@ -4,13 +4,14 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import usePostAds from "../../../hooks/admin/usePostAds";
 import IAds from "../../../types/IAds";
 import { useNavigate } from "react-router-dom";
+import { APP_CLOUDNAME, APP_PRESET_KEY } from "../../../config/config";
 
 interface Errors {
   [key: string]: string;
 }
 
-const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;
-const cloudname: string = import.meta.env.VITE_REACT_APP_CLOUDNAME;
+const presetKey: string = APP_PRESET_KEY;
+const cloudname: string = APP_CLOUDNAME;
 
 const CreateAdForm: React.FC = () => {
   const [picLoading, setPicLoading] = useState(false);

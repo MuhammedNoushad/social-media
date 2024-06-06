@@ -8,10 +8,11 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import "./index.css";
 import { SocketProvider } from "./Context/SocketContext.tsx";
+import { APP_GOOGLE_CLIENT_ID } from "./config/config.ts";
 
 ReactDOM.render(
   <GoogleOAuthProvider
-    clientId={import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID!}
+    clientId={APP_GOOGLE_CLIENT_ID!}
   >
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import { APP_BASE_URL } from "../config/config";
 
 interface SocketContextValue {
   socket: Socket | null;
@@ -29,7 +30,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     let newSocket: Socket | null = null;
 
     if (token) {
-      newSocket = io(import.meta.env.VITE_REACT_APP_BASE_URL, {
+      newSocket = io(APP_BASE_URL, {
         query: {
           userId: user._id,
         },

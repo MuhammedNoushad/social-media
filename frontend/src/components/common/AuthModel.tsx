@@ -65,7 +65,7 @@ function AuthModel({
       <div className="w-full max-w-md p-6 rounded-lg bg-white bg-clip-padding flex flex-col items-center">
         <img
           className="rounded-md h-11 mt-4"
-          src="/public/logo.webp"
+          src="/logo.webp"
           alt="site logo"
         />
         <div className="mt-4 text-center">

@@ -7,10 +7,11 @@ import IUserDetails from "../../../types/IUserDetails";
 import useEditProfile from "../../../hooks/user/useEditProfile";
 import useDeleteProfilePic from "../../../hooks/user/useDeleteProfilePic";
 import { RootState } from "../../../store/store";
+import { APP_CLOUDNAME, APP_PRESET_KEY } from "../../../config/config";
 
 function EditProfileCard() {
-  const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;
-  const cloudname: string = import.meta.env.VITE_REACT_APP_CLOUDNAME;
+  const presetKey: string =APP_PRESET_KEY;
+  const cloudname: string =APP_CLOUDNAME;
 
   const userDetails = useSelector((state: RootState) => state.user);
   const editProfile = useEditProfile();

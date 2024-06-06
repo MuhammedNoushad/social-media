@@ -6,9 +6,10 @@ import IFileUpload from "../../../types/IFileUpload";
 import Image from "../../../types/IFileImage";
 import useCreatePost from "../../../hooks/user/useCreatePost";
 import axios from "axios";
+import { APP_CLOUDNAME, APP_PRESET_KEY } from "../../../config/config";
 
-const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;
-const cloudname: string = import.meta.env.VITE_REACT_APP_CLOUDNAME;
+const presetKey: string = APP_PRESET_KEY;
+const cloudname: string = APP_CLOUDNAME;
 
 const PostCreate: React.FC = () => {
   const { createPost } = useCreatePost();

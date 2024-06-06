@@ -5,6 +5,7 @@ import useFetchAd from "../../../hooks/admin/useFetchAd";
 import IAds from "../../../types/IAds";
 import { useNavigate } from "react-router-dom";
 import usePostAds from "../../../hooks/admin/usePostAds";
+import { APP_CLOUDNAME, APP_PRESET_KEY } from "../../../config/config";
 
 interface Errors {
   [key: string]: string;
@@ -14,8 +15,8 @@ interface EditAdFormProps {
   adId: string | undefined;
 }
 
-const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;
-const cloudname: string = import.meta.env.VITE_REACT_APP_CLOUDNAME;
+const presetKey: string = APP_PRESET_KEY;
+const cloudname: string = APP_CLOUDNAME;
 
 const EditAdForm: React.FC<EditAdFormProps> = ({ adId }) => {
   const [picLoading, setPicLoading] = useState(false);

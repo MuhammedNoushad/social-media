@@ -40,7 +40,7 @@ const AdminSidebar: React.FC = () => {
         <div className="flex items-center justify-center h-20 shadow-md">
           <img
             className="rounded-md h-11 mt-4"
-            src="/public/logo.webp"
+            src="/logo.webp"
             alt="site logo"
           />
         </div>

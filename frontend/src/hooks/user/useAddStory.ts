@@ -1,7 +1,8 @@
 import axios from "../../axios/axios";
+import { APP_CLOUDNAME, APP_PRESET_KEY } from "../../config/config";
 
-const presetKey: string = import.meta.env.VITE_REACT_APP_PRESET_KEY;
-const cloudname: string = import.meta.env.VITE_REACT_APP_CLOUDNAME;
+const presetKey: string = APP_PRESET_KEY;
+const cloudname: string = APP_CLOUDNAME;
 
 // Function for add a new story
 const useAddStory = () => {

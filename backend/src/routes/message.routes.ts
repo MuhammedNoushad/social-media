@@ -5,12 +5,13 @@ import {
   getMessage,
   setMessage,
 } from "../controllers/message.controllers";
+import verifyUser from "../middleware/verifyToken";
 
 const messageRoute = express.Router();
 
-messageRoute.get("/chat-list/:userId", fetchUsersToChat);
-messageRoute.get("/:userId/:userToChatId", getMessage);
-messageRoute.post("/:userId/:userToChatId", setMessage);
-messageRoute.get("/conversation/:userId", fetchConverstions);
+messageRoute.get("/chat-list/:userId", verifyUser, fetchUsersToChat);
+messageRoute.get("/:userId/:userToChatId", verifyUser, getMessage);
+messageRoute.post("/:userId/:userToChatId", verifyUser, setMessage);
+messageRoute.get("/conversation/:userId", verifyUser, fetchConverstions);
 
 export default messageRoute;

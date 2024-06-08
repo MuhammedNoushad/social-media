@@ -5,10 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const story_controllers_1 = require("../controllers/story.controllers");
+const verifyToken_1 = __importDefault(require("../middleware/verifyToken"));
 const storyRoute = express_1.default.Router();
-storyRoute.get('/', story_controllers_1.fetchAllStories);
-storyRoute.get('/:userId', story_controllers_1.fetchSingleUserStory);
-storyRoute.post("/:userId", story_controllers_1.addNewStory);
-storyRoute.put('/:storyId/:userId', story_controllers_1.updateStoryViews);
-storyRoute.delete("/:storyId/:userId", story_controllers_1.deleteStory);
+storyRoute.get("/", verifyToken_1.default, story_controllers_1.fetchAllStories);
+storyRoute.get("/:userId", verifyToken_1.default, story_controllers_1.fetchSingleUserStory);
+storyRoute.post("/:userId", verifyToken_1.default, story_controllers_1.addNewStory);
+storyRoute.put("/:storyId/:userId", verifyToken_1.default, story_controllers_1.updateStoryViews);
+storyRoute.delete("/:storyId/:userId", verifyToken_1.default, story_controllers_1.deleteStory);
 exports.default = storyRoute;

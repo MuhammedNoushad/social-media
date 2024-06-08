@@ -442,14 +442,14 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
       {/* Model for voice call  */}
       <OutGoingCall
         callerName={userToChatData.username}
-        callerImage={userToChatData.profileimg ?? "/public/avathar.png"}
+        callerImage={userToChatData.profileimg ?? "/avathar.png"}
         onClose={handleRejectVoiceCall}
         isOpen={showVoiceCallModal}
       />
 
       <IncomingCall
         callerName={callingUser.username}
-        callerImage={callingUser.profileimg ?? "/public/avathar.png"}
+        callerImage={callingUser.profileimg ?? "/avathar.png"}
         onClose={handleRejectIncomingVoiceCall}
         isOpen={incomingVoiceCallModal}
         onAcceptCall={handleAcceptIncomingVoiceCall}
@@ -458,14 +458,14 @@ function MessageContainer({ userToChatId }: { userToChatId: string }) {
       {/* Model for video call  */}
       <OutGoingCall
         callerName={userToChatData.username}
-        callerImage={userToChatData.profileimg ?? "/public/avathar.png"}
+        callerImage={userToChatData.profileimg ?? "/avathar.png"}
         onClose={handleRejectCall}
         isOpen={showCallModal}
       />
 
       <IncomingCall
         callerName={callingUser.username}
-        callerImage={callingUser.profileimg ?? "/public/avathar.png"}
+        callerImage={callingUser.profileimg ?? "/avathar.png"}
         onClose={handleRejectIncomingCall}
         isOpen={incomingCallModal}
         onAcceptCall={handleAcceptIncomingCall}

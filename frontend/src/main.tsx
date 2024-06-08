@@ -11,14 +11,14 @@ import { SocketProvider } from "./Context/SocketContext.tsx";
 import { APP_GOOGLE_CLIENT_ID } from "./config/config.ts";
 
 ReactDOM.render(
-  <GoogleOAuthProvider
-    clientId={APP_GOOGLE_CLIENT_ID!}
-  >
+  <GoogleOAuthProvider clientId={APP_GOOGLE_CLIENT_ID!}>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Toaster richColors position="top-right" />
         <SocketProvider>
-          <App />
+          <div className="bg-white min-h-screen">
+            <App />
+          </div>
         </SocketProvider>
       </PersistGate>
     </Provider>

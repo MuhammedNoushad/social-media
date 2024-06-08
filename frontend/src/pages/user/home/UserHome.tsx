@@ -35,7 +35,7 @@ function UserHome() {
         <Sidebar page="home" />
       </div>
       <div className="flex w-10/12">
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-2 lg:gap-10">
           <div className="grid justify-center w-10/12 gap:6 lg:gap-12">
             <Story />
           </div>

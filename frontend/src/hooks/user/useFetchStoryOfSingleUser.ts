@@ -1,6 +1,6 @@
 // Hook for fetch story of single user
 
-import axios from "axios";
+import axios from "../../axios/axios";
 
 const useFetchStoryOfSingleUser = () => {
   const fetchStoryOfSingleUser = async (userId: string) => {

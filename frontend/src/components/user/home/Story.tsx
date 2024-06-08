@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
+import { UploadButton } from "@bytescale/upload-widget-react";
+import { toast } from "sonner";
+
 import useFetchAllStory from "../../../hooks/user/useFetchAllStory";
 import IStory from "../../../types/IStory";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import CarouselModal from "./StoryModal";
-import { UploadButton } from "@bytescale/upload-widget-react";
 import useAddStory from "../../../hooks/user/useAddStory";
-import { toast } from "sonner";
 
 const StoryComponent: React.FC = () => {
   const [stories, setStories] = useState<IStory[]>([]);
@@ -78,7 +79,7 @@ const StoryComponent: React.FC = () => {
 
   return (
     <>
-      <div className="relative max-w-3xl mx-auto">
+      <div className="relative px-4 max-w-xs md:max-w-2xl lg:max-w-3xl">
         {stories.length > 5 && (
           <button
             onClick={scrollLeft}
@@ -93,7 +94,7 @@ const StoryComponent: React.FC = () => {
           className="my-3 px-1 flex space-x-4 items-center overscroll-auto overflow-x-auto scrollbar-hide"
         >
           {/* Add your storys here */}
-          <div className="relative flex-shrink-0 w-24 cursor-pointer">
+          <div className="relative flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-16 lg:w-24">
             <UploadButton
               options={{ apiKey: "free", maxFileCount: 1 }}
               onComplete={handleAddStory}
@@ -138,7 +139,7 @@ const StoryComponent: React.FC = () => {
 
           {/* LoggedIn User Story */}
           {loggedInUserStory && loggedInUserStory[0]?.story?.length > 0 && (
-            <div className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-24">
+            <div className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-16 lg:w-24">
               <img
                 onClick={() => {
                   showStoryModal(loggedInUser._id);
@@ -156,7 +157,7 @@ const StoryComponent: React.FC = () => {
           {storyOfOthers.map((story) => (
             <div
               key={story._id}
-              className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-24"
+              className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-16 lg:w-24"
             >
               <img
                 onClick={() => {

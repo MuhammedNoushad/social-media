@@ -2,7 +2,7 @@ function MessagePlaceholder() {
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <img
-        src="/public/message placeholder.jpg"
+        src="/message placeholder.jpg"
         alt="Message Placeholder"
         className="max-w-xs"
       />

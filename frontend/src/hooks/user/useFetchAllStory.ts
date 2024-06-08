@@ -7,7 +7,6 @@ const useFetchAllStory = () => {
       const response = await axios.get("/api/story/");
       const data = response.data;
       if (data.success) {
-        console.log(data.stories, "data.stories");
         return data.stories;
       }
     } catch (error) {

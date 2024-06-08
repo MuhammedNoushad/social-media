@@ -20,7 +20,7 @@ const UserCardList: React.FC<IUserCardListProps> = ({ users }) => {
           <div className="flex items-center">
             <img
               className="rounded-full h-10 w-10 md:h-12 md:w-12"
-              src={user.profileimg || "/public/avathar.png"}
+              src={user.profileimg || "/avathar.png"}
               alt={user.username}
             />
             <div className="ml-2 flex flex-col">

@@ -3,7 +3,7 @@ import handleInvalidToken from "../utils/handleInvalidToken";
 import { APP_BASE_URL } from "../config/config";
 
 const instance = axios.create({
-  baseURL: APP_BASE_URL,
+  baseURL: APP_BASE_URL ,
 });
 
 instance.interceptors.request.use(

@@ -9,7 +9,6 @@ import {
   getPostOfUser,
   report,
 } from "../controllers/post.controllers";
-import verifyToken from "../middleware/verifyToken";
 import {
   addComment,
   deleteComment,
@@ -17,27 +16,28 @@ import {
   fetchCountPosts,
   toggleLike,
 } from "../controllers/comment.controllers";
+import verifyUser from "../middleware/verifyToken";
 
 const postRoute = express.Router();
 
-postRoute.get("/", verifyToken, fetchAllPosts);
-postRoute.put("/:postId", editPost);
-postRoute.post("/:userId", verifyToken, createNewPost);
-postRoute.get("/:userId", verifyToken, getPostOfUser);
-postRoute.delete("/:postId", deletePost);
+postRoute.get("/",verifyUser, fetchAllPosts);
+postRoute.put("/:postId",verifyUser, editPost);
+postRoute.post("/:userId",verifyUser, createNewPost);
+postRoute.get("/:userId",verifyUser, getPostOfUser);
+postRoute.delete("/:postId",verifyUser, deletePost);
 
 
-postRoute.post("/add-comment/:postId", addComment);
-postRoute.put("/comment/:postId/:commentId", editComment);
-postRoute.delete("/comment/:postId/:commentId", deleteComment);
+postRoute.post("/add-comment/:postId",verifyUser, addComment);
+postRoute.put("/comment/:postId/:commentId",verifyUser, editComment);
+postRoute.delete("/comment/:postId/:commentId",verifyUser, deleteComment);
 
-postRoute.post("/toggle-like/:postId", toggleLike);
-postRoute.get("/liked-users/:postId", fetchAllLikedUsers);
+postRoute.post("/toggle-like/:postId", verifyUser,toggleLike);
+postRoute.get("/liked-users/:postId",verifyUser, fetchAllLikedUsers);
 
-postRoute.get("/posts/count", fetchCountPosts);
-postRoute.get('/posts/total-likes',fetchTotalLikes)
+postRoute.get("/posts/count",verifyUser, fetchCountPosts);
+postRoute.get('/posts/total-likes',verifyUser,fetchTotalLikes)
 
 
-postRoute.post("/report/:postId", report);
+postRoute.post("/report/:postId",verifyUser, report);
 
 export default postRoute;

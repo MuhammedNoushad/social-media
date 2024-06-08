@@ -74,7 +74,7 @@ export function DefaultGallery({
         <div className="p-4 mb-6">
           <div className="m-auto flex justify-center">
             <img
-              src="/public/placeholder.jpg"
+              src="/placeholder.jpg"
               className="w-80 h-72"
               alt="placeholder"
             />

@@ -160,7 +160,7 @@ const ProfileCard: React.FC<{ userDetails: IUserState; profile: string }> = ({
               <div className="relative inline-block shrink-0 rounded-2xl">
                 <img
                   className="object-cover inline-block shrink-0 rounded-full w-[50px] h-[50px] sm:w-[80px] sm:h-[80px] lg:w-[120px] lg:h-[120px]"
-                  src={userDetails.profileimg || "/public/avathar.png"}
+                  src={userDetails.profileimg || "/avathar.png"}
                   alt="image"
                 />
               </div>

@@ -82,7 +82,6 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
 
   // Function for showing story viewed users
   const showViewedUsers = (viewed: IUserDetails[]) => {
-    console.log(viewed, "viewed");
     setViewedUsers(viewed);
     setOpenViewedUsers(true);
   };
@@ -104,7 +103,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
             setCurrentSlide(0);
           }}
         />
-        <div className="relative z-10 w-full max-w-4xl p-6 bg-white rounded-lg shadow-lg">
+        <div className="relative z-10 max-w-4xl p-6 bg-white rounded-lg shadow-lg md:w-3/4 lg:w-2/3 xl:w-1/2">
           <div className="relative">
             <div className="overflow-hidden w-full min-h-[24rem] bg-gray-100 rounded-lg">
               <div

@@ -16,5 +16,7 @@ export default {
     // eslint-disable-next-line no-undef
     require("tailwind-scrollbar-hide"), // Adding the scrollbar-hide plugin
   ],
-  darkMode: false,
+  daisyui: {
+    themes: ["light"],
+  },
 };

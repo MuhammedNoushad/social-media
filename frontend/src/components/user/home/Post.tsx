@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { FaRegFlag, FaTrash, FaUserMinus, FaUserPlus } from "react-icons/fa";
@@ -20,7 +20,6 @@ import useFollow from "../../../hooks/user/useFollow";
 import LikedUsersModal from "./LikedUsersModal";
 import useFetchAllConnections from "../../../hooks/user/useFetchAllConnections";
 import AdPost from "../common/AdPost";
-import Pagination from "../../admin/common/Pagination";
 import PostShimmer from "../../skeleton/PostShimmer";
 
 function Post() {
@@ -32,9 +31,7 @@ function Post() {
   const [showLikedUsersModal, setShowLikedUsersModal] = useState(false);
   const [likedUsers, setLikedUsers] = useState<IUserDetails[]>([]);
   const [postReported, setPostReported] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [loading] = useState(false);
   const [selectedPost, setSelectedPost] = useState<{
     userId?: IUserDetails;
     imageUrl: string;
@@ -58,7 +55,6 @@ function Post() {
   );
 
   const detailsElement = document.querySelector("details");
-  const postsPerPage = 10;
 
   const isFollowingAnyUser =
     connections?.following?.length > 0 ||
@@ -91,10 +87,7 @@ function Post() {
     filteredPosts = [...filteredPosts, ...remainingPosts];
   }
 
-  // Pagination logic
-  const startIndex = (currentPage - 1) * postsPerPage;
-  const endIndex = startIndex + postsPerPage;
-  const currentPosts = filteredPosts.slice(startIndex, endIndex);
+  const currentPosts = filteredPosts;
 
   // Insert ad posts after every 3 user posts
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,18 +99,7 @@ function Post() {
     }
   }
 
-  useEffect(() => {
-    const totalPages = Math.ceil(posts.length / postsPerPage);
-    setTotalPages(totalPages);
-    setLoading(false);
-  }, [posts.length]);
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [currentPage]);
 
   const handleImageClick = (post: {
     userId: IUserDetails;
@@ -598,11 +580,6 @@ function Post() {
           onClose={handleCloseLikedUsersModal}
         />
       )}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
     </>
   );
 }

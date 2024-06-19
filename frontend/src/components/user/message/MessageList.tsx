@@ -43,6 +43,15 @@ function MessageList({
     fetchData();
   }, [loggedUser._id, conversations]);
 
+  // Function for formating the last message
+  const formatingLastMessage = (message: string) => {
+    if (message.length > 20) {
+      return message.slice(0, 20) + "...";
+    } else {
+      return message;
+    }
+  };
+
   return (
     <div className="p-4 border-x-2 border-gray-300 h-full">
       <header className="p-4 border-b border-gray-300 flex justify-center items-center text-black">
@@ -78,7 +87,7 @@ function MessageList({
                   {participant?.username}
                 </h2>
                 <p className="text-gray-600 font-medium font-roboto-condensed">
-                  {conversation.lastMessage}{" "}
+                  {formatingLastMessage(conversation.lastMessage)}{" "}
                   <span className="text-gray-500 font-roboto-condensed font-normal text-xs ml-2">
                     *{formatMessageTimeStamp(conversation.updatedAt)}
                   </span>

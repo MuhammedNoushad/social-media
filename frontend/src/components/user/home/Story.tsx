@@ -144,7 +144,7 @@ const StoryComponent: React.FC = () => {
                 onClick={() => {
                   showStoryModal(loggedInUser._id);
                 }}
-                src={loggedInUser.profileimg}
+                src={loggedInUser.profileimg || "/avathar.png"}
                 alt={loggedInUser.username}
                 className={`w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-0.5`}
               />
@@ -163,7 +163,7 @@ const StoryComponent: React.FC = () => {
                 onClick={() => {
                   showStoryModal(story.userId._id);
                 }}
-                src={story.userId.profileimg}
+                src={story.userId.profileimg || "/avathar.png"}
                 alt={story.userId.username}
                 className={`w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-0.5`}
               />

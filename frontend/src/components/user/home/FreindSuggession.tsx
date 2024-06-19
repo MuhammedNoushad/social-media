@@ -45,7 +45,7 @@ const FriendSuggestion = () => {
                       navigate(`/profile/${user._id}`);
                     }}
                     className="w-10 h-10 rounded-full cursor-pointer"
-                    src={user.profileimg}
+                    src={user.profileimg || "/avathar.png"}
                     alt={user.username}
                   />
                   <span className="ml-3 font-medium">{user.username}</span>

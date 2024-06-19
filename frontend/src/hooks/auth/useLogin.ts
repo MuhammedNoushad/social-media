@@ -5,13 +5,17 @@ import { setUser } from "../../store/features/userDetailsSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { addToken } from "../../store/features/tokenSlice";
+import { useState } from "react";
 
 const useLogin = () => {
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const login = async (userData: IFormInput) => {
     try {
+      setLoading(true);
       const response = await axios.post("/api/auth/login", userData, {
         headers: { "Content-Type": "application/json" },
       });
@@ -39,10 +43,12 @@ const useLogin = () => {
       } else {
         toast.error("An error occurred during login.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
-  return login;
+  return {login , loading};
 };
 
 export default useLogin;

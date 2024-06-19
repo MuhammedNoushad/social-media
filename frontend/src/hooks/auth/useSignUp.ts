@@ -2,14 +2,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../axios/axios";
 import IFormInput from "../../types/IFormInputs";
 import { toast } from "sonner";
+import { useState } from "react";
 
-type SignUpFunction = (formData: IFormInput) => Promise<void>;
+const useSignUp = () => {
+  const [loading, setLoading] = useState(false);
 
-const useSignUp = (): SignUpFunction => {
   const navigate = useNavigate();
 
-  const signup: SignUpFunction = async (formData: IFormInput) => {
+  const signup = async (formData: IFormInput) => {
     try {
+      setLoading(true);
       const response = await axios.post("/api/auth/signup", formData, {
         headers: { "Content-Type": "application/json" },
       });
@@ -29,10 +31,12 @@ const useSignUp = (): SignUpFunction => {
       } else {
         toast.error("An error occurred during login.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
-  return signup;
+  return { signup, loading };
 };
 
 export default useSignUp;

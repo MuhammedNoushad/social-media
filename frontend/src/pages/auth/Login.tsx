@@ -15,7 +15,7 @@ function Login() {
   });
   const [errors, setErrors] = useState<Partial<IFormInput>>({});
 
-  const login = useLogin();
+  const {login , loading} = useLogin();
 
   // Function to toggle between showing and hiding the password
   const togglePasswordVisibility = () => {
@@ -108,7 +108,7 @@ function Login() {
             type="submit"
             className="btn btn-wide mt-6 px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-150"
           >
-            Login
+            {loading ? <span className="loading loading-spinner"></span> : <span>Login</span>}
           </button>
         </div>
       </form>

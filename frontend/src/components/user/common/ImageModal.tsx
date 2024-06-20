@@ -472,12 +472,12 @@ const ImageModal: React.FC<ImageModalProps> = ({
                           </form>
                         </div>
                       ) : (
-                        <p className="text-sm text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap font-roboto-condensed">
-                          <span className="font-semibold mr-2 ">
-                            {comment.userId.username}:{" "}
-                          </span>
-                          {comment.comment}
-                        </p>
+                        <p className="text-sm text-gray-600 max-w-52 font-roboto-condensed">
+                        <span className="font-semibold mr-2">
+                          {comment.userId.username}:
+                        </span>
+                        <span style={{ wordWrap: "break-word" }}>{comment.comment}</span>
+                      </p>
                       )}
                     </div>
                     {comment.userId._id === currentUser._id &&

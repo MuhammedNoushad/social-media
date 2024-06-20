@@ -7,6 +7,7 @@ import { RootState } from "../../store/store";
 // Function for fetching all connections
 const useFetchAllConnections = () => {
   const [suggestedUsers, setSuggestedUsers] = useState<IUserDetails[]>([]);
+  const [suggestUserLoader, setSuggestUserLoader] = useState<boolean>(false);
 
   const user = useSelector((state: RootState) => state.user);
 
@@ -37,6 +38,7 @@ const useFetchAllConnections = () => {
   // Function for suggest users for the logged in users
   const suggestUsers = async (userId: string) => {
     try {
+      setSuggestUserLoader(true);
       const response = await axios.get(`/api/connection/suggest-users/${userId}`);
       const data = response.data;
       setSuggestedUsers(data.users);
@@ -44,13 +46,16 @@ const useFetchAllConnections = () => {
       console.log(error);
       throw error;
     }
+    finally {
+      setSuggestUserLoader(false);
+    }
   };
 
   useEffect(() => {
     suggestUsers(user._id);
   }, [user._id]);
 
-  return { fetchAllConnections, fetchAllLikedUsers , suggestedUsers,setSuggestedUsers };
+  return { fetchAllConnections, fetchAllLikedUsers , suggestedUsers,setSuggestedUsers , suggestUserLoader };
 };
 
 export default useFetchAllConnections;

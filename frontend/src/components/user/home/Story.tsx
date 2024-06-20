@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import CarouselModal from "./StoryModal";
 import useAddStory from "../../../hooks/user/useAddStory";
+import SkeletonCircle from "../../skeleton/SkeletonCircle";
 
 const StoryComponent: React.FC = () => {
   const [stories, setStories] = useState<IStory[]>([]);
@@ -17,7 +18,7 @@ const StoryComponent: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { fetchAllStory } = useFetchAllStory();
+  const { fetchAllStory, storyLoader } = useFetchAllStory();
   const { uploadOnCloudinay, addNewStory } = useAddStory();
 
   const loggedInUser = useSelector((state: RootState) => state.user);
@@ -79,112 +80,120 @@ const StoryComponent: React.FC = () => {
 
   return (
     <>
-      <div className="relative px-4 max-w-xs md:max-w-2xl lg:max-w-3xl">
-        {stories.length > 5 && (
-          <button
-            onClick={scrollLeft}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-1 shadow-md z-10"
-            aria-label="Scroll Left"
-          >
-            &lt;
-          </button>
-        )}
-        <div
-          ref={containerRef}
-          className="my-3 px-1 flex space-x-4 items-center overscroll-auto overflow-x-auto scrollbar-hide"
-        >
-          {/* Add your storys here */}
-          <div className="relative flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-16 lg:w-24">
-            <UploadButton
-              options={{ apiKey: "free", maxFileCount: 1 }}
-              onComplete={handleAddStory}
-            >
-              {({ onClick }) => (
-                <>
-                  <img
-                    onClick={storyLoading ? () => {} : onClick}
-                    src={loggedInUser.profileimg || "/avathar.png"}
-                    alt={loggedInUser.username}
-                    className={`w-16 h-16 rounded-full ${
-                      storyLoading && "opacity-50 cursor-not-allowed"
-                    }`}
-                  />
-                  <div className="absolute top-11 left-12 rounded-full cursor-pointer bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500">
-                    <svg
-                      aria-label="Plus icon"
-                      className="x1lliihq x1n2onr6"
-                      color="rgb(0, 149, 246)"
-                      fill="rgb(0, 149, 246)"
-                      height="16"
-                      role="img"
-                      viewBox="0 0 24 24"
-                      width="16"
-                    >
-                      <title>Add Story</title>
-                      <path d="M12.001.504a11.5 11.5 0 1 0 11.5 11.5 11.513 11.513 0 0 0-11.5-11.5Zm5 12.5h-4v4a1 1 0 0 1-2 0v-4h-4a1 1 0 1 1 0-2h4v-4a1 1 0 1 1 2 0v4h4a1 1 0 0 1 0 2Z"></path>
-                    </svg>
-                  </div>
-                  {storyLoading && (
-                    <span className="loading loading-spinner absolute top-5 left-5 right-0 bottom-0 flex items-center justify-center"></span>
-                  )}
-                  <span className="text-xs text-gray-600 mt-1 font-semibold font-roboto-condensed">
-                    {loggedInUser.username.length > 6
-                      ? loggedInUser.username.slice(0, 6) + "..."
-                      : loggedInUser.username}
-                  </span>
-                </>
-              )}
-            </UploadButton>
-          </div>
-
-          {/* LoggedIn User Story */}
-          {loggedInUserStory && loggedInUserStory[0]?.story?.length > 0 && (
-            <div className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-16 lg:w-24">
-              <img
-                onClick={() => {
-                  showStoryModal(loggedInUser._id);
-                }}
-                src={loggedInUser.profileimg || "/avathar.png"}
-                alt={loggedInUser.username}
-                className={`w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-0.5`}
-              />
-              <span className="text-xs text-gray-600 mt-1 font-semibold font-roboto-condensed">
-                your story
-              </span>
-            </div>
-          )}
-
-          {storyOfOthers.map((story) => (
-            <div
-              key={story._id}
-              className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-16 lg:w-24"
-            >
-              <img
-                onClick={() => {
-                  showStoryModal(story.userId._id);
-                }}
-                src={story.userId.profileimg || "/avathar.png"}
-                alt={story.userId.username}
-                className={`w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-0.5`}
-              />
-              <span className="text-xs text-gray-600 mt-1 font-semibold font-roboto-condensed">
-                {story.userId.username.length > 6
-                  ? story.userId.username.slice(0, 6) + "..."
-                  : story.userId.username}
-              </span>
-            </div>
+      {storyLoader ? (
+        <div className="flex space-x-4 gap-2">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <SkeletonCircle key={index} size="16" />
           ))}
         </div>
-        {stories.length > 5 && (
-          <button
-            onClick={scrollRight}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-1 shadow-md z-10"
-            aria-label="Scroll Right"
+      ) : (
+        <div className="relative px-4 max-w-xs md:max-w-2xl lg:max-w-3xl">
+          {stories.length > 5 && (
+            <button
+              onClick={scrollLeft}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-1 shadow-md z-10"
+              aria-label="Scroll Left"
+            >
+              &lt;
+            </button>
+          )}
+          <div
+            ref={containerRef}
+            className="my-3 px-1 flex space-x-4 items-center overscroll-auto overflow-x-auto scrollbar-hide"
           >
-            &gt;
-          </button>
-        )}
-      </div>
+            {/* Add your storys here */}
+            <div className="relative flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-16 lg:w-24">
+              <UploadButton
+                options={{ apiKey: "free", maxFileCount: 1 }}
+                onComplete={handleAddStory}
+              >
+                {({ onClick }) => (
+                  <>
+                    <img
+                      onClick={storyLoading ? () => {} : onClick}
+                      src={loggedInUser.profileimg || "/avathar.png"}
+                      alt={loggedInUser.username}
+                      className={`w-16 h-16 rounded-full ${
+                        storyLoading && "opacity-50 cursor-not-allowed"
+                      }`}
+                    />
+                    <div className="absolute top-11 left-12 rounded-full cursor-pointer bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500">
+                      <svg
+                        aria-label="Plus icon"
+                        className="x1lliihq x1n2onr6"
+                        color="rgb(0, 149, 246)"
+                        fill="rgb(0, 149, 246)"
+                        height="16"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="16"
+                      >
+                        <title>Add Story</title>
+                        <path d="M12.001.504a11.5 11.5 0 1 0 11.5 11.5 11.513 11.513 0 0 0-11.5-11.5Zm5 12.5h-4v4a1 1 0 0 1-2 0v-4h-4a1 1 0 1 1 0-2h4v-4a1 1 0 1 1 2 0v4h4a1 1 0 0 1 0 2Z"></path>
+                      </svg>
+                    </div>
+                    {storyLoading && (
+                      <span className="loading loading-spinner absolute top-5 left-5 right-0 bottom-0 flex items-center justify-center"></span>
+                    )}
+                    <span className="text-xs text-gray-600 mt-1 font-semibold font-roboto-condensed">
+                      {loggedInUser.username.length > 6
+                        ? loggedInUser.username.slice(0, 6) + "..."
+                        : loggedInUser.username}
+                    </span>
+                  </>
+                )}
+              </UploadButton>
+            </div>
+
+            {/* LoggedIn User Story */}
+            {loggedInUserStory && loggedInUserStory[0]?.story?.length > 0 && (
+              <div className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-16 lg:w-24">
+                <img
+                  onClick={() => {
+                    showStoryModal(loggedInUser._id);
+                  }}
+                  src={loggedInUser.profileimg || "/avathar.png"}
+                  alt={loggedInUser.username}
+                  className={`w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-0.5`}
+                />
+                <span className="text-xs text-gray-600 mt-1 font-semibold font-roboto-condensed">
+                  your story
+                </span>
+              </div>
+            )}
+
+            {storyOfOthers.map((story) => (
+              <div
+                key={story._id}
+                className="flex flex-col gap-1 justify-center items-center cursor-pointer flex-shrink-0 w-16 lg:w-24"
+              >
+                <img
+                  onClick={() => {
+                    showStoryModal(story.userId._id);
+                  }}
+                  src={story.userId.profileimg || "/avathar.png"}
+                  alt={story.userId.username}
+                  className={`w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-0.5`}
+                />
+                <span className="text-xs text-gray-600 mt-1 font-semibold font-roboto-condensed">
+                  {story.userId.username.length > 6
+                    ? story.userId.username.slice(0, 6) + "..."
+                    : story.userId.username}
+                </span>
+              </div>
+            ))}
+          </div>
+          {stories.length > 5 && (
+            <button
+              onClick={scrollRight}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-1 shadow-md z-10"
+              aria-label="Scroll Right"
+            >
+              &gt;
+            </button>
+          )}
+        </div>
+      )}
       <CarouselModal
         statusUserId={statusId}
         isOpen={openModal}

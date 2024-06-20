@@ -13,17 +13,24 @@ import {
   togglePostBlock,
 } from "../controllers/post.controllers";
 import verifyUser from "../middleware/verifyToken";
+import isBlock from "../middleware/isBlock";
 
 const adminRoute = express.Router();
 
-adminRoute.get("/users", verifyUser, verifyToken, getUsers);
-adminRoute.put("/block-user/:userId", verifyUser, verifyToken, blockUser);
-adminRoute.get("/users/chart/data", verifyUser, fetchChartData);
+adminRoute.get("/users", verifyUser, verifyToken, isBlock, getUsers);
+adminRoute.put(
+  "/block-user/:userId",
+  verifyUser,
+  isBlock,
+  verifyToken,
+  blockUser
+);
+adminRoute.get("/users/chart/data", verifyUser, isBlock, fetchChartData);
 
-adminRoute.get("/users/latest", verifyUser, fetchLatestUsers);
+adminRoute.get("/users/latest", verifyUser, isBlock, fetchLatestUsers);
 
-adminRoute.get("/reported-posts", verifyUser, reportedPosts);
-adminRoute.put("/block-post/:postId", verifyUser, togglePostBlock);
-adminRoute.get("/posts/chart/data", verifyUser, fetchChartDataPost);
+adminRoute.get("/reported-posts", verifyUser, isBlock, reportedPosts);
+adminRoute.put("/block-post/:postId", verifyUser, isBlock, togglePostBlock);
+adminRoute.get("/posts/chart/data", verifyUser, isBlock, fetchChartDataPost);
 
 export default adminRoute;

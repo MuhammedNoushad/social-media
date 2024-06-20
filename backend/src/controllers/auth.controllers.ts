@@ -8,7 +8,7 @@ import {
 } from "../utils/sendMail";
 import OtpRepository from "../repositories/OtpRepository";
 import IUsers from "../interfaces/IUsers";
-import generateTokenAndSetCookie from "../utils/generateToken";
+import {generateTokenAndSetCookies} from "../utils/generateToken";
 import generatePassword from "../utils/generatePassword";
 import { hasJSDocParameterTags } from "typescript";
 
@@ -143,7 +143,7 @@ export const login = async (req: Request, res: Response) => {
       // If password correct create new User account
       if (isPasswordCorrect) {
         // Generate jwt cookie
-        const accessToken = generateTokenAndSetCookie(
+        const accessToken = generateTokenAndSetCookies(
           userDetails._id ? userDetails._id : "",
           res
         );
@@ -201,7 +201,7 @@ export const googleLogin = async (req: Request, res: Response) => {
       if (user.isBlock) {
         return res.status(404).json({ error: "User is blocked" });
       }
-      const accessToken = generateTokenAndSetCookie(
+      const accessToken = generateTokenAndSetCookies(
         user._id ? user._id : "",
         res
       );
@@ -235,7 +235,7 @@ export const googleLogin = async (req: Request, res: Response) => {
       const createdUser = await userRepository.createNewUser(newUser);
 
       if (createdUser) {
-        const accessToken = generateTokenAndSetCookie(
+        const accessToken = generateTokenAndSetCookies(
           createdUser._id ?? "default_id",
           res
         );

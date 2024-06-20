@@ -1,11 +1,10 @@
+// utils/handleInvalidToken.ts
 import { toast } from "sonner";
 
-function handleInvalidToken() {
+export const handleInvalidToken = () => {
   // Clear the token from localStorage
-  localStorage.removeItem("token");
-
   toast.error("Your session has expired. Please log in again.");
-  window.location.href = "/login";
-}
 
-export default handleInvalidToken;
+  localStorage.clear();
+  window.location.reload();
+};

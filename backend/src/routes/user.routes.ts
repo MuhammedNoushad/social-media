@@ -7,6 +7,7 @@ import {
   updateProfile,
 } from "../controllers/user.controllers";
 import verifyToken from "../middleware/verifyToken";
+import isBlock from "../middleware/isBlock";
 
 const userRoute = express.Router();
 
@@ -17,9 +18,9 @@ userRoute.delete(
   verifyToken,
   deleteProfilePic
 );
-userRoute.get("/users/count", verifyToken, fetchCountUsers);
+userRoute.get("/users/count", verifyToken,isBlock, fetchCountUsers);
 
-userRoute.get("/users", verifyToken, fetchAllUsers);
-userRoute.get("/:userId", verifyToken, fetchSigleUser);
+userRoute.get("/users", verifyToken,isBlock, fetchAllUsers);
+userRoute.get("/:userId", verifyToken,isBlock, fetchSigleUser);
 
 export default userRoute;

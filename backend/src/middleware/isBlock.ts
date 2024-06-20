@@ -1,44 +1,37 @@
 import { NextFunction, Request, Response } from "express";
-import jwt, { decode, JwtPayload } from "jsonwebtoken";
-import User from "../models/user.model";
+import jwt from "jsonwebtoken";
+import UserRepository from "../repositories/UserRepository";
 
-// Middleware for checking if user is blocked
+const userRepository = new UserRepository();
+
+// Function for checking if user is blocked
 const isBlock = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.cookies.jwt;
-    console.log(token)
+    const authorization = req.headers["authorization"];
 
-    if (!token) {
-      return res
-        .status(401)
-        .json({ error: "Unauthorized -  No Token Provided" });
+    if (!authorization) {
+      return res.status(401).json({ error: "No token provided" });
     }
 
-    const jwtToken = process.env.JWT_TOKEN;
-    if (!jwtToken) {
-      return res
-        .status(500)
-        .json({ error: "Internal Server Error - JWT Token not set" });
-    }
+    const token = authorization.split(" ")[1];
 
-    const decoded = jwt.verify(token, jwtToken) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_TOKEN as string);
 
     if (!decoded) {
-      return res.status(401).json({ error: "Unauthorized -  No Valid Token" });
+      return res.status(401).json({ error: "Invalid token" });
     }
 
-    const user = await User.findById(decoded.userId).select("-password");
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    const { userId } = decoded as { userId: string };
+    const user = await userRepository.findById(userId);
 
     if (user?.isBlock) {
-      res.clearCookie("jwt");
-      return res.status(403).json({ error: "User is blocked" });
-    } else {
-      next();
+      return res.status(401).json({ error: "User is blocked" });
     }
-  } catch (error) {}
+
+    next();
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export default isBlock;

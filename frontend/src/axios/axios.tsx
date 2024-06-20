@@ -1,9 +1,10 @@
+// api/axiosInstance.ts
 import axios from "axios";
-import handleInvalidToken from "../utils/handleInvalidToken";
+import { handleInvalidToken } from "../utils/handleInvalidToken";
 import { APP_BASE_URL } from "../config/config";
 
 const instance = axios.create({
-  baseURL: APP_BASE_URL ,
+  baseURL: APP_BASE_URL,
 });
 
 instance.interceptors.request.use(
@@ -19,16 +20,17 @@ instance.interceptors.request.use(
   }
 );
 
-instance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Check if the error is due to an invalid token
-    if (error.response && error.response.status === 401) {
-      // Handle the invalid token
-      handleInvalidToken();
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const setupInterceptors = () => {
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        handleInvalidToken();
+      }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
-);
+  );
+};
 
 export default instance;

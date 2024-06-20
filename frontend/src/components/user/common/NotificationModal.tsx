@@ -47,7 +47,7 @@ const NotificationModal = ({
                   onClick={() => {
                     navigate(`/profile/${notification.from._id}`);
                   }}
-                  src={notification.from.profileimg}
+                  src={notification.from.profileimg || "/avathar.png"}
                   alt={`${notification.from.username}'s profile`}
                   className="w-10 h-10 rounded-full object-cover avatar"
                 />

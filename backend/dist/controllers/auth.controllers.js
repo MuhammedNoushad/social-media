@@ -17,7 +17,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const UserRepository_1 = __importDefault(require("../repositories/UserRepository"));
 const sendMail_1 = require("../utils/sendMail");
 const OtpRepository_1 = __importDefault(require("../repositories/OtpRepository"));
-const generateToken_1 = __importDefault(require("../utils/generateToken"));
+const generateToken_1 = require("../utils/generateToken");
 const generatePassword_1 = __importDefault(require("../utils/generatePassword"));
 // Creating instance of Repositories
 const userRepository = new UserRepository_1.default();
@@ -126,7 +126,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             // If password correct create new User account
             if (isPasswordCorrect) {
                 // Generate jwt cookie
-                const accessToken = (0, generateToken_1.default)(userDetails._id ? userDetails._id : "", res);
+                const accessToken = (0, generateToken_1.generateTokenAndSetCookies)(userDetails._id ? userDetails._id : "", res);
                 const role = userDetails.isAdmin ? "admin" : "user";
                 const responseData = {
                     _id: userDetails._id || "",
@@ -182,7 +182,7 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             if (user.isBlock) {
                 return res.status(404).json({ error: "User is blocked" });
             }
-            const accessToken = (0, generateToken_1.default)(user._id ? user._id : "", res);
+            const accessToken = (0, generateToken_1.generateTokenAndSetCookies)(user._id ? user._id : "", res);
             const role = user.isAdmin ? "admin" : "user";
             const responseData = {
                 _id: user._id || "",
@@ -213,7 +213,7 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             };
             const createdUser = yield userRepository.createNewUser(newUser);
             if (createdUser) {
-                const accessToken = (0, generateToken_1.default)((_a = createdUser._id) !== null && _a !== void 0 ? _a : "default_id", res);
+                const accessToken = (0, generateToken_1.generateTokenAndSetCookies)((_a = createdUser._id) !== null && _a !== void 0 ? _a : "default_id", res);
                 const role = createdUser.isAdmin ? "admin" : "user";
                 const responseData = {
                     _id: createdUser._id,

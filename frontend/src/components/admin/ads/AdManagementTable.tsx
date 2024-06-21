@@ -25,6 +25,13 @@ function AdManagementTable() {
   const handleConfirm = async () => {
     try {
       await deleteAd(adId);
+
+      // Check the deleted ad is the last one in the list
+      // If it the last one, go to the previous page
+      if (ads.length === 1) {
+        setCurrentPage(currentPage - 1 < 1 ? 1 : currentPage - 1);
+      }
+
       setConfirmationModal(false);
     } catch (error) {
       console.error(error);

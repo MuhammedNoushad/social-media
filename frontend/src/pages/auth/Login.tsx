@@ -45,73 +45,80 @@ function Login() {
 
   return (
     <AuthModel page="Login">
-      <form noValidate className="w-full" onSubmit={formSubmitHandler}>
-        <div className="mt-5">
-          <label className="block mb-2 text-sm" htmlFor="your-email">
-            Your Email
-          </label>
-          <input
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 ${
-              errors.email
-                ? "border-red-500"
-                : "border-gray-300 dark:border-gray-700"
-            }`}
-            type="email"
-            id="your-email"
-            name="email"
-            placeholder="Enter your email"
-            onChange={handleInputChange}
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email}</p>
-          )}
+      <div className="w-full max-w-md mx-auto">
+        <div className="p-4 mb-4 text-sm text-gray-700 bg-gray-100 border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600">
+          <h3 className="mb-2 text-lg font-semibold">Demo Credentials</h3>
+          <p><strong>Email:</strong> demo@example.com</p>
+          <p><strong>Admin:</strong> admin@example.com</p>
+          <p><strong>Password:</strong> demo1234</p>
         </div>
-        <div className="mt-4 relative">
-          <label className="block mb-2 text-sm" htmlFor="your-password">
-            Your Password
-          </label>
-          <div className="relative">
+        <form noValidate className="w-full" onSubmit={formSubmitHandler}>
+          <div className="mt-5">
+            <label className="block mb-2 text-sm" htmlFor="your-email">
+              Your Email
+            </label>
             <input
-              className={`w-full px-4 py-2 pr-10 border rounded-lg focus:outline-none focus:border-blue-500 ${
-                errors.password
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 ${
+                errors.email
                   ? "border-red-500"
                   : "border-gray-300 dark:border-gray-700"
               }`}
-              type={showPassword ? "text" : "password"}
-              id="your-password"
-              name="password"
-              placeholder="Enter your password"
-              autoComplete="new-password"
+              type="email"
+              id="your-email"
+              name="email"
+              placeholder="Enter your email"
               onChange={handleInputChange}
             />
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+            )}
+          </div>
+          <div className="mt-4 relative">
+            <label className="block mb-2 text-sm" htmlFor="your-password">
+              Your Password
+            </label>
+            <div className="relative">
+              <input
+                className={`w-full px-4 py-2 pr-10 border rounded-lg focus:outline-none focus:border-blue-500 ${
+                  errors.password
+                    ? "border-red-500"
+                    : "border-gray-300 dark:border-gray-700"
+                }`}
+                type={showPassword ? "text" : "password"}
+                id="your-password"
+                name="password"
+                placeholder="Enter your password"
+                autoComplete="new-password"
+                onChange={handleInputChange}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 flex items-center px-3 focus:outline-none"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+            )}
+          </div>
+          <Link
+            to="/forgot-password"
+            className="mt-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer"
+          >
+            Forgot your password?
+          </Link>
+          <div className="flex justify-center">
             <button
-              type="button"
-              className="absolute inset-y-0 right-0 flex items-center px-3 focus:outline-none"
-              onClick={togglePasswordVisibility}
+              type="submit"
+              className="btn btn-wide mt-6 px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-150"
             >
-              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              {loading ? <span className="loading loading-spinner"></span> : <span>Login</span>}
             </button>
           </div>
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-500">{errors.password}</p>
-          )}
-        </div>
-        <Link
-          to="/forgot-password"
-          className="mt-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer"
-        >
-          Forgot your password?
-        </Link>
-        <div className="flex justify-center">
-          {" "}
-          <button
-            type="submit"
-            className="btn btn-wide mt-6 px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-150"
-          >
-            {loading ? <span className="loading loading-spinner"></span> : <span>Login</span>}
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </AuthModel>
   );
 }

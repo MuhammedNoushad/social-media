@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+
 import SignUp from "../pages/auth/SignUp";
 import Login from "../pages/auth/Login";
 import ConfirmOtp from "../pages/auth/VerifyOtp";

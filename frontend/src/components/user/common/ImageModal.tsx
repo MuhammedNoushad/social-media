@@ -326,7 +326,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
     <>
       <div className="fixed z-50 inset-0 flex items-center justify-center">
         <div className="fixed inset-0 bg-black opacity-50"></div>
-        <div className="relative z-10 w-3/4 h-3/4 bg-white rounded-lg shadow-lg">
+        <div className="relative z-10 md:w-3/4 h-3/4 bg-white rounded-lg shadow-lg">
           <button
             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
             onClick={onClose}
@@ -334,17 +334,17 @@ const ImageModal: React.FC<ImageModalProps> = ({
             <FaTimes size={24} />
           </button>
           <div className="flex h-full">
-            <div className="w-2/3 h-full">
+            <div className="w-2/3 h-full hidden md:block">
               <img
                 className="h-full w-full object-cover object-center rounded-l-lg"
                 src={selectedPost.imageUrl}
                 alt={`gallery-photo-${selectedPost._id}`}
               />
             </div>
-            <div className="w-1/3 h-full p-4 flex flex-col">
+            <div className="w-auto md:w-1/3 h-full p-4 flex flex-col">
               <div className="flex-grow ">
                 {/* Image description */}
-                <div className="bg-gray-100 p-2 rounded-md mb-2 flex items-center ">
+                <div className="bg-gray-100 p-2 rounded-md mb-2 flex items-center gap-1">
                   <img
                     onClick={() =>
                       navigate(`/profile/${selectedPost.userId?._id}`)
@@ -353,7 +353,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
                     alt={selectedPost.userId?.username}
                     className="w-8 h-8 rounded-full mr-2 cursor-pointer"
                   />
-                  <div className="flex items-center">
+                  <div className="flex items-center justify-between">
                     <div>
                       {editingDescription ? (
                         <form onSubmit={(e) => handleSaveDescription(e)}>
@@ -376,7 +376,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
                       )}
                     </div>
                     <details ref={detailsRef} className="dropdown">
-                      <summary className="mr-4 btn btn-ghost text-white hover:text-white hover:bg-transparent">
+                      <summary className=" btn btn-ghost text-white hover:text-white hover:bg-transparent">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="25"
@@ -473,11 +473,13 @@ const ImageModal: React.FC<ImageModalProps> = ({
                         </div>
                       ) : (
                         <p className="text-sm text-gray-600 max-w-52 font-roboto-condensed">
-                        <span className="font-semibold mr-2">
-                          {comment.userId.username}:
-                        </span>
-                        <span style={{ wordWrap: "break-word" }}>{comment.comment}</span>
-                      </p>
+                          <span className="font-semibold mr-2">
+                            {comment.userId.username}:
+                          </span>
+                          <span style={{ wordWrap: "break-word" }}>
+                            {comment.comment}
+                          </span>
+                        </p>
                       )}
                     </div>
                     {comment.userId._id === currentUser._id &&

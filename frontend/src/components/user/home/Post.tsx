@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { FaRegFlag, FaTrash, FaUserMinus, FaUserPlus } from "react-icons/fa";
@@ -99,9 +99,25 @@ function Post() {
     }
   }
 
-
-
   const handleImageClick = (post: {
+    userId: IUserDetails;
+    imageUrl: string;
+    _id: string;
+    description: string;
+    comments?: IComment[];
+    likes?: string[];
+  }) => {
+    // if the image is loaded in the phone or tablet view then not show modal
+    if (window.innerWidth <= 768) {
+      return;
+    }
+
+    setSelectedPost(post);
+    setShowModal(true);
+  };
+
+  // function to handle comment click
+  const handleCommentClick = (post: {
     userId: IUserDetails;
     imageUrl: string;
     _id: string;
@@ -417,7 +433,7 @@ function Post() {
                           role="img"
                           viewBox="0 0 24 24"
                           width="24"
-                          onClick={() => handleImageClick(image)}
+                          onClick={() => handleCommentClick(image)}
                         >
                           <title>Comment</title>
                           <path
